@@ -13,27 +13,22 @@ import copy
 print("PyTorch Version: ",torch.__version__)
 print("Torchvision Version: ",torchvision.__version__)
 
+def init_data_transforms(config):
 
+    data_transforms = None
 
-# Data augmentation and normalization for training
-# Just normalization for validation
-data_transforms = {
-    'train': transforms.Compose([
-        transforms.RandomResizedCrop(input_size),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ]),
-    'val': transforms.Compose([
-        transforms.Resize(input_size),
-        transforms.CenterCrop(input_size),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ]),
-}
+    # Data augmentation and normalization for training
+    # Just normalization for validation
 
-print("Initializing Datasets and Dataloaders...")
+    if config.transforms.apply_transforms:
+        data_transforms = {
+            'train': transforms.Compose([
+                transforms.RandomResizedCrop(config.transforms.crop_size),
+                transforms.RandomHorizontalFlip(),
+            ]),
+            'val': transforms.Compose([
+                transforms.CenterCrop(config.transforms.crop_size),
+            ]),
+        }
 
-
-# Detect if we have a GPU available
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    return data_transforms

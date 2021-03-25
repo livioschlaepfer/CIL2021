@@ -1,10 +1,12 @@
+from os import RTLD_NOLOAD
 from torch.utils import data
 from torchvision import transforms
 import numpy as np
 from sklearn.model_selection import train_test_split
-
 import glob
 from PIL import Image
+
+from transforms import init_data_transforms
 
 
 def init_train_dataloaders(config):
@@ -21,10 +23,13 @@ def init_train_dataloaders(config):
     image_paths = {'train': image_paths_train, 'val': image_paths_val}
     mask_paths = {'train': mask_paths_train, 'val': mask_paths_val}
 
+    # Get transforms
+    data_transforms = init_data_transforms(config)
+
     print('Initializing datasets and dataloader')
 
     # Create training and validation datasets
-    image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], mask_paths=mask_paths[x]) for x in ['train', 'val']}
+    image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], mask_paths=mask_paths[x], transform=data_transforms) for x in ['train', 'val']}
     
     # Create training and validation dataloaders
     dataloaders_dict = {x: data.DataLoader(image_datasets[x], batch_size=config.batch_size, shuffle=True) for x in ['train', 'val']}
@@ -55,19 +60,22 @@ class SegmentationDataSet(data.Dataset):
         # image.show() # For testing only
         # mask.show() # For testing only
 
-        # Fix mask segmentation class colors
-        mask = np.array(mask)
-        mask[mask > 35] = 255 # set road to white #TODO: check threshold
-        mask[mask <= 35] = 0 # set backgournd to dark
-        mask = Image.fromarray(np.uint8(mask))
-
         # Transformation / Augmentation
         if self.transform is not None:
             image = self.transform(image)
             mask = self.transform(mask)
 
-        # Preprocessing
+        # Normalize image
         image = self.prep_image(image)
-        mask = self.prep_mask(mask)
+        
+        # One hot encode segmentation classes based on segmentation class colors
+        mask = np.array(mask)
+        road = np.zeros(mask.shape)
+        background = np.zeros(mask.shape)
+
+        road[mask > 35] = 1 # One hot encode road #TODO: determine optimal threshold
+        background[mask <= 35] = 1 # One hot encode background #TODO: determine optimal threshold
+
+        mask = np.stack((road, background)) # Merge road and background
 
         return image, mask

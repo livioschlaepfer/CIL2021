@@ -49,9 +49,9 @@ if config.freeze:
 optimizer_ft = optim.Adam(params_to_update, lr=0.001)
 
 # Setup the loss
-# criterion = torch.nn.MSELoss(reduction='mean')
+criterion = torch.nn.MSELoss(reduction='mean')
 # criterion = nn.CrossEntropyLoss()
-criterion = nn.NLLLoss()
+# criterion = nn.NLLLoss()
 
 
 # Train and evaluate

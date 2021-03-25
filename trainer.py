@@ -47,14 +47,9 @@ def train_model(model, dataloaders, criterion, optimizer, device, config, num_ep
                     outputs = model(inputs)['out']
 
                     # Visualize output
-                    # visualize_output(outputs, config=config)
+                    visualize_output(outputs, config=config)
 
-                    outputs = log_softmax(outputs,1)
-
-                    print("outputs shape", outputs.shape)
-                    print("labels shape", labels.shape)
-
-                    loss = criterion(outputs, labels.float())
+                    loss = criterion(outputs.float(), labels.float())
 
                     _, preds = torch.max(outputs, 1)
 
