@@ -15,7 +15,7 @@ def visualize_output(output, config):
         colors = torch.as_tensor([i for i in range(2)])[:, None] * palette
         colors = (colors % 255).numpy().astype("uint8")
 
-        # plot the semantic segmentation predictions of 21 classes in each color
+        # plot the semantic segmentation predictions per class
         r = Image.fromarray(output_predictions.byte().cpu().numpy()).resize(input_image.size)
         r.putpalette(colors)
 
