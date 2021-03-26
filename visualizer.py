@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 def visualize_output(output, config):
     print("Started visualizer")
 
-    input_image = Image.open(config.image_dir + '/satImage_001.png')
+    input_image = Image.open(config.paths.train_image_dir + '/satImage_001.png')
 
     for image in output:
         output_predictions = image.argmax(0)

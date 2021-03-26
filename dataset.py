@@ -12,13 +12,13 @@ from transforms import init_data_transforms
 def init_train_dataloaders(config):
 
     # Load data paths
-    image_paths = glob.glob(config.image_dir + '/*.png')
-    mask_paths = glob.glob(config.mask_dir + '/*.png')
+    image_paths = glob.glob(config.paths.train_image_dir + '/*.png')
+    mask_paths = glob.glob(config.paths.train_mask_dir + '/*.png')
 
     print('Creating training and validation splits')
 
     # Create training and validation splits
-    image_paths_train, image_paths_val, mask_paths_train, mask_paths_val = train_test_split(image_paths, mask_paths, test_size = config.val_size, random_state = config.seed)
+    image_paths_train, image_paths_val, mask_paths_train, mask_paths_val = train_test_split(image_paths[:3], mask_paths[:3], test_size = config.val_size, random_state = config.seed)
     
     image_paths = {'train': image_paths_train, 'val': image_paths_val}
     mask_paths = {'train': mask_paths_train, 'val': mask_paths_val}
@@ -36,8 +36,24 @@ def init_train_dataloaders(config):
 
     return image_datasets, dataloaders_dict
 
+
+def init_test_dataloaders(config):
+    
+    # Load data paths
+    image_paths = glob.glob(config.paths.test_image_dir + '/*.png')
+
+    print('Initializing datasets and dataloader')
+
+    # Create training and validation datasets
+    image_datasets = {'test': SegmentationDataSet(image_paths=image_paths)}
+    
+    # Create training and validation dataloaders
+    dataloaders_dict = {'test': data.DataLoader(image_datasets['test'], shuffle=False)}
+
+    return image_datasets, dataloaders_dict
+
 class SegmentationDataSet(data.Dataset):
-    def __init__(self, image_paths, mask_paths, transform=None):
+    def __init__(self, image_paths, mask_paths=None, transform=None):
         self.image_paths = image_paths
         self.mask_paths = mask_paths
         self.transform = transform
@@ -48,6 +64,10 @@ class SegmentationDataSet(data.Dataset):
         self.prep_mask =    transforms.Compose([
                                 transforms.ToTensor()
                             ])
+        if (mask_paths == None): 
+            self.training_run = False
+        else: 
+            self.training_run = True
 
     def __len__(self):
         return len(self.image_paths)
@@ -55,7 +75,8 @@ class SegmentationDataSet(data.Dataset):
     def __getitem__(self, index: int):
         # Load input and target
         image = Image.open(self.image_paths[index])
-        mask = Image.open(self.mask_paths[index])
+        if self.training_run:
+            mask = Image.open(self.mask_paths[index])
 
         # image.show() # For testing only
         # mask.show() # For testing only
@@ -63,19 +84,24 @@ class SegmentationDataSet(data.Dataset):
         # Transformation / Augmentation
         if self.transform is not None:
             image = self.transform(image)
-            mask = self.transform(mask)
+            if self.training_run:
+                mask = self.transform(mask)
 
         # Normalize image
         image = self.prep_image(image)
-        
-        # One hot encode segmentation classes based on segmentation class colors
-        mask = np.array(mask)
-        road = np.zeros(mask.shape)
-        background = np.zeros(mask.shape)
 
-        road[mask > 35] = 1 # One hot encode road #TODO: determine optimal threshold
-        background[mask <= 35] = 1 # One hot encode background #TODO: determine optimal threshold
+        if self.training_run:
+            # One hot encode segmentation classes based on segmentation class colors
+            mask = np.array(mask)
+            road = np.zeros(mask.shape)
+            background = np.zeros(mask.shape)
 
-        mask = np.stack((road, background)) # Merge road and background
+            road[mask > 35] = 1 # One hot encode road #TODO: determine optimal threshold
+            background[mask <= 35] = 1 # One hot encode background #TODO: determine optimal threshold
 
-        return image, mask
+            mask = np.stack((road, background)) # Merge road and background
+
+        if self.training_run:
+            return image, mask
+        else:
+            return image, self.image_paths[index]

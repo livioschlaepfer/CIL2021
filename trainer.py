@@ -47,7 +47,8 @@ def train_model(model, dataloaders, criterion, optimizer, device, config, num_ep
                     outputs = model(inputs)['out']
 
                     # Visualize output
-                    visualize_output(outputs, config=config)
+                    if config.visualize_model_output:
+                        visualize_output(outputs, config=config)
 
                     loss = criterion(outputs.float(), labels.float())
 

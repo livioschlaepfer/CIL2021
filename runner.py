@@ -1,5 +1,6 @@
 from __future__ import print_function
 from __future__ import division
+from tester import test_model
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -14,7 +15,7 @@ from box import Box
 import yaml
 
 from model import initialize_model
-from dataset import init_train_dataloaders
+from dataset import init_test_dataloaders, init_train_dataloaders
 from trainer import train_model
 
 
@@ -53,7 +54,15 @@ criterion = torch.nn.MSELoss(reduction='mean')
 # criterion = nn.CrossEntropyLoss()
 # criterion = nn.NLLLoss()
 
+# Train and evaluate model
+if config.runs.train_run:
+    model_ft, hist = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, num_epochs = config.num_epochs, config = config, device = device)
 
-# Train and evaluate
-model_ft, hist = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, num_epochs = config.num_epochs, config = config, device = device)
 
+# Test model
+if config.runs.test_run:
+    # Create test datasets + dataloader
+    image_datasets, dataloaders_dict = init_test_dataloaders(config)
+
+    # Test model
+    test_model(model_ft, dataloaders_dict, device, config)
