@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 import glob
 from PIL import Image
 
-from transforms import init_data_transforms
+from src.transforms import init_data_transforms
 
 
 def init_train_dataloaders(config):
@@ -18,7 +18,7 @@ def init_train_dataloaders(config):
     print('Creating training and validation splits')
 
     # Create training and validation splits
-    image_paths_train, image_paths_val, mask_paths_train, mask_paths_val = train_test_split(image_paths, mask_paths, test_size = config.val_size, random_state = config.seed)
+    image_paths_train, image_paths_val, mask_paths_train, mask_paths_val = train_test_split(image_paths[:3], mask_paths[:3], test_size = config.val_size, random_state = config.seed)
     
     image_paths = {'train': image_paths_train, 'val': image_paths_val}
     mask_paths = {'train': mask_paths_train, 'val': mask_paths_val}

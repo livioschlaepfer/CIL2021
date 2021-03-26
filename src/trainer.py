@@ -6,7 +6,7 @@ from torch.nn.functional import log_softmax
 import time
 import copy
 
-from visualizer import visualize_output
+from src.visualizer import visualize_output
 
 
 def train_model(model, dataloaders, criterion, optimizer, device, config, num_epochs=25):

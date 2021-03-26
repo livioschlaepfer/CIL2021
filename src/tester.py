@@ -6,8 +6,7 @@ import glob
 import torch
 from PIL import Image
 
-
-from visualizer import visualize_output
+from src.visualizer import visualize_output
 
 def test_model(model, dataloaders, device, config):
 
@@ -26,7 +25,7 @@ def test_model(model, dataloaders, device, config):
 
     with torch.no_grad():
         # Iterate over data.
-        for idx, (inputs, path) in enumerate(dataloaders[phase]):
+        for inputs, path in dataloaders[phase]:
             inputs = inputs.to(device)
         
             # Get outputs
@@ -49,6 +48,6 @@ def test_model(model, dataloaders, device, config):
                 r.putpalette(colors)
 
                 # Store output
-                r.save(config.paths.test_output_dir + "/" + path.split("/")[-1])
-                print("Stored output for", path.split("/")[-1])
+                r.save(config.paths.test_output_dir + "/" + path[0].split("/")[-1])
+                print("Stored output for", path[0].split("/")[-1])
 

@@ -1,6 +1,5 @@
 from __future__ import print_function
 from __future__ import division
-from tester import test_model
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -14,9 +13,11 @@ import copy
 from box import Box
 import yaml
 
-from model import initialize_model
-from dataset import init_test_dataloaders, init_train_dataloaders
-from trainer import train_model
+from src.model import initialize_model
+from src.dataset import init_test_dataloaders, init_train_dataloaders
+from src.trainer import train_model
+from src.tester import test_model
+
 
 
 # load config
