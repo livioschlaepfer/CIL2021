@@ -18,7 +18,7 @@ import yaml
 from src.dataset import init_test_dataloaders, init_train_dataloaders
 from src.trainer import train_model
 from src.tester import test_model
-from models.model_runner import init_runner
+from src.models.model_runner import init_runner
 
 # load config
 config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
@@ -61,4 +61,4 @@ if config.runs.test_run:
     image_datasets, dataloaders_dict = init_test_dataloaders(config)
 
     # Test model
-    test_model(runner.model, dataloaders_dict, device, config)
+    test_model(runner, dataloaders_dict, device, config)

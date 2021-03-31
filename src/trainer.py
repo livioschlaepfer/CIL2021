@@ -1,6 +1,8 @@
 from __future__ import print_function
 from __future__ import division
 
+import numpy as np
+
 import torch
 from torch.nn.functional import log_softmax
 import time
@@ -50,9 +52,11 @@ def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
                     if config.visualize_model_output:
                         visualize_output(outputs, config=config)
 
-                    loss = runner.criterion(outputs.float(), labels.float())
+                    outputs = torch.sigmoid(outputs)
 
-                    _, preds = torch.max(outputs, 1)
+                    loss = runner.criterion(outputs.float(), labels.float())
+                    
+                    preds = outputs.argmax(1)
 
                     # backward + optimize only if in training phase
                     if phase == 'train':

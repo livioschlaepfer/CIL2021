@@ -1,6 +1,6 @@
 
 
-from models.deeplabv3 import DeepLabv3RunnerClass
+from src.models.deeplabv3 import DeepLabv3RunnerClass
 
 
 def init_runner(config):
