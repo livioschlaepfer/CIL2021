@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from __future__ import print_function
 from __future__ import division
 import torch
@@ -13,36 +15,34 @@ import copy
 from box import Box
 import yaml
 
-from src.model import initialize_model
 from src.dataset import init_test_dataloaders, init_train_dataloaders
 from src.trainer import train_model
 from src.tester import test_model
+from models.model_runner import init_runner
 
-
-
-# load config
+# load config
 config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
 
 # Create training and validation datasets + dataloader
 image_datasets, dataloaders_dict = init_train_dataloaders(config)
 
-# Initialize the model for this run
-model_ft = initialize_model(config)
+# Initialize the runner for the selected model
+runner = init_runner(config)
 
 # Detect if we have a GPU available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # Send the model to GPU
-model_ft = model_ft.to(device)
+runner.model = runner.model.to(device)
 
 # Gather the parameters to be optimized/updated in this run. 
-params_to_update = model_ft.parameters()
+params_to_update = runner.model.parameters()
 
 # Specify layers where we want to freeze weights
 if config.freeze:
     print("Freeze layers, set trainable layers")
     params_to_update = []
-    for name,param in model_ft.named_parameters():
+    for name,param in runner.model.named_parameters():
         if param.requires_grad == True:
             params_to_update.append(param)
             print("\t",name)
@@ -50,14 +50,9 @@ if config.freeze:
 # Observe that all parameters are being optimized
 optimizer_ft = optim.Adam(params_to_update, lr=0.001)
 
-# Setup the loss
-criterion = torch.nn.MSELoss(reduction='mean')
-# criterion = nn.CrossEntropyLoss()
-# criterion = nn.NLLLoss()
-
 # Train and evaluate model
 if config.runs.train_run:
-    model_ft, hist = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, num_epochs = config.num_epochs, config = config, device = device)
+    runner.model, hist = train_model(runner, dataloaders_dict, optimizer_ft, num_epochs = config.num_epochs, config = config, device = device)
 
 
 # Test model
@@ -66,4 +61,4 @@ if config.runs.test_run:
     image_datasets, dataloaders_dict = init_test_dataloaders(config)
 
     # Test model
-    test_model(model_ft, dataloaders_dict, device, config)
+    test_model(runner.model, dataloaders_dict, device, config)

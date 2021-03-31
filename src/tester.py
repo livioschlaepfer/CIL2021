@@ -8,7 +8,7 @@ from PIL import Image
 
 from src.visualizer import visualize_output
 
-def test_model(model, dataloaders, device, config):
+def test_model(runner, dataloaders, device, config):
 
     # Get sample image shape
     input_image = Image.open(config.paths.train_image_dir + '/satImage_001.png')
@@ -18,7 +18,7 @@ def test_model(model, dataloaders, device, config):
         os.makedirs(config.paths.test_output_dir)
 
     # Set model to evaluate mode
-    model.eval()
+    runner.model.eval()
     phase = 'test'
 
     print("Start creating outputs")
@@ -29,7 +29,7 @@ def test_model(model, dataloaders, device, config):
             inputs = inputs.to(device)
         
             # Get outputs
-            outputs = model(inputs)['out']
+            outputs = runner.forward(inputs)
 
             # Visualize output #TODO: Only for testing
             if config.visualize_model_output:

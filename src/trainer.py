@@ -9,12 +9,12 @@ import copy
 from src.visualizer import visualize_output
 
 
-def train_model(model, dataloaders, criterion, optimizer, device, config, num_epochs=25):
+def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
     since = time.time()
 
     val_acc_history = []
 
-    best_model_wts = copy.deepcopy(model.state_dict())
+    best_model_wts = copy.deepcopy(runner.model.state_dict())
     best_acc = 0.0
 
     for epoch in range(num_epochs):
@@ -24,9 +24,9 @@ def train_model(model, dataloaders, criterion, optimizer, device, config, num_ep
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
             if phase == 'train':
-                model.train()  # Set model to training mode
+                runner.model.train()  # Set model to training mode
             else:
-                model.eval()   # Set model to evaluate mode
+                runner.model.eval()   # Set model to evaluate mode
 
             running_loss = 0.0
             running_corrects = 0
@@ -44,13 +44,13 @@ def train_model(model, dataloaders, criterion, optimizer, device, config, num_ep
                 with torch.set_grad_enabled(phase == 'train'):
                     # Get model outputs and calculate loss
 
-                    outputs = model(inputs)['out']
+                    outputs = runner.forward(inputs)
 
                     # Visualize output
                     if config.visualize_model_output:
                         visualize_output(outputs, config=config)
 
-                    loss = criterion(outputs.float(), labels.float())
+                    loss = runner.criterion(outputs.float(), labels.float())
 
                     _, preds = torch.max(outputs, 1)
 
@@ -72,7 +72,7 @@ def train_model(model, dataloaders, criterion, optimizer, device, config, num_ep
             # deep copy the model
             if phase == 'val' and epoch_acc > best_acc:
                 best_acc = epoch_acc
-                best_model_wts = copy.deepcopy(model.state_dict())
+                best_model_wts = copy.deepcopy(runner.model.state_dict())
             if phase == 'val':
                 val_acc_history.append(epoch_acc)
 
@@ -83,5 +83,5 @@ def train_model(model, dataloaders, criterion, optimizer, device, config, num_ep
     print('Best val Acc: {:4f}'.format(best_acc))
 
     # load best model weights
-    model.load_state_dict(best_model_wts)
-    return model, val_acc_history
+    runner.model.load_state_dict(best_model_wts)
+    return runner.model, val_acc_history
