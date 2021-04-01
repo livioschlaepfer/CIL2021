@@ -23,11 +23,11 @@ from src.models.model_runner import init_runner
 # load config
 config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
 
-# Create training and validation datasets + dataloader
-image_datasets, dataloaders_dict = init_train_dataloaders(config)
-
 # Initialize the runner for the selected model
 runner = init_runner(config)
+
+# Create training and validation datasets + dataloader
+image_datasets, dataloaders_dict = init_train_dataloaders(config)
 
 # Detect if we have a GPU available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -52,7 +52,7 @@ optimizer_ft = optim.Adam(params_to_update, lr=0.001)
 
 # Train and evaluate model
 if config.runs.train_run:
-    runner.model, hist = train_model(runner, dataloaders_dict, optimizer_ft, num_epochs = config.num_epochs, config = config, device = device)
+    runner, hist = train_model(runner, dataloaders_dict, optimizer_ft, num_epochs = config.num_epochs, config = config, device = device)
 
 
 # Test model

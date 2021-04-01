@@ -20,19 +20,27 @@ def test_model(runner, dataloaders, device, config):
 
     print("Start creating outputs")
 
-    with torch.no_grad():
-        # Iterate over data.
-        for inputs, path in dataloaders[phase]:
-            inputs = inputs.to(device)
-        
-            # Get outputs
-            outputs = runner.forward(inputs, path)
+    # Iterate over data.
+    for inputs, path in dataloaders[phase]:
 
-            # Visualize output #TODO: Only for testing
-            if config.visualize_model_output:
-                visualize_output(outputs, config=config)
+        print("prediction on test input")
 
+        inputs = inputs.to(device)
+    
+        # Get outputs
+        with torch.no_grad():
+            outputs = runner.forward(inputs)
+
+        # Visualize output #TODO: Only for testing
+        if config.visualize_model_output:
+            visualize_output(outputs, config=config)
+
+        for output in outputs:
             # Convert output to .png and store
-            runner.convert_to_png(outputs)
+            png = runner.convert_to_png(output)
+
+            # Store output
+            png.save(config.paths.test_output_dir + "/" + os.path.split(path[0])[1])
+            print("Stored output for", os.path.split(path[0])[1])
                 
 

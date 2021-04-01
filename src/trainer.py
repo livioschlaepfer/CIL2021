@@ -52,8 +52,6 @@ def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
                     if config.visualize_model_output:
                         visualize_output(outputs, config=config)
 
-                    outputs = torch.sigmoid(outputs)
-
                     loss = runner.criterion(outputs.float(), labels.float())
                     
                     preds = outputs.argmax(1)
@@ -88,4 +86,4 @@ def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
 
     # load best model weights
     runner.model.load_state_dict(best_model_wts)
-    return runner.model, val_acc_history
+    return runner, val_acc_history

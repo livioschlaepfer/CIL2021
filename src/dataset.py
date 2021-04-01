@@ -18,7 +18,7 @@ def init_train_dataloaders(config):
     print('Creating training and validation splits')
 
     # Create training and validation splits
-    image_paths_train, image_paths_val, mask_paths_train, mask_paths_val = train_test_split(image_paths, mask_paths, test_size = config.val_size, random_state = config.seed)
+    image_paths_train, image_paths_val, mask_paths_train, mask_paths_val = train_test_split(image_paths[:3], mask_paths[:3], test_size = config.val_size, random_state = config.seed)
     
     image_paths = {'train': image_paths_train, 'val': image_paths_val}
     mask_paths = {'train': mask_paths_train, 'val': mask_paths_val}
@@ -26,7 +26,7 @@ def init_train_dataloaders(config):
     # Get transforms
     data_transforms = init_data_transforms(config)
 
-    print('Initializing datasets and dataloader')
+    print('Initializing datasets and dataloader for training')
 
     # Create training and validation datasets
     image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], mask_paths=mask_paths[x], transform=data_transforms) for x in ['train', 'val']}
@@ -42,7 +42,8 @@ def init_test_dataloaders(config):
     # Load data paths
     image_paths = glob.glob(config.paths.test_image_dir + '/*.png')
 
-    print('Initializing datasets and dataloader')
+    print('Initializing datasets and dataloader for testing')
+    print(image_paths)
 
     # Create training and validation datasets
     image_datasets = {'test': SegmentationDataSet(image_paths=image_paths)}
