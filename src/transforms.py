@@ -23,8 +23,10 @@ def init_data_transforms(config):
     if config.transforms.apply_transforms:
         data_transforms = {
             'train': transforms.Compose([
-                transforms.RandomResizedCrop(config.transforms.crop_size),
                 transforms.RandomHorizontalFlip(),
+                transforms.RandomVerticalFlip(),
+                transforms.RandomRotation(degrees=15),
+                transforms.RandomResizedCrop(config.transforms.crop_size)
             ]),
             'val': transforms.Compose([
                 transforms.CenterCrop(config.transforms.crop_size),

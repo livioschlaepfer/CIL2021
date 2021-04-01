@@ -13,6 +13,7 @@ from src.visualizer import visualize_output
 
 def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
     since = time.time()
+    vis_time = time.time()
 
     val_acc_history = []
 
@@ -49,10 +50,13 @@ def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
                     outputs = runner.forward(inputs)
 
                     # Visualize output
-                    if config.visualize_model_output:
+                    if config.visualize_model_output and (time.time()-vis_time>10):
                         visualize_output(outputs, config=config)
+                        vis_time=time.time()
 
                     loss = runner.criterion(outputs.float(), labels.float())
+                    if config.model_name == "bayesian_Unet":
+                        loss += runner.kl_loss()
                     
                     preds = outputs.argmax(1)
 
