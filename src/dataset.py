@@ -12,6 +12,12 @@ from src.transforms import init_data_transforms
 def init_train_dataloaders(config):
 
     # Load data paths
+    if not os.path.exists(config.paths.train_image_dir):
+        raise OSError("Does not exist", config.paths.train_image_dir)
+
+    if not os.path.exists(config.paths.train_mask_dir):
+        raise OSError("Does not exist", config.paths.train_mask_dir)
+    
     image_paths = glob.glob(config.paths.train_image_dir + '/*.png')
     mask_paths = glob.glob(config.paths.train_mask_dir + '/*.png')
 
@@ -40,10 +46,12 @@ def init_train_dataloaders(config):
 def init_test_dataloaders(config):
     
     # Load data paths
+    if not os.path.exists(config.paths.test_image_dir):
+        raise OSError("Does not exist", config.paths.test_image_dir)
+
     image_paths = glob.glob(config.paths.test_image_dir + '/*.png')
 
     print('Initializing datasets and dataloader for testing')
-    print(image_paths)
 
     # Create training and validation datasets
     image_datasets = {'test': SegmentationDataSet(image_paths=image_paths)}

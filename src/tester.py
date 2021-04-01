@@ -23,8 +23,6 @@ def test_model(runner, dataloaders, device, config):
     # Iterate over data.
     for inputs, path in dataloaders[phase]:
 
-        print("prediction on test input")
-
         inputs = inputs.to(device)
     
         # Get outputs
