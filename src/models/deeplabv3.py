@@ -49,8 +49,6 @@ class DeepLabv3RunnerClass:
         return loss
 
     def convert_to_png(self, output):
-        # Get sample image shape
-        input_image = Image.open(self.config.paths.train_image_dir + '/satImage_001.png')
 
         output_predictions = output.argmax(0)
 
@@ -59,7 +57,7 @@ class DeepLabv3RunnerClass:
         colors = (colors % 255).numpy().astype("uint8")
 
         # Plot the semantic segmentation predictions per class
-        r = Image.fromarray(output_predictions.byte().cpu().numpy()).resize(input_image.size)
+        r = Image.fromarray(output_predictions.byte().cpu().numpy())
         r.putpalette(colors)
 
         return r
