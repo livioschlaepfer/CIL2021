@@ -60,8 +60,8 @@ feature_extract: False
 
 # Configure transforms
 transforms:
-  apply_transforms: False
-  crop_size: 260
+  apply_transforms: True
+  crop_size: 320
 
 # Setting for Bayesian Unet
 bm:

@@ -38,34 +38,33 @@ print(lay.forward(inputs))
 
 print(lay.kl_loss_()) """
 
-output_predictions = torch.rand(400,400)
+x = torch.rand(2,3,400,400)
+y = torch.rand(2,400,400)
+z = torch.rand(2,400,400)
+
+
+for (i,j,k) in zip(x,y,z):
+    print(i.shape,j.shape,k.shape)
+
+
+
+
+""" output_predictions = torch.rand(400,400)
+output_predictions1 = torch.rand(3,400,400)
 print(output_predictions)
 new = output_predictions.detach().clone()
 new[new>0.5]=1
 new[new<=0.5]=0
-print(output_predictions.ToPILImage())
 print(new)
 
+out = transforms.ToPILImage(mode="L")(output_predictions).convert("RGB")
+out1 = transforms.ToPILImage(mode="RGB")(output_predictions1)
+new = transforms.ToPILImage(mode="L")(new).convert("RGB")
 
-palette = torch.tensor([2 ** 25 - 1, 2 ** 15 - 1, 2 ** 21 - 1])
-print(palette)
-colors = torch.as_tensor([i for i in range(2)])[:, None] * palette
-print(colors)
-colors = (colors % 255).numpy().astype("uint8")
-print(colors)
 
-# plot the semantic segmentation predictions per class
-r = Image.fromarray(output_predictions.cpu().numpy(), mode="1")
-r.show()
 
-bw = Image.fromarray(new.cpu().numpy(), mode="1")
-bw.show()
+out.show()
+out1.show()
+new.show()
 
-two_img = np.hstack([new.cpu().numpy(), output_predictions.cpu().numpy()])
-r_two_img = Image.fromarray(two_img, mode="1")
-
-r_two_img.show()
-#r.putpalette(colors)
-
-#plt.imshow(r)
-#r.show()
+Image.fromarray(np.hstack((np.array(out),np.array(new), np.array(out1)))).show() """

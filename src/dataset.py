@@ -5,8 +5,9 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import glob
 from PIL import Image
+import torchvision.transforms.functional as TF
 
-from src.transforms import init_data_transforms
+#from src.transforms import init_data_transforms
 
 
 def init_train_dataloaders(config):
@@ -35,7 +36,7 @@ def init_train_dataloaders(config):
     print('Initializing datasets and dataloader for training')
 
     # Create training and validation datasets
-    image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], mask_paths=mask_paths[x], transform=data_transforms) for x in ['train', 'val']}
+    image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], mask_paths=mask_paths[x], transform=config.transform.apply_transform) for x in ['train', 'val']}
     
     # Create training and validation dataloaders
     dataloaders_dict = {x: data.DataLoader(image_datasets[x], batch_size=config.batch_size, shuffle=True) for x in ['train', 'val']}
@@ -62,13 +63,13 @@ def init_test_dataloaders(config):
     return image_datasets, dataloaders_dict
 
 class SegmentationDataSet(data.Dataset):
-    def __init__(self, image_paths, mask_paths=None, transform=None):
+    def __init__(self, image_paths, mask_paths=None, transform=False):
         self.image_paths = image_paths
         self.mask_paths = mask_paths
         self.transform = transform
         self.prep_image =   transforms.Compose([
                                 transforms.ToTensor(),
-                                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+                                #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
                             ])
         self.prep_mask =    transforms.Compose([
                                 transforms.ToTensor()
@@ -81,6 +82,34 @@ class SegmentationDataSet(data.Dataset):
     def __len__(self):
         return len(self.image_paths)
 
+    def transform(self, image, mask):
+
+        # Random horizontal flipping
+        if random.random() > 0.5:
+            image = TF.hflip(image)
+            mask = TF.hflip(mask)
+
+        # Random vertical flipping
+        if random.random() > 0.5:
+            image = TF.vflip(image)
+            mask = TF.vflip(mask)
+
+        # Random rotation
+        angle = np.random.uniform(low=-180, high=180)
+        image = TF.rotate(image, angle)
+        mask = TF.rotate(mask, angle)
+
+        # Center crop to avoid black edges the best we can 
+        cc = transforms.CenterCrop(config.transforms.crop_size)
+        image = cc(image)
+        mask = cc(mask)        
+        
+        # Transform to tensor
+        image = TF.to_tensor(image)
+        mask = TF.to_tensor(mask)
+        return image, mask        
+
+
     def __getitem__(self, index: int):
         # Load input and target
         image = Image.open(self.image_paths[index])
@@ -91,20 +120,19 @@ class SegmentationDataSet(data.Dataset):
         # mask.show() # For testing only
 
         # Transformation / Augmentation
-        if self.transform is not None:
-            image = self.transform(image)
+        if self.transform:
             if self.training_run:
-                mask = self.transform(mask)
-
-        # Normalize image
-        image = self.prep_image(image)
-
+                image, mask = self.transform(image, mask)
+        else:
+            image = self.prep_image(image)
+            mask = self.prep_mask(mask)
+        
         if self.training_run:
             # One hot encode segmentation classes based on segmentation class colors
             mask = np.array(mask)
             
-            mask[mask > 0.1] = 1 # One hot encode road #TODO: determine optimal threshold
-            mask[mask <= 0.1] = 0 # One hot encode background #TODO: determine optimal threshold
+            mask[mask > 0.1] = 1. # One hot encode road #TODO: determine optimal threshold
+            mask[mask <= 0.1] = 0. # One hot encode background #TODO: determine optimal threshold
 
         if self.training_run:
             return image, mask
