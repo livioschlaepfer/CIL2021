@@ -19,6 +19,7 @@ from src.dataset import init_test_dataloaders, init_train_dataloaders
 from src.trainer import train_model
 from src.tester import test_model
 from src.models.model_runner import init_runner
+from src.models.bayesian_Unet import calculate_kl
 
 # load config
 config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)

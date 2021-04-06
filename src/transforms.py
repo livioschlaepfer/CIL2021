@@ -26,7 +26,7 @@ def init_data_transforms(config):
                 transforms.RandomHorizontalFlip(),
                 transforms.RandomVerticalFlip(),
                 transforms.RandomRotation(degrees=15),
-                transforms.RandomResizedCrop(config.transforms.crop_size)
+                transforms.RandomResizedCrop(config.transforms.crop_size),
             ]),
             'val': transforms.Compose([
                 transforms.CenterCrop(config.transforms.crop_size),

@@ -102,13 +102,9 @@ class SegmentationDataSet(data.Dataset):
         if self.training_run:
             # One hot encode segmentation classes based on segmentation class colors
             mask = np.array(mask)
-            road = np.zeros(mask.shape)
-            background = np.zeros(mask.shape)
-
-            road[mask > 35] = 1 # One hot encode road #TODO: determine optimal threshold
-            background[mask <= 35] = 1 # One hot encode background #TODO: determine optimal threshold
-
-            mask = np.stack((road, background)) # Merge road and background
+            
+            mask[mask > 0.1] = 1 # One hot encode road #TODO: determine optimal threshold
+            mask[mask <= 0.1] = 0 # One hot encode background #TODO: determine optimal threshold
 
         if self.training_run:
             return image, mask

@@ -51,6 +51,9 @@ val_size: 0.1
 # Freeze pretrained layer weights
 freeze: False
 
+# Threshold probability when a pixel is classified as road
+predict_threshold: 0.5
+
 # Flag for feature extracting. When False, we finetune the whole model,
 #   when True we only update the reshaped layer params
 feature_extract: False
@@ -63,4 +66,4 @@ transforms:
 # Setting for Bayesian Unet
 bm:
   in_channels: 3
-  
+  kl_weight: 0.00001

@@ -7,15 +7,15 @@ def visualize_output(output, config):
     print("Started visualizer")
 
     for image in output:
-        output_predictions = image.argmax(0)
+        output_predictions = image
+        binary = output_predictions
+        binary[binary>config.predict_threshold] = 1
+        binary[binary<=config.predict_threshold] = 0
 
-        palette = torch.tensor([2 ** 25 - 1, 2 ** 15 - 1, 2 ** 21 - 1])
-        colors = torch.as_tensor([i for i in range(2)])[:, None] * palette
-        colors = (colors % 255).numpy().astype("uint8")
+        two_img = vstack(binary.numpy(), output_predictions.numpy())
 
         # plot the semantic segmentation predictions per class
-        r = Image.fromarray(output_predictions.byte().cpu().numpy())
-        r.putpalette(colors)
+        r = Image.fromarray(output_predictions.cpu())
 
         #plt.imshow(r)
         r.show()

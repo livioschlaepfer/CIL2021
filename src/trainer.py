@@ -47,18 +47,16 @@ def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
                 with torch.set_grad_enabled(phase == 'train'):
                     # Get model outputs and calculate loss
 
-                    outputs = runner.forward(inputs)
-
+                    outputs = torch.squeeze(runner.forward(inputs)) # here squeeze to remove second dimension
+                    
                     # Visualize output
                     if config.visualize_model_output and (time.time()-vis_time>10):
                         visualize_output(outputs, config=config)
                         vis_time=time.time()
 
-                    loss = runner.criterion(outputs.float(), labels.float())
-                    if config.model_name == "bayesian_Unet":
-                        loss += runner.kl_loss()
-                    
-                    preds = outputs.argmax(1)
+                    loss = runner.loss(outputs.float(), labels.float())
+                    preds = torch.zeros(outputs.shape).to(device)
+                    preds[preds>config.predict_threshold] = 1
 
                     # backward + optimize only if in training phase
                     if phase == 'train':
