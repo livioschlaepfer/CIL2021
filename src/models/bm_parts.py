@@ -43,7 +43,7 @@ class Bayesian_Unet(nn.Module):
     def forward(self, x):
         self.shape = x.shape
         self.crop_out = transforms.CenterCrop((self.shape[2], self.shape[3]))
-        print(self.shape)
+        #print(self.shape)
         
         x = self.conv1(x)
         skip1 = self.conv2(x)
@@ -55,14 +55,14 @@ class Bayesian_Unet(nn.Module):
         x = self.max2(skip2)
         x = self.conv5(x)
         skip3 = self.conv6(x)
-        print(skip3.shape)
+        #print(skip3.shape)
         #print("shape after 3rd conv segment: " ,x.shape)
         x = self.max3(skip3)
         x = self.conv7(x)
         x = self.conv8(x)
         x = self.trans_conv1(x)
         #print("shape after 1st trans_conv segment: " ,x.shape)
-        print(x.shape)
+        #print(x.shape)
         x = self.conv9(torch.cat((x, skip3), dim=1))
         x = self.conv10(x)
         x = self.trans_conv2(x)
@@ -315,7 +315,7 @@ class composite_bay_conv(torch.nn.Module):
             self.dropout_lay = nn.Dropout2d(self.rate)
         
     def forward(self, x):
-        assert(x.shape[0] == self.batch_size)
+        #assert(x.shape[0] == self.batch_size)
         x = self.bl(x)
         x = self.activation(x)
         if self.batch_norm:
@@ -373,7 +373,7 @@ class composite_bay_trans_conv(torch.nn.Module):
             self.dropout_lay = nn.Dropout2d(self.rate)
         
     def forward(self, x):
-        assert(x.shape[0] == self.batch_size)
+        #assert(x.shape[0] == self.batch_size)
         x = self.trans_bl(x)
         x = self.activation(x)
         if self.batch_norm:

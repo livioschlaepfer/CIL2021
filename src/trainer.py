@@ -50,14 +50,11 @@ def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
                     outputs = torch.squeeze(runner.forward(inputs)) # here squeeze to remove second dimension
                     
                     # Visualize output
-                    if config.visualize_model_output and (time.time()-vis_time>3):
-                        print("input shape:", inputs.shape)
-                        print("label shape:", labels.shape)
-                        print("output shape:", outputs.shape)
-                        visualize_output(outputs, inputs, labels, config=config)
+                    if config.visualize_model_output and (time.time()-vis_time>10):
+                        visualize_output(outputs, inputs, labels=labels, config=config, phase=phase)
                         vis_time=time.time()
 
-                    loss = runner.loss(outputs.float(), labels.float())
+                    loss = runner.loss(outputs.float(), labels.squeeze().float())
                     preds = torch.zeros(outputs.shape).to(device)
                     preds[preds>config.predict_threshold] = 1
 

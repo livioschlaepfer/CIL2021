@@ -38,18 +38,18 @@ print(lay.forward(inputs))
 
 print(lay.kl_loss_()) """
 
-x = torch.rand(2,3,400,400)
+""" x = torch.rand(2,3,400,400)
 y = torch.rand(2,400,400)
 z = torch.rand(2,400,400)
 
 
 for (i,j,k) in zip(x,y,z):
-    print(i.shape,j.shape,k.shape)
+    print(i.shape,j.shape,k.shape) """
 
 
 
 
-""" output_predictions = torch.rand(400,400)
+output_predictions = torch.rand(400,400)
 output_predictions1 = torch.rand(3,400,400)
 print(output_predictions)
 new = output_predictions.detach().clone()
@@ -67,4 +67,4 @@ out.show()
 out1.show()
 new.show()
 
-Image.fromarray(np.hstack((np.array(out),np.array(new), np.array(out1)))).show() """
+Image.fromarray(np.hstack((np.array(out),np.array(new), np.array(out1)))).show()

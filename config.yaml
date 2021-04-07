@@ -1,7 +1,7 @@
 # Running options
 runs:
   train_run: True # train test run
-  test_run: True # train model and store
+  test_run: False # train model and store
   
 
 # Declare paths
@@ -66,4 +66,5 @@ transforms:
 # Setting for Bayesian Unet
 bm:
   in_channels: 3
+  BCE_reduction: "sum"
   kl_weight: 0.00001

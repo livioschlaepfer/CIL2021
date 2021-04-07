@@ -32,7 +32,7 @@ class B_Unet:
         # Setup the loss
         # self.criterion = torch.nn.MSELoss(reduction='mean')
         # self.criterion = nn.CrossEntropyLoss()
-        self.criterion = nn.BCELoss()
+        self.criterion = nn.BCELoss(reduction=self.config.bm.BCE_reduction)
         # self.criterion = nn.NLLLoss()
     
     def forward(self, inputs):
@@ -40,6 +40,8 @@ class B_Unet:
         return outputs
 
     def loss(self, outputs, labels):
+        print(self.criterion(outputs.float(), labels.float()))
+        print(self.config.bm.kl_weight*self.model.kl_loss())
         loss = self.criterion(outputs.float(), labels.float()) + self.config.bm.kl_weight*self.model.kl_loss()
         return loss
 
