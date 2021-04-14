@@ -68,7 +68,7 @@ class SegmentationDataSet(data.Dataset):
         self.transform = transform
         self.prep_image =   transforms.Compose([
                                 transforms.ToTensor(),
-                                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+                                #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
                             ])
         # self.prep_image =   transforms.Compose([
         #                         transforms.ToTensor(),
