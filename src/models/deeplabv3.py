@@ -46,10 +46,9 @@ class DeepLabv3RunnerClass:
             dice = dice_loss()
 
             print("BCE", bce(input, target))
-            print("dice", dice(input, target))
+            print("Dice", dice(input, target))
 
-
-            return 0.5 * bce(input, target) + 0.5 * dice(input, target)
+            return 0.2 * bce(input, target) + 0.8 * dice(input, target)
 
         self.criterion = forward
 

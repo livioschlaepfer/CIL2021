@@ -5,25 +5,22 @@ from PIL import Image
 import matplotlib.pyplot as plt
 
 
-def visualize_output(inputs, labels, outputs, config):
+def visualize_output(outputs, inputs = None, labels = None, config=None):
     print("Started visualizer")
 
     for idx, output in enumerate(outputs):
         # convert output to binary encoding
         binary = output.argmin(0)
         binary = torch.tensor(binary, dtype=torch.float64)
-
-
-        print("binary type", type(binary))
-        print("label type", type(labels[idx]))
-
-        input = transforms.ToPILImage(mode="RGB")(inputs[idx])
-        label = transforms.ToPILImage(mode="LA")(labels[idx]).convert("RGB")
         binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 
-        print("inputs shape", input.size)
-        print("labels shape", label.size)
-        print("binary shape", binary.size)
+        if inputs is not None:
+            input = transforms.ToPILImage(mode="RGB")(inputs[idx])
+            label = transforms.ToPILImage(mode="LA")(labels[idx]).convert("RGB")
+            
+            # plot the semantic segmentation predictions per class
+            Image.fromarray(np.hstack((np.array(input), np.array(label), np.array(binary)))).show()
 
-        # plot the semantic segmentation predictions per class
-        Image.fromarray(np.hstack((np.array(input), np.array(label), np.array(binary)))).show()
+        else:
+            # plot the semantic segmentation predictions per class
+            Image.fromarray(np.hstack((np.array(binary)))).show()
