@@ -31,7 +31,7 @@ def test_model(runner, dataloaders, device, config):
 
         # Visualize output #TODO: Only for testing
         if config.visualize_model_output:
-            visualize_output(outputs = outputs, config=config)
+            visualize_output(outputs, inputs, config=config)
 
         for output in outputs:
             # Convert output to .png and store

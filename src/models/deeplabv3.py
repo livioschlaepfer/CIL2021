@@ -5,6 +5,8 @@ import torch.nn as nn
 from torchvision import models
 from torchvision.models.segmentation.deeplabv3 import DeepLabHead
 from torchvision.models.segmentation.fcn import FCNHead
+from torchvision import transforms
+
 
 from src.criterion.dice_loss import dice_loss
 
@@ -48,14 +50,7 @@ class DeepLabv3RunnerClass:
             print("BCE", bce(input, target))
             print("Dice", dice(input, target))
 
-<<<<<<< Updated upstream
             return 0.2 * bce(input, target) + 0.8 * dice(input, target)
-=======
-
-
-            # 0.5 * bce(input, target) +
-            return  dice(input, target)
->>>>>>> Stashed changes
 
         self.criterion = forward
 
@@ -74,10 +69,9 @@ class DeepLabv3RunnerClass:
     def convert_to_png(self, output):
 
         binary = output.argmin(0)
+        binary = torch.tensor(binary, dtype=torch.float64)
+        binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 
-        # Plot the semantic segmentation predictions per class
-        r = Image.fromarray(binary.byte().cpu().numpy())
-
-        return r
+        return binary
 
 
