@@ -37,13 +37,14 @@ num_classes: 2
 seed: 12345678
 
 # Batch size for training (change depending on how much memory you have)
-batch_size: 2
+batch_size: 3
 
 # Viusualize model output
 visualize_model_output: True
+visualize_time: 60
 
 # Number of epochs to train for
-num_epochs: 1
+num_epochs: 20
 
 # Proportion of the dataset used for validation split
 val_size: 0.1
@@ -66,5 +67,5 @@ transforms:
 # Setting for Bayesian Unet
 bm:
   in_channels: 3
-  BCE_reduction: "sum"
-  kl_weight: 0.00001
+  BCE_reduction: "mean"
+  kl_weight: 0.0000001

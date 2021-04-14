@@ -123,7 +123,7 @@ class Bayesian_CNNLayer(torch.nn.Module):
     
     """
     
-    def __init__(self, input_channels, output_channels, kernel_size, stride=1, padding=0, dilation=1, bias=True, priors=None):
+    def __init__(self, input_channels, output_channels, kernel_size, stride=1, padding=0, dilation=1, bias=True, priors=None, verbose=False):
         super(Bayesian_CNNLayer, self).__init__()
         self.input_channels = input_channels
         self.output_channels = output_channels
@@ -134,6 +134,7 @@ class Bayesian_CNNLayer(torch.nn.Module):
         self.groups = 1
         self.use_bias = bias
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.verbose = verbose
         
         # encode prior assumptions
         if priors is None:
@@ -184,7 +185,9 @@ class Bayesian_CNNLayer(torch.nn.Module):
             bias = self.bias_mu + bias_eps * self.bias_sigma
         else:
             bias = None
-        #print(input.shape)
+
+        if self.verbose:
+            print(weight[0,0,0,:])
             
         return F.conv2d(input, weight, bias, self.stride, self.padding, self.dilation, self.groups)
     
@@ -202,7 +205,7 @@ class Bayesian_transposed_CNNLayer(torch.nn.Module):
     
     """
     
-    def __init__(self, input_channels, output_channels, kernel_size, stride=1, padding=0, dilation=1, bias=True, priors=None, output_padding=0):
+    def __init__(self, input_channels, output_channels, kernel_size, stride=1, padding=0, dilation=1, bias=True, priors=None, output_padding=0, verbose=False):
         super(Bayesian_transposed_CNNLayer, self).__init__()
         self.input_channels = input_channels
         self.output_channels = output_channels
@@ -213,6 +216,7 @@ class Bayesian_transposed_CNNLayer(torch.nn.Module):
         self.groups = 1
         self.use_bias = bias
         self.output_padding = output_padding
+        self.verbose = verbose
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         
         # encode prior assumptions
@@ -264,7 +268,9 @@ class Bayesian_transposed_CNNLayer(torch.nn.Module):
             bias = self.bias_mu + bias_eps * self.bias_sigma
         else:
             bias = None
-        #print(input.shape)
+
+        if self.verbose:
+            print(weight)
             
         return F.conv_transpose2d(input, weight, bias, self.stride, self.padding, self.output_padding, self.groups, self.dilation)
     
@@ -282,7 +288,7 @@ class composite_bay_conv(torch.nn.Module):
     """
     def __init__(self, input_channels, output_channels, kernel_size, 
                  batch_size, stride=1, padding=0, dilation=1, bias=True, priors=None, 
-                 activation=nn.ReLU(), dropout=False, rate=0.3, batch_norm=True):
+                 activation=nn.ReLU(), dropout=False, rate=0.3, batch_norm=True, verbose=False):
         super(composite_bay_conv, self).__init__()
         self.input_channels = input_channels
         self.output_channels = output_channels
@@ -297,6 +303,7 @@ class composite_bay_conv(torch.nn.Module):
         self.rate = rate
         self.batch_norm = batch_norm
         self.batch_size = batch_size
+        self.verbose=verbose
 
         self.bl = Bayesian_CNNLayer(input_channels=self.input_channels, 
                               output_channels=self.output_channels, 
@@ -305,7 +312,8 @@ class composite_bay_conv(torch.nn.Module):
                               padding=self.padding,
                               dilation=self.dilation,
                               bias=self.bias,
-                              priors=self.priors
+                              priors=self.priors,
+                              verbose = self.verbose
                               )
         
         if batch_norm:
@@ -338,7 +346,7 @@ class composite_bay_trans_conv(torch.nn.Module):
     
     def __init__(self, input_channels, output_channels, kernel_size, 
                  batch_size, stride=1, padding=0, dilation=1, bias=True, priors=None, 
-                 activation=nn.Identity(), dropout=False, rate=0.3, batch_norm=True, output_padding=0):
+                 activation=nn.Identity(), dropout=False, rate=0.3, batch_norm=True, output_padding=0, verbose=False):
         super(composite_bay_trans_conv, self).__init__()
         self.input_channels = input_channels
         self.output_channels = output_channels
@@ -354,6 +362,7 @@ class composite_bay_trans_conv(torch.nn.Module):
         self.rate = rate
         self.batch_norm = batch_norm
         self.batch_size = batch_size
+        self.verbose=verbose
 
         self.trans_bl = Bayesian_transposed_CNNLayer(input_channels=self.input_channels, 
                               output_channels=self.output_channels, 
@@ -363,7 +372,8 @@ class composite_bay_trans_conv(torch.nn.Module):
                               dilation=self.dilation,
                               bias=self.bias,
                               priors=self.priors,
-                              output_padding=self.output_padding
+                              output_padding=self.output_padding,
+                              verbose=self.verbose
                               )
         
         if batch_norm:

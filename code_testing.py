@@ -49,7 +49,7 @@ for (i,j,k) in zip(x,y,z):
 
 
 
-output_predictions = torch.rand(400,400)
+""" output_predictions = torch.rand(400,400)
 output_predictions1 = torch.rand(3,400,400)
 print(output_predictions)
 new = output_predictions.detach().clone()
@@ -67,4 +67,33 @@ out.show()
 out1.show()
 new.show()
 
-Image.fromarray(np.hstack((np.array(out),np.array(new), np.array(out1)))).show()
+Image.fromarray(np.hstack((np.array(out),np.array(new), np.array(out1)))).show() """
+
+# load config
+config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
+
+# Initialize the runner for the selected model
+runner = init_runner(config)
+
+# Create training and validation datasets + dataloader
+image_datasets, dataloaders_dict = init_train_dataloaders(config)
+
+print(dataloaders_dict)
+
+bucket = torch.zeros(3,400,400)
+counter =0
+for inputs, labels in dataloaders_dict["train"]:
+    bucket+=torch.squeeze(inputs)
+    counter +=1
+bucket = bucket/counter
+
+bucket2 = torch.zeros(90,3,400,400)
+counter2 =0
+for inputs, labels in dataloaders_dict["train"]:
+    bucket2[counter2,:,:,:] =inputs
+    counter2 +=1
+
+
+mean = torch.mean(bucket, dim=[1,2])
+std = torch.std(bucket2, dim=[0,2,3])
+print(mean, std)

@@ -15,7 +15,7 @@ def visualize_output(outputs, inputs, config, phase, labels=None):
             binary[binary<=config.predict_threshold] = 0
             
             lab = torch.tensor(lab, dtype=torch.float64)
-            
+            print(out.shape)
             input = transforms.ToPILImage(mode="RGB")(inp)
             label = transforms.ToPILImage(mode="L")(lab).convert("RGB")
             output = transforms.ToPILImage(mode="L")(out).convert("RGB")

@@ -71,7 +71,7 @@ class SegmentationDataSet(data.Dataset):
         self.config = config
         self.prep_image =   transforms.Compose([
                                 transforms.ToTensor(),
-                                #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+                                transforms.Normalize([0.3220, 0.3186, 0.2851], [0.2009, 0.1952, 0.1929])
                             ])
         self.prep_mask =    transforms.Compose([
                                 transforms.ToTensor()
@@ -97,7 +97,7 @@ class SegmentationDataSet(data.Dataset):
             mask = TF.vflip(mask)
 
         # Random rotation
-        angle = np.random.uniform(low=-180, high=180)
+        angle = np.random.uniform(low=-10, high=10)
         image = TF.rotate(image, angle)
         mask = TF.rotate(mask, angle)
 
@@ -108,6 +108,7 @@ class SegmentationDataSet(data.Dataset):
         
         # Transform to tensor
         image = TF.to_tensor(image)
+        image = transforms.Normalize([0.3220, 0.3186, 0.2851], [0.2009, 0.1952, 0.1929])(image) 
         mask = TF.to_tensor(mask)
 
         return image, mask       
