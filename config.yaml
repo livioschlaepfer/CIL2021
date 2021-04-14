@@ -58,5 +58,5 @@ feature_extract: False
 
 # Configure transforms
 transforms:
-  apply_transforms: False
+  apply_transforms: True
   crop_size: 260

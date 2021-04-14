@@ -6,6 +6,8 @@ from torchvision import models
 from torchvision.models.segmentation.deeplabv3 import DeepLabHead
 from torchvision.models.segmentation.fcn import FCNHead
 
+from src.criterion.dice_loss import dice_loss
+
 
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -35,8 +37,12 @@ class DeepLabv3RunnerClass:
         # Setup the loss
         # self.criterion = torch.nn.MSELoss(reduction='mean')
         # self.criterion = nn.CrossEntropyLoss()
-        self.criterion = nn.BCELoss()
+        # self.criterion = nn.BCELoss()
         # self.criterion = nn.NLLLoss()
+        # self.criterion = DiceLoss()
+        self.criterion = dice_loss()
+
+
     
     def forward(self, inputs):
         outputs = self.model(inputs)['out']

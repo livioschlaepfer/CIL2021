@@ -70,6 +70,9 @@ class SegmentationDataSet(data.Dataset):
                                 transforms.ToTensor(),
                                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
                             ])
+        # self.prep_image =   transforms.Compose([
+        #                         transforms.ToTensor(),
+        #                     ])
         self.prep_mask =    transforms.Compose([
                                 transforms.ToTensor()
                             ])
@@ -90,16 +93,14 @@ class SegmentationDataSet(data.Dataset):
         # image.show() # For testing only
         # mask.show() # For testing only
 
-        # Transformation / Augmentation
-        if self.transform is not None:
-            image = self.transform(image)
-            if self.training_run:
-                mask = self.transform(mask)
-
         # Normalize image
         image = self.prep_image(image)
 
         if self.training_run:
+            # Transformation / Augmentation
+            if self.transform is not None:
+                image, mask =  self.transform(image, mask)
+
             # One hot encode segmentation classes based on segmentation class colors
             mask = np.array(mask)
             road = np.zeros(mask.shape)

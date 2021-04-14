@@ -50,7 +50,7 @@ def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
 
                     # Visualize output
                     if config.visualize_model_output:
-                        visualize_output(outputs, config=config)
+                        visualize_output(inputs, labels, outputs, config=config)
 
                     loss = runner.criterion(outputs.float(), labels.float())
                     
