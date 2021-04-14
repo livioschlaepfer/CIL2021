@@ -66,15 +66,10 @@ class DeepLabv3RunnerClass:
 
     def convert_to_png(self, output):
 
-        output_predictions = output.argmax(0)
-
-        palette = torch.tensor([2 ** 25 - 1, 2 ** 15 - 1, 2 ** 21 - 1])
-        colors = torch.as_tensor([i for i in range(2)])[:, None] * palette
-        colors = (colors % 255).numpy().astype("uint8")
+        binary = output.argmin(0)
 
         # Plot the semantic segmentation predictions per class
-        r = Image.fromarray(output_predictions.byte().cpu().numpy())
-        r.putpalette(colors)
+        r = Image.fromarray(binary.byte().cpu().numpy())
 
         return r
 
