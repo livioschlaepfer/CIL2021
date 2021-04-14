@@ -5,10 +5,13 @@ import os
 import glob
 import torch
 from PIL import Image
+import time
 
 from src.visualizer import visualize_output
 
 def test_model(runner, dataloaders, device, config):   
+    since = time.time()
+    vis_time = time.time()
 
     # Create output folder if not existing
     if not os.path.exists(config.paths.test_output_dir):
@@ -30,8 +33,9 @@ def test_model(runner, dataloaders, device, config):
             outputs = runner.forward(inputs)
 
         # Visualize output #TODO: Only for testing
-        if config.visualize_model_output:
+        if config.visualize_model_output and (time.time()-vis_time>config.visualize_time):
             visualize_output(outputs, inputs, config=config)
+            vis_time=time.time()
 
         for output in outputs:
             # Convert output to .png and store

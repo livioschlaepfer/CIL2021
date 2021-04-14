@@ -87,5 +87,5 @@ def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
     # print('Best val Acc: {:4f}'.format(best_acc))
 
     # load best model weights
-    runner.model.load_state_dict(best_model_wts)
+    #runner.model.load_state_dict(best_model_wts)
     return runner, val_acc_history

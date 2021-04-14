@@ -48,7 +48,7 @@ if __name__ == '__main__':
     # load config
     config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
 
-    submission_filename = 'dummy_submission.csv'
+    submission_filename = 'submission.csv'
     image_filenames = glob.glob(config.paths.test_output_dir+"/*.png")
 
     print("Start masks to submission")

@@ -15,8 +15,7 @@ def visualize_output(outputs, inputs = None, labels = None, config=None):
             binary = torch.tensor(binary, dtype=torch.float64)
             binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 
-<<<<<<< HEAD
-            if inputs is not None:
+            if inputs is not None and labels is not None:
                 input = transforms.ToPILImage(mode="RGB")(inputs[idx])
                 label = transforms.ToPILImage(mode="LA")(labels[idx]).convert("RGB")
                 
@@ -24,21 +23,6 @@ def visualize_output(outputs, inputs = None, labels = None, config=None):
                 Image.fromarray(np.hstack((np.array(input), np.array(label), np.array(binary)))).show()
 
             else:
+                input = transforms.ToPILImage(mode="RGB")(inputs[idx])
                 # plot the semantic segmentation predictions per class
-                Image.fromarray(np.hstack((np.array(binary)))).show()
-
-        else:
-            break
-=======
-        if inputs is not None and labels is not None:
-            input = transforms.ToPILImage(mode="RGB")(inputs[idx])
-            label = transforms.ToPILImage(mode="LA")(labels[idx]).convert("RGB")
-            
-            # plot the semantic segmentation predictions per class
-            Image.fromarray(np.hstack((np.array(input), np.array(label), np.array(binary)))).show()
-
-        else:
-            input = transforms.ToPILImage(mode="RGB")(inputs[idx])
-            # plot the semantic segmentation predictions per class
-            Image.fromarray(np.hstack((np.array(input), np.array(binary)))).show()
->>>>>>> cb2b0412e0120eb44bd7e6bf6fc87d6a97b7ad64
+                Image.fromarray(np.hstack((np.array(input), np.array(binary)))).show()
