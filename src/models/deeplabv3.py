@@ -50,7 +50,7 @@ class DeepLabv3RunnerClass:
             print("BCE", bce(input, target))
             print("Dice", dice(input, target))
 
-            return bce(input, target) + 1.5*dice(input, target)
+            return 1 + bce(input, target) - dice(input, target)
 
         self.criterion = forward
 

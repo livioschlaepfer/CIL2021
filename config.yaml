@@ -22,7 +22,7 @@ paths:
   # test_image_dir: '/cluster/home/livios/data/test_images/test_images'
 
   # Directory for test output
-  test_output_dir: 'C:\Users\svenk\OneDrive\Desktop\ETH_SS_21\Computational_Intelligence_Lab\Project\Data\test_images\Run_fancy_loss'
+  test_output_dir: 'C:\Users\svenk\OneDrive\Desktop\ETH_SS_21\Computational_Intelligence_Lab\Project\Data\test_images'
   # test_output_dir: '/Users/livioschlapfer/Documents/OneDrive/Daten Livio/Schule/ETH/Master/2. Semester/Computational Intelligence Lab/3 - Project/2 - Data/cil-road-segmentation-2021/test_images/test_output'
   #test_output_dir: '/cluster/home/livios/data/test_images/test_output'
 
