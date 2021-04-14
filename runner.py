@@ -48,7 +48,7 @@ if config.freeze:
             print("\t",name)
 
 # Observe that all parameters are being optimized
-optimizer_ft = optim.Adam(params_to_update, lr=0.001)
+optimizer_ft = optim.Adam(params_to_update, lr=0.0001)
 
 # Train and evaluate model
 if config.runs.train_run:
