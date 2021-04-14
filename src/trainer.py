@@ -51,15 +51,10 @@ def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
                     outputs = runner.forward(inputs)
 
                     # Visualize output
-<<<<<<< Updated upstream
-                    if config.visualize_model_output:
-                        visualize_output(outputs, inputs, labels, config=config)
-=======
                     if config.visualize_model_output and (time.time()-vis_time>config.visualize_time):
-                        visualize_output(inputs, labels, outputs, config=config)
+                        visualize_output(outputs, inputs, labels, config=config)
                         vis_time=time.time()
                     
->>>>>>> Stashed changes
 
                     loss = runner.criterion(outputs.float(), labels.float())
                     

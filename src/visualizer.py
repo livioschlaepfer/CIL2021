@@ -9,18 +9,22 @@ def visualize_output(outputs, inputs = None, labels = None, config=None):
     print("Started visualizer")
 
     for idx, output in enumerate(outputs):
-        # convert output to binary encoding
-        binary = output.argmin(0)
-        binary = torch.tensor(binary, dtype=torch.float64)
-        binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
+        if idx == 0:
+            # convert output to binary encoding
+            binary = output.argmin(0)
+            binary = torch.tensor(binary, dtype=torch.float64)
+            binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 
-        if inputs is not None:
-            input = transforms.ToPILImage(mode="RGB")(inputs[idx])
-            label = transforms.ToPILImage(mode="LA")(labels[idx]).convert("RGB")
-            
-            # plot the semantic segmentation predictions per class
-            Image.fromarray(np.hstack((np.array(input), np.array(label), np.array(binary)))).show()
+            if inputs is not None:
+                input = transforms.ToPILImage(mode="RGB")(inputs[idx])
+                label = transforms.ToPILImage(mode="LA")(labels[idx]).convert("RGB")
+                
+                # plot the semantic segmentation predictions per class
+                Image.fromarray(np.hstack((np.array(input), np.array(label), np.array(binary)))).show()
+
+            else:
+                # plot the semantic segmentation predictions per class
+                Image.fromarray(np.hstack((np.array(binary)))).show()
 
         else:
-            # plot the semantic segmentation predictions per class
-            Image.fromarray(np.hstack((np.array(binary)))).show()
+            break

@@ -48,14 +48,7 @@ class DeepLabv3RunnerClass:
             print("BCE", bce(input, target))
             print("Dice", dice(input, target))
 
-<<<<<<< Updated upstream
             return 0.2 * bce(input, target) + 0.8 * dice(input, target)
-=======
-
-
-            # 0.5 * bce(input, target) +
-            return  dice(input, target)
->>>>>>> Stashed changes
 
         self.criterion = forward
 
