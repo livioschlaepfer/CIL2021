@@ -40,7 +40,17 @@ class DeepLabv3RunnerClass:
         # self.criterion = nn.BCELoss()
         # self.criterion = nn.NLLLoss()
         # self.criterion = DiceLoss()
-        self.criterion = dice_loss()
+
+        def forward(input, target):
+            bce = nn.BCELoss()
+
+            print("BCE", bce(input, target))
+            print("dice", dice_loss(input, target))
+
+
+            return 0.5 * bce(input, target) + 0.5 * dice_loss(input, target)
+
+        self.criterion = forward
 
 
     
