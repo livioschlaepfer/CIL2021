@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from torch.nn import Parameter
 from torchvision import transforms
 from src.models.bm_parts import composite_bay_conv, composite_bay_trans_conv, Bayesian_Unet
+from src.criterion.custom_losses import DiceLoss, weighted_Dice_BCE
 
 def calculate_kl(mu_q, sig_q, mu_p, sig_p):
     kl = 0.5 * (2 * torch.log(sig_p / sig_q) - 1 + (sig_q / sig_p).pow(2) + ((mu_p - mu_q) / sig_p).pow(2)).sum()
@@ -29,19 +30,22 @@ class B_Unet:
         self.model = model
 
     def init_criterion(self):
-        # Setup the loss
-        # self.criterion = torch.nn.MSELoss(reduction='mean')
-        # self.criterion = nn.CrossEntropyLoss()
-        self.criterion = nn.BCELoss(reduction=self.config.bm.BCE_reduction)
-        # self.criterion = nn.NLLLoss()
+        if self.config.criterion == "BCE":
+            self.criterion = nn.BCELoss(reduction=self.config.criterion.BCE_reduction)
+        if self.config.criterion == "Dice":
+            self.criterion = DiceLoss()
+        if self.config.criterion == "BCE_with_logits":
+            self.criterion = nn.BCEWithLogitsLoss(reduction=self.config.criterion.BCE_reduction, pos_weight=self.config.criterion.BCE_reduction)
+        if self.config.criterion == "weighted_Dice_BCE":
+            self.criterion = weighted_Dice_BCE()
     
     def forward(self, inputs):
         outputs = self.model(inputs)
-        return outputs
+        return torch.squeeze(outputs)
 
     def loss(self, outputs, labels):
-        print(self.criterion(outputs.float(), labels.float()))
-        print(self.config.bm.kl_weight*self.model.kl_loss())
+        #print(self.criterion(outputs.float(), labels.float()))
+        #print(self.config.bm.kl_weight*self.model.kl_loss())
         loss = self.criterion(outputs.float(), labels.float()) + self.config.bm.kl_weight*self.model.kl_loss()
         return loss
 

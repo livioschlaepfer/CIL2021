@@ -78,7 +78,7 @@ class Bayesian_Unet(nn.Module):
         x = self.crop_out(x)
         out = self.out_sig(x)
                 
-        return out
+        return out, x
     
     def predict_class_probs(self, x, num_forward_passes=10):
         batch_size = x.shape[0]

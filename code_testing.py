@@ -12,6 +12,7 @@ import os
 import copy
 from box import Box
 import yaml
+import getpass
 
 from src.dataset import init_test_dataloaders, init_train_dataloaders
 from src.trainer import train_model
@@ -19,9 +20,20 @@ from src.models.model_runner import init_runner
 from src.models.bayesian_Unet import B_Unet
 from src.models.bm_parts import composite_bay_conv
 
+from src.criterion.custom_losses import DiceLoss
+
 import torch
 from PIL import Image
 import matplotlib.pyplot as pl
+
+test1 = torch.rand(2, 5,5, requires_grad=True)
+test2 = torch.rand(2,5,5, requires_grad=True)
+print(test1.shape, test2.shape)
+
+
+print("ok")
+
+print(getpass.getuser())
 
 # load config
 """ config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
@@ -69,7 +81,7 @@ new.show()
 
 Image.fromarray(np.hstack((np.array(out),np.array(new), np.array(out1)))).show() """
 
-# load config
+""" # load config
 config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
 
 # Initialize the runner for the selected model
@@ -96,4 +108,4 @@ for inputs, labels in dataloaders_dict["train"]:
 
 mean = torch.mean(bucket, dim=[1,2])
 std = torch.std(bucket2, dim=[0,2,3])
-print(mean, std)
+print(mean, std) """
