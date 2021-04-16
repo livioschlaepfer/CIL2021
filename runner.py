@@ -23,6 +23,9 @@ from src.models.model_runner import init_runner
 # load config
 config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
 
+# fix seed
+np.random.seed(config.seed)
+
 # Initialize the runner for the selected model
 runner = init_runner(config)
 
