@@ -30,23 +30,26 @@ class B_Unet:
         self.model = model
 
     def init_criterion(self):
-        if self.config.criterion == "BCE":
+        if self.config.criterion.name == "BCE":
             self.criterion = nn.BCELoss(reduction=self.config.criterion.BCE_reduction)
-        if self.config.criterion == "Dice":
+        if self.config.criterion.name == "Dice":
             self.criterion = DiceLoss()
-        if self.config.criterion == "BCE_with_logits":
-            self.criterion = nn.BCEWithLogitsLoss(reduction=self.config.criterion.BCE_reduction, pos_weight=self.config.criterion.BCE_reduction)
-        if self.config.criterion == "weighted_Dice_BCE":
+        if self.config.criterion.name == "BCE_with_logits":
+            self.criterion = nn.BCEWithLogitsLoss(reduction=self.config.criterion.BCE_reduction, pos_weight=self.config.criterion.pos_weight)
+        if self.config.criterion.name == "weighted_Dice_BCE":
             self.criterion = weighted_Dice_BCE()
     
     def forward(self, inputs):
-        outputs = self.model(inputs)
-        return torch.squeeze(outputs)
+        after_sig, before_sig = self.model(inputs)
+        if self.config.criterion.name == "BCE_with_logits":
+            return torch.squeeze(before_sig)
+        else:
+            return torch.squeeze(after_sig)
 
     def loss(self, outputs, labels):
         #print(self.criterion(outputs.float(), labels.float()))
         #print(self.config.bm.kl_weight*self.model.kl_loss())
-        loss = self.criterion(outputs.float(), labels.float()) + self.config.bm.kl_weight*self.model.kl_loss()
+        loss = self.criterion(outputs.float(), labels.float()) + self.config.criterion.kl_weight*self.model.kl_loss()
         return loss
 
     def convert_to_png(self, output):

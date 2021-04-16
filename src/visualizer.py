@@ -9,8 +9,7 @@ def visualize_output(outputs, inputs, config, phase, labels=None):
     print("Started visualizer")
 
     if config.model_name == "bayesian_Unet":
-        counter == 0
-        if (phase == "train" or phase == "val") and counter ==0:
+        if phase == "train" or phase == "val":
             for (out, inp, lab) in zip(outputs, inputs, labels):
                 binary = out.detach().clone()
                 binary[binary>config.predict_threshold] = 1
@@ -24,7 +23,7 @@ def visualize_output(outputs, inputs, config, phase, labels=None):
                 binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 
                 Image.fromarray(np.hstack((np.array(input), np.array(label), np.array(output), np.array(binary)))).show()
-                counter +=1
+                break
 
         if phase == "test":
             for (out, inp) in zip(outputs, inputs):

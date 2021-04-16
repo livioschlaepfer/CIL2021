@@ -111,6 +111,8 @@ class SegmentationDataSet(data.Dataset):
             mask[mask > 0.1] = 1. # One hot encode road #TODO: determine optimal threshold
             mask[mask <= 0.1] = 0. # One hot encode background #TODO: determine optimal threshold
 
+            print(mask.shape)
+
         if self.training_run:
             return image, mask
         else:
