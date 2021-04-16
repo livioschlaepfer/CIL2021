@@ -3,13 +3,14 @@ from __future__ import division
 
 import os
 import glob
+import numpy as np
 import torch
 from PIL import Image
 import time
 
 from src.visualizer import visualize_output
 
-def test_model(runner, dataloaders, device, config):   
+def test_model(runner, dataloaders_test, dataloaders_train, device, optimizer, config):   
     since = time.time()
     vis_time = time.time()
 
@@ -17,14 +18,72 @@ def test_model(runner, dataloaders, device, config):
     if not os.path.exists(config.paths.test_output_dir):
         os.makedirs(config.paths.test_output_dir)
 
+    print("Start creating outputs")
+
+    # Apply pseudo labeling if configured
+    if config.pseudo_labeling:
+
+        phase = 'test'
+
+        # Iterate over data.
+        for inputs, path in dataloaders_test[phase]:
+
+            inputs = inputs.to(device)
+
+            # 1) Get pseudo label for test batch
+            runner.model.eval()
+            with torch.no_grad():
+                print("shape inputs 1", inputs.shape)
+                pseudo_labels = runner.forward(inputs)
+
+            # Visualize output #TODO: Only for testing
+            if config.visualize_model_output:
+                visualize_output(pseudo_labels, inputs, config=config)
+                vis_time=time.time()
+
+            # 2) Update model with random batch from training data
+            runner.model.train() 
+            phase = 'train'
+
+            batch_inputs, batch_labels = next(iter(dataloaders_train['train']))
+            batch_inputs = batch_inputs.to(device)
+
+            optimizer.zero_grad()
+
+            with torch.set_grad_enabled(phase == 'train'):
+                outputs = runner.forward(batch_inputs)
+                
+                loss1 = runner.criterion(outputs.float(), batch_labels.float())
+
+                print("loss 1", loss1.shape)
+
+            # 3) Evaluate on same test batch 
+
+            with torch.set_grad_enabled(phase == 'train'):
+                print("shape inputs 2", inputs.shape)
+                outputs = runner.forward(inputs)
+                
+                loss2 = runner.criterion(outputs.float(), pseudo_labels.float())
+
+                print("loss 2", loss2.shape)
+
+                loss = 0.7 * loss1 + 0.3 * loss2
+
+                loss.backward()
+                optimizer.step()
+
+            # Visualize output #TODO: Only for testing
+            if config.visualize_model_output and (time.time()-vis_time>config.visualize_time):
+                visualize_output(outputs, inputs, config=config)
+                vis_time=time.time()
+    
+
     # Set model to evaluate mode
     runner.model.eval()
     phase = 'test'
 
-    print("Start creating outputs")
-
     # Iterate over data.
-    for inputs, path in dataloaders[phase]:
+    for inputs, path in dataloaders_test[phase]:
 
         inputs = inputs.to(device)
     
@@ -44,5 +103,6 @@ def test_model(runner, dataloaders, device, config):
             # Store output
             png.save(config.paths.test_output_dir + "/" + os.path.split(path[0])[1])
             print("Stored output for", os.path.split(path[0])[1])
-                
+
+            
 

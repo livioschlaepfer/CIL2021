@@ -57,7 +57,7 @@ def init_test_dataloaders(config):
     image_datasets = {'test': SegmentationDataSet(image_paths=image_paths)}
     
     # Create training and validation dataloaders
-    dataloaders_dict = {'test': data.DataLoader(image_datasets['test'], shuffle=False)}
+    dataloaders_dict = {'test': data.DataLoader(image_datasets['test'], batch_size=config.batch_size, shuffle=False)}
 
     return image_datasets, dataloaders_dict
 

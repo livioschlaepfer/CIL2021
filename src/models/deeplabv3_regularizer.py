@@ -87,6 +87,7 @@ class DeepLabv3WithRegularizer(nn.Module):
         self.model_segmentation.classifier = DeepLabHead(2048, self.config.num_classes)
         self.model_segmentation.aux_classifier = FCNHead(1024, self.config.num_classes)
 
+
         self.model_regularizer = models.segmentation.deeplabv3_resnet50(pretrained=True, progress=True, aux_loss=None)
         
         # Update number of segmentation classes in classifier and auxillary classifier
@@ -97,8 +98,6 @@ class DeepLabv3WithRegularizer(nn.Module):
         outputs = self.model_segmentation(inputs)['out']
         outputs = torch.sigmoid(outputs)
 
-        intermediate = outputs
-
         # Padding to obtain 3 input channels
         zeros = Variable(torch.zeros(outputs.shape)[:,0].unsqueeze(1))
 
@@ -108,8 +107,6 @@ class DeepLabv3WithRegularizer(nn.Module):
         outputs = torch.cat((outputs, zeros), 1)
 
         outputs = self.model_regularizer(outputs)['out']
-
-        outputs = outputs + intermediate
 
         outputs = torch.sigmoid(outputs)
 

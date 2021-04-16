@@ -30,7 +30,7 @@ np.random.seed(config.seed)
 runner = init_runner(config)
 
 # Create training and validation datasets + dataloader
-image_datasets, dataloaders_dict = init_train_dataloaders(config)
+image_datasets, dataloaders_dict_train = init_train_dataloaders(config)
 
 # Detect if we have a GPU available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -55,13 +55,13 @@ optimizer_ft = optim.Adam(params_to_update, lr=0.0001)
 
 # Train and evaluate model
 if config.runs.train_run:
-    runner, hist = train_model(runner, dataloaders_dict, optimizer_ft, num_epochs = config.num_epochs, config = config, device = device)
+    runner, hist = train_model(runner, dataloaders_dict_train, optimizer_ft, num_epochs = config.num_epochs, config = config, device = device)
 
 
 # Test model
 if config.runs.test_run:
     # Create test datasets + dataloader
-    image_datasets, dataloaders_dict = init_test_dataloaders(config)
+    image_datasets, dataloaders_dict_test = init_test_dataloaders(config)
 
     # Test model
-    test_model(runner, dataloaders_dict, device, config)
+    test_model(runner, dataloaders_dict_test, dataloaders_dict_train, device, optimizer_ft, config)

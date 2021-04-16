@@ -22,7 +22,7 @@ def init_data_transforms(config):
     # Just normalization for validation
 
     def transform(image, mask):
-        
+
         # Random horizontal flipping
         if np.random.uniform(0,1) > 0.5:
             image = TF.hflip(image)
