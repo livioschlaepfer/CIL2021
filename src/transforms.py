@@ -35,7 +35,7 @@ def init_data_transforms(config):
 
         # Random rotation
         if np.random.uniform(0,1) > 0.5:
-            angle = np.random.uniform(low=-10, high=10)
+            angle = np.random.uniform(low=-45, high=45)
             image = TF.rotate(image, angle)
             mask = TF.rotate(mask, angle)
 

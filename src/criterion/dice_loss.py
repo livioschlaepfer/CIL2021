@@ -14,7 +14,7 @@ def dice_loss():
         print("intersection shape", intersection.shape)
 
         # Compute area of union
-        union = torch.numel(input)
+        union = torch.numel(input)*2
 
         # Compute dice coefficient
         dims = (1)
