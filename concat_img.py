@@ -4,9 +4,9 @@ from PIL import Image
 import cv2
 
 # define paths for translation from domain A (images in folderA) -> domain B (images in folderB)
-folderA = 'C:\Users\svenk\OneDrive\Desktop\ETH_SS_21\Computational_Intelligence_Lab\Project\Data_GAN/folderA'
-folderB = 'C:\Users\svenk\OneDrive\Desktop\ETH_SS_21\Computational_Intelligence_Lab\Project\Data_GAN/folderB'
-dest_path = 'C:\Users\svenk\OneDrive\Desktop\ETH_SS_21\Computational_Intelligence_Lab\Project\Data_GAN/output'
+folderA = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/folderA'
+folderB = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/folderB'
+dest_path = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/output'
 
 splits = os.listdir(folderA)
 
@@ -30,6 +30,7 @@ for sp in splits:
             im_A1 = Image.open(path_A)
             im_A = np.array(im_A1)
             im_B1 = Image.open(path_B)
+            im_B1 = im_B1.convert(mode='RGB')
             im_B = np.array(im_B1)
             im_AB = np.concatenate([im_A, im_B], 1)
             cv2.imwrite(path_AB, im_AB)
