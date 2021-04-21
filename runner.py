@@ -28,8 +28,7 @@ config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
 
 # update paths based on user name
 username = getpass.getuser()
-print("username", username)
-paths = paths_setter(username=username)
+config.paths = paths_setter(username=username)
 
 
 # fix seed
