@@ -30,7 +30,6 @@ config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
 username = getpass.getuser()
 config.paths = paths_setter(username=username)
 
-
 # fix seed
 np.random.seed(config.seed)
 
