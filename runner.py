@@ -14,14 +14,23 @@ import os
 import copy
 from box import Box
 import yaml
+import getpass
 
 from src.dataset import init_test_dataloaders, init_train_dataloaders
 from src.trainer import train_model
 from src.tester import test_model
 from src.models.model_runner import init_runner
+from src.paths import paths_setter
+
 
 # load config
 config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
+
+# update paths based on user name
+username = getpass.getuser()
+print("username", username)
+paths = paths_setter(username=username)
+
 
 # fix seed
 np.random.seed(config.seed)
