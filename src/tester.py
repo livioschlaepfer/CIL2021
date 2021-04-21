@@ -83,7 +83,7 @@ def test_model(runner, dataloaders_test, dataloaders_train, device, optimizer, c
     phase = 'test'
 
     # Iterate over data.
-    for inputs, path in dataloaders_test[phase]:
+    for inputs, paths in dataloaders_test[phase]:
 
         inputs = inputs.to(device)
     
@@ -96,13 +96,13 @@ def test_model(runner, dataloaders_test, dataloaders_train, device, optimizer, c
             visualize_output(outputs, inputs, config=config)
             vis_time=time.time()
 
-        for output in outputs:
+        for index in range(len(outputs)):
             # Convert output to .png and store
-            png = runner.convert_to_png(output)
+            png = runner.convert_to_png(outputs[index])
 
             # Store output
-            png.save(config.paths.test_output_dir + "/" + os.path.split(path[0])[1])
-            print("Stored output for", os.path.split(path[0])[1])
+            png.save(config.paths.test_output_dir + "/" + os.path.split(path[index])[1])
+            print("Stored output for", os.path.split(path[index])[1])
 
             
 

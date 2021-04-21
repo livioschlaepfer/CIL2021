@@ -66,12 +66,12 @@ def main():
         image = to_tensor(Image.open(image_paths[index]))
         mask = to_tensor(Image.open(mask_paths[index]))
 
-        rotation(image, mask, path_tail)
+        center_rotation(image, mask, path_tail)
         five_crop(image, mask, path_tail)
 
         
 # Center crop rotation
-def rotation(image, mask, path_tail):
+def center_rotation(image, mask, path_tail):
     for angle in [30, 60, 120, 150, 210, 240, 300, 330]:
 
         image = TF.rotate(image, angle)
@@ -101,48 +101,18 @@ def five_crop(image, mask, path_tail):
         transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + ".png")
         transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + ".png")
 
-        v_flip(image, mask, path_tail, index)
-        h_flip(image, mask, path_tail, index)
-        vh_flip(image, mask, path_tail, index)
-        hv_flip(image, mask, path_tail, index)
+        for angle in [90, 180, 270]:
+    
+            image = TF.rotate(image, angle)
+            mask = TF.rotate(mask, angle)
 
-# Horizontal flipping      
-def h_flip(image, mask, path_tail, index):
-    image = TF.hflip(image)
-    mask = TF.hflip(mask)
+            # Center crop to avoid black edges the best we can 
+            cc = transforms.CenterCrop(config.transforms.crop_size)
+            image = cc(image)
+            mask = cc(mask) 
 
-    transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + "_h_flip" + ".png")
-    transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + "_h_flip" + ".png")
-
-# Hertical flipping
-def v_flip(image, mask, path_tail, index):
-    image = TF.vflip(image)
-    mask = TF.vflip(mask)
-
-    transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + "_v_flip" + ".png")
-    transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + "_v_flip" + ".png")
-
-# Vertical Horizontal flipping
-def vh_flip(image, mask, path_tail, index):
-    image = TF.vflip(image)
-    mask = TF.vflip(mask)
-
-    image = TF.hflip(image)
-    mask = TF.hflip(mask)
-
-    transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + "_vh_flip" + ".png")
-    transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + "_vh_flip" + ".png")
-
-# Horizontal Hertical flipping
-def hv_flip(image, mask, path_tail, index):
-    image = TF.hflip(image)
-    mask = TF.hflip(mask)
-
-    image = TF.vflip(image)
-    mask = TF.vflip(mask)
-
-    transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + "_hv_flip" + ".png")
-    transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + "_hv_flip" + ".png")
+            transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + "_rot" + str(angle) + ".png")
+            transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + "_rot" + str(angle) + ".png")
 
 
 if __name__ == "__main__":
