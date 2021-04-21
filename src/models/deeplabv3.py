@@ -44,6 +44,7 @@ class DeepLabv3RunnerClass:
         # self.criterion = DiceLoss()
 
         def forward(input, target):
+
             bce = nn.BCELoss()
             dice = dice_loss()
 
@@ -54,9 +55,7 @@ class DeepLabv3RunnerClass:
             return loss
 
         self.criterion = forward
-
-
-    
+  
     def forward(self, inputs):
         outputs = self.model(inputs)['out']
         outputs = torch.sigmoid(outputs)
