@@ -106,11 +106,6 @@ def five_crop(image, mask, path_tail):
             image = TF.rotate(image, angle)
             mask = TF.rotate(mask, angle)
 
-            # Center crop to avoid black edges the best we can 
-            cc = transforms.CenterCrop(config.transforms.crop_size)
-            image = cc(image)
-            mask = cc(mask) 
-
             transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + "_rot" + str(angle) + ".png")
             transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + "_rot" + str(angle) + ".png")
 

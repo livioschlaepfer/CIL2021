@@ -101,8 +101,8 @@ def test_model(runner, dataloaders_test, dataloaders_train, device, optimizer, c
             png = runner.convert_to_png(outputs[index])
 
             # Store output
-            png.save(config.paths.test_output_dir + "/" + os.path.split(path[index])[1])
-            print("Stored output for", os.path.split(path[index])[1])
+            png.save(config.paths.test_output_dir + "/" + os.path.split(paths[index])[1])
+            print("Stored output for", os.path.split(paths[index])[1])
 
             
 
