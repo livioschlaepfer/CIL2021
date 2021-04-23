@@ -64,4 +64,4 @@ pseudo_labeling: False
 # Configure transforms
 transforms:
   apply_transforms: False
-  crop_size: 220
+  crop_size: 208

@@ -66,7 +66,7 @@ def main():
         image = to_tensor(Image.open(image_paths[index]))
         mask = to_tensor(Image.open(mask_paths[index]))
 
-        center_rotation(image, mask, path_tail)
+        # center_rotation(image, mask, path_tail)
         five_crop(image, mask, path_tail)
 
         
@@ -101,13 +101,28 @@ def five_crop(image, mask, path_tail):
         transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + ".png")
         transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + ".png")
 
-        for angle in [90, 180, 270]:
-    
-            image = TF.rotate(image, angle)
-            mask = TF.rotate(mask, angle)
+        h_flip(image, mask, path_tail, index)
+        rotate_90(image, mask, path_tail, index)
 
-            transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + "_rot" + str(angle) + ".png")
-            transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + "_rot" + str(angle) + ".png")
+# Horizontal flipping      
+def h_flip(image, mask, path_tail, index):
+    image = TF.hflip(image)
+    mask = TF.hflip(mask)
+
+    transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + "_h_flip" + ".png")
+    transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + "_h_flip" + ".png")
+
+    rotate_90(image, mask, path_tail + "_" + str(index) + "_h_flip", index)
+
+
+# Rotation by 90s multiply
+def rotate_90(image, mask, path_tail, index):
+    for angle in [90, 180, 270]:
+        image = TF.rotate(image, angle)
+        mask = TF.rotate(mask, angle)
+
+        transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_rot" + str(angle) + ".png")
+        transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_rot" + str(angle) + ".png")
 
 
 if __name__ == "__main__":

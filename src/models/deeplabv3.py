@@ -45,10 +45,13 @@ class DeepLabv3RunnerClass:
 
         def forward(input, target):
 
+            input = self.image_to_patched(input)
+            target = self.mask_to_patched(target)
+
             bce = nn.BCELoss()
             dice = dice_loss()
 
-            loss = 0.2 * bce(input, target) + 0.8 * dice(input, target)
+            loss = 1 * bce(input, target) + 0.5 * dice(input, target)
 
             print("loss", loss)
 
@@ -73,5 +76,27 @@ class DeepLabv3RunnerClass:
         binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 
         return binary
+
+    # assign a label to a patch
+    def mask_to_patched(self, mask):
+        foreground_threshold = 0.25
+        patch_size = 16
+        patcher = nn.AvgPool2d(patch_size)
+
+        mask = patcher(mask)
+
+        thresholded_mask = mask
+        thresholded_mask[:,0][mask[:,0] > foreground_threshold] = 1
+        thresholded_mask[:,1][mask[:,1] <= foreground_threshold] = 0
+        
+        return thresholded_mask
+
+
+    def image_to_patched(self, image):
+        patch_size = 16
+        patcher = nn.AvgPool2d(patch_size)
+
+        return patcher(image)
+        
 
 
