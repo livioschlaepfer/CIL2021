@@ -163,7 +163,7 @@ class BaseModel(ABC):
     def __patch_instance_norm_state_dict(self, state_dict, module, keys, i=0):
         """Fix InstanceNorm checkpoints incompatibility (prior to 0.4)"""
         key = keys[i]
-        print(i)
+        #print(i)
         if i + 1 == len(keys):  # at the end, pointing to a parameter/buffer
             if module.__class__.__name__.startswith('InstanceNorm') and \
                     (key == 'running_mean' or key == 'running_var'):
@@ -198,10 +198,10 @@ class BaseModel(ABC):
                     del state_dict._metadata
                     print("deleted")
 
-                # patch InstanceNorm checkpoints prior to 0.4
-                # for key in list(state_dict.keys()):  # need to copy keys here because we mutate in loop
-                #     self.__patch_instance_norm_state_dict(state_dict, net, key.split('.'))
-                # net.load_state_dict(state_dict)
+                #patch InstanceNorm checkpoints prior to 0.4
+                for key in list(state_dict.keys()):  # need to copy keys here because we mutate in loop
+                    self.__patch_instance_norm_state_dict(state_dict, net, key.split('.'))
+                net.load_state_dict(state_dict)
 
     def print_networks(self, verbose):
         """Print the total number of parameters in the network and (if verbose) network architecture

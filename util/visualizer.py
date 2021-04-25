@@ -35,14 +35,15 @@ def visualize_output(outputs, inputs, labels=None):
     #     Image.fromarray(np.hstack((np.array(input), np.array(output), np.array(binary)))).show()
 
 
-def visualize_pred(outputs, inputs=None, labels=None):
+def visualize_pred(inputs, outputs, labels=None):
     #print("Started visualizer")
     #print(outputs.shape)
 
+    input = transforms.ToPILImage(mode="RGB")(torch.squeeze(inputs))
     output = transforms.ToPILImage(mode="RGB")(torch.squeeze(outputs)) #.convert("RGB")
     # binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 
-    Image.fromarray(np.array(output)).show()#, np.array(label), np.array(output)))).show() # , np.array(binary)
+    Image.fromarray(np.hstack((np.array(input), np.array(output)))).show()#, np.array(label), np.array(output)))).show() # , np.array(binary)
 
 
 

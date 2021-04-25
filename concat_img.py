@@ -1,36 +1,64 @@
 import os
 import numpy as np
+import torch
+from torchvision import datasets, models, transforms
+import torchvision.transforms.functional as TF
 from PIL import Image
-import cv2
+from cv2 import cv2
+import time
+import sys
+from tqdm import tqdm
 
-# define paths for translation from domain A (images in folderA) -> domain B (images in folderB)
-folderA = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data/training/images/1'
-folderB = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data/training/groundtruth/1'
-dest_path = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/train'
+def get_concat_h(im1, im2):
+    dst = Image.new('RGB', (im1.size[1] + im2.size[1], im1.size[0]))
+    dst.paste(im1, (0, 0))
+    dst.paste(im2, (im1.size[1], 0))
+    return dst
 
-splits = os.listdir(folderA)
+folder_A = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data/training/images/'
+folder_B = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data/training/groundtruth/'
+folder_AB = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/train/'
 
-for sp in splits:
-    img_fold_A = os.path.join(folderA, sp)
-    img_fold_B = os.path.join(folderB, sp)
-    img_list = os.listdir(img_fold_A)
-    num_imgs = len(img_list)
-    img_fold_AB = os.path.join(dest_path, sp)
-    if not os.path.isdir(img_fold_AB):
-        os.makedirs(img_fold_AB)
-    print('split = %s, number of images = %d' % (sp, num_imgs))
-    for n in range(num_imgs):
-        name_A = img_list[n]
-        path_A = os.path.join(img_fold_A, name_A)
-        name_B = name_A
-        path_B = os.path.join(img_fold_B, name_B)
-        if os.path.isfile(path_A) and os.path.isfile(path_B):
-            name_AB = name_A
-            path_AB = os.path.join(img_fold_AB, name_AB)
-            im_A1 = Image.open(path_A)
-            im_A = np.array(im_A1)
-            im_B1 = Image.open(path_B)
-            im_B1 = im_B1.convert(mode='RGB')
-            im_B = np.array(im_B1)
-            im_AB = np.concatenate([im_A, im_B], 1)
-            cv2.imwrite(path_AB, im_AB)
+assert len(os.listdir(folder_A)) == len(os.listdir(folder_B)), "make sure number of images is equal to number of masks"
+
+img_names = os.listdir(folder_A) # suffices to look at folder A since corresponding images have the same name
+
+for name in img_names:
+    img_A = Image.open(os.path.join(folder_A, name))
+    img_B = Image.open(os.path.join(folder_B, name)).convert("RGB")
+
+    img_A_ten = transforms.ToTensor()(img_A)
+    img_B_ten = transforms.ToTensor()(img_B)
+    
+    # define the centercrop
+    cc = transforms.CenterCrop(256)
+    for angle in [30, 60, 120, 150, 210, 240, 300, 330]:
+        img_A_rot = TF.rotate(img_A_ten, angle)
+        img_B_rot = TF.rotate(img_B_ten, angle)
+        img_A_rot_cc = transforms.ToPILImage()(cc(img_A_rot))
+        img_B_rot_cc = transforms.ToPILImage()(cc(img_B_rot))
+        img_AB = get_concat_h(img_A_rot_cc, img_B_rot_cc)
+        path_AB = folder_AB  + str(angle) + "_" + "cc" + "_" + name
+        img_AB.save(path_AB)
+
+    fc = transforms.FiveCrop(256)
+    img_A_fc = fc(img_A_ten)
+    img_B_fc = fc(img_B_ten)
+    for i in range(len(img_A_fc)):
+        A = img_A_fc[i]
+        B = img_B_fc[i]
+        A_1 = transforms.ToPILImage()(A)
+        B_1 = transforms.ToPILImage()(B)
+        AB = get_concat_h(A_1, B_1)
+        path_AB = folder_AB + "fc_" + str(i) + "_noflip"  + name
+        AB.save(path_AB)
+        for angle in [90, 180, 270]:
+            A_rot = transforms.ToPILImage()(TF.rotate(A, angle))
+            B_rot = transforms.ToPILImage()(TF.rotate(B, angle))
+            AB_rot = get_concat_h(A_rot, B_rot)
+            path_AB = folder_AB + "fc_" + str(i) + "_" + str(angle)  + name
+            AB_rot.save(path_AB)  
+
+    print(name)  
+
+print("done!")
