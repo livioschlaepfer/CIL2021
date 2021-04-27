@@ -72,18 +72,19 @@ def main():
         
 # Center crop rotation
 def center_rotation(image, mask, path_tail):
+
     for angle in [30, 60, 120, 150, 210, 240, 300, 330]:
 
-        image = TF.rotate(image, angle)
-        mask = TF.rotate(mask, angle)
+        image_rot = TF.rotate(image, angle)
+        mask_rot = TF.rotate(mask, angle)
 
         # Center crop to avoid black edges the best we can 
         cc = transforms.CenterCrop(config.transforms.crop_size)
-        image = cc(image)
-        mask = cc(mask) 
+        image_rot = cc(image_rot)
+        mask_rot = cc(mask_rot) 
 
-        transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + "rot" + str(angle) + ".png")
-        transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + "rot" + str(angle) + ".png")
+        transform_to_png(image_rot).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + "rot" + str(angle) + ".png")
+        transform_to_png(mask_rot).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + "rot" + str(angle) + ".png")
         
 # Five crop augmentation
 def five_crop(image, mask, path_tail):
