@@ -82,7 +82,7 @@ def save_images(opt, img, number, image_path, aspect_ratio=1.0, resize=None):
     short_path = ntpath.basename(image_path[0])
     name = os.path.splitext(short_path)[0]
 
-    ims, txts, links = [], [], []
+    #ims, txts, links = [], [], []
 
     #for label, im_data in visuals.items():
     im = util.tensor2im(img)

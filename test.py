@@ -65,6 +65,7 @@ if __name__ == '__main__':
                 break
             model.set_input(data)  # unpack data from data loader
             model.test()           # run inference
+            #print(model.fake.shape)
             #print("".join(data["A_paths"]))
             # if i % 5 == 0:
             #     visualize_pred(data["A"], model.fake)
