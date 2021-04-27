@@ -60,8 +60,8 @@ class DeepLabv3RunnerClass:
 
             loss3 = 0 * bce(input, target) + 1 * dice(input, target)
 
-            input = self.image_to_patched(input, 32)
-            target = self.mask_to_patched(target, 32)
+            input = self.image_to_patched(input, 4)
+            target = self.mask_to_patched(target, 4)
 
             loss4 = 0 * bce(input, target) + 1 * dice(input, target)
 
