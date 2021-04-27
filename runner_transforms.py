@@ -66,7 +66,7 @@ def main():
         image = to_tensor(Image.open(image_paths[index]))
         mask = to_tensor(Image.open(mask_paths[index]))
 
-        # center_rotation(image, mask, path_tail)
+        center_rotation(image, mask, path_tail)
         five_crop(image, mask, path_tail)
 
         
