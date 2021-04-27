@@ -24,7 +24,7 @@ class DeepLabv3RunnerClass:
     def init_model(self):
         print('Initializing model')
 
-        model = models.segmentation.deeplabv3_resnet50(pretrained=True, progress=True, aux_loss=None)
+        model = models.segmentation.deeplabv3_resnet101(pretrained=True, progress=True, aux_loss=None)
         
         # Update number of segmentation classes in classifier and auxillary classifier
         model.classifier = DeepLabHead(2048, self.config.num_classes)
