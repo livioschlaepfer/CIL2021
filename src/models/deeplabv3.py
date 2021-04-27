@@ -48,14 +48,12 @@ class DeepLabv3RunnerClass:
             bce = nn.BCELoss()
             dice = dice_loss()
 
-            loss1 = 0 * bce(input, target) + 1 * dice(input, target)
+            loss1 = 1 * bce(input, target) + 0 * dice(input, target)
 
             input_16 = self.image_to_patched(input, 16)
             target_16 = self.mask_to_patched(target, 16)
 
-            loss3 = 0 * bce(input_16, target_16) + 1 * dice(input_16, target_16)
-
-           
+            loss3 = 1 * bce(input_16, target_16) + 0 * dice(input_16, target_16)
 
             print("loss1", loss1,"loss3", loss3, )
 
