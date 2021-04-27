@@ -48,17 +48,26 @@ class DeepLabv3RunnerClass:
             bce = nn.BCELoss()
             dice = dice_loss()
 
-            loss1 = 1 * bce(input, target) + 0.5 * dice(input, target)
+            loss1 = 0 * bce(input, target) + 1 * dice(input, target)
 
+            input = self.image_to_patched(input, 8)
+            target = self.mask_to_patched(target, 8)
 
-            input = self.image_to_patched(input)
-            target = self.mask_to_patched(target)
+            loss2 = 0 * bce(input, target) + 1 * dice(input, target)
 
-            loss2 = 1 * bce(input, target) + 0.5 * dice(input, target)
+            input = self.image_to_patched(input, 16)
+            target = self.mask_to_patched(target, 16)
 
-            print("loss1", loss1, "loss2", loss2 )
+            loss3 = 0 * bce(input, target) + 1 * dice(input, target)
 
-            return loss1 + 0.2 * loss2
+            input = self.image_to_patched(input, 32)
+            target = self.mask_to_patched(target, 32)
+
+            loss4 = 0 * bce(input, target) + 1 * dice(input, target)
+
+            print("loss1", loss1, "loss2", loss2, "loss3", loss3, "loss4", loss4 )
+
+            return loss1 + 0.2 * loss2 + 0.2 * loss3 + 0.2 * loss4
 
         self.criterion = forward
   
@@ -81,9 +90,8 @@ class DeepLabv3RunnerClass:
         return binary
 
     # assign a label to a patch
-    def mask_to_patched(self, mask):
+    def mask_to_patched(self, mask, patch_size = 16):
         foreground_threshold = 0.25
-        patch_size = 16
         patcher = nn.AvgPool2d(patch_size)
 
         mask = patcher(mask)
@@ -95,8 +103,7 @@ class DeepLabv3RunnerClass:
         return thresholded_mask
 
 
-    def image_to_patched(self, image):
-        patch_size = 16
+    def image_to_patched(self, image, patch_size):
         patcher = nn.AvgPool2d(patch_size)
 
         return patcher(image)

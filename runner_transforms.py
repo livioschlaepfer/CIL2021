@@ -73,7 +73,7 @@ def main():
 # Center crop rotation
 def center_rotation(image, mask, path_tail):
 
-    for angle in [30, 60, 120, 150, 210, 240, 300, 330]:
+    for angle in [30, 35, 40, 50, 55, 60, 65, 70, 75, 80, 85, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 185, 190, 195, 200, 205, 210, 240, 300, 330]:
 
         image_rot = TF.rotate(image, angle)
         mask_rot = TF.rotate(mask, angle)
