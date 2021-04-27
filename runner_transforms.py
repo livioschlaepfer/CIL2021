@@ -85,7 +85,7 @@ def center_rotation(image, mask, path_tail):
 
         transform_to_png(image_rot).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + "rot" + str(angle) + ".png")
         transform_to_png(mask_rot).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + "rot" + str(angle) + ".png")
-        
+
 # Five crop augmentation
 def five_crop(image, mask, path_tail):
     # Five crop image
@@ -102,18 +102,20 @@ def five_crop(image, mask, path_tail):
         transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + ".png")
         transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + ".png")
 
-        h_flip(image, mask, path_tail, index)
-        rotate_90(image, mask, path_tail, index)
+        h_flip(image, mask, path_tail + "_" + str(index), index)
+        rotate_90(image, mask, path_tail + "_" + str(index), index)
+        color_jitter(image, mask, path_tail + "_" + str(index), index)
 
 # Horizontal flipping      
 def h_flip(image, mask, path_tail, index):
     image = TF.hflip(image)
     mask = TF.hflip(mask)
 
-    transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_" + str(index) + "_h_flip" + ".png")
-    transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_" + str(index) + "_h_flip" + ".png")
+    transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_h_flip" + ".png")
+    transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_h_flip" + ".png")
 
-    rotate_90(image, mask, path_tail + "_" + str(index) + "_h_flip", index)
+    rotate_90(image, mask, path_tail + "_h_flip", index)
+    color_jitter(image, mask, path_tail + "_h_flip", index)
 
 
 # Rotation by 90s multiply
@@ -124,6 +126,15 @@ def rotate_90(image, mask, path_tail, index):
 
         transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_rot" + str(angle) + ".png")
         transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_rot" + str(angle) + ".png")
+
+# Apply random color jitter
+def color_jitter(image, mask, path_tail, index):
+    jitter = transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0)
+
+    image = jitter(image)
+
+    transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_jitter" + ".png")
+    transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_jitter" + ".png")
 
 
 if __name__ == "__main__":
