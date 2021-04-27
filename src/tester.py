@@ -101,9 +101,9 @@ def test_model(runner, dataloaders_test, dataloaders_train, device, optimizer, c
                 output = transform_test_aggregate(outputs)
 
                 # Visualize output #TODO: Only for testing
-                # if config.visualize_model_output and (time.time()-vis_time>config.visualize_time):
-                visualize_output(output, input, config=config)
-                vis_time=time.time()
+                if config.visualize_model_output and (time.time()-vis_time>config.visualize_time):
+                    visualize_output(output, input, config=config)
+                    vis_time=time.time()
 
                 # Convert output to .png and store
                 png = runner.convert_to_png(output[0])
