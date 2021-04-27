@@ -46,7 +46,7 @@ visualize_model_output: True
 visualize_time: 10
 
 # Number of epochs to train for
-num_epochs: 15
+num_epochs: 5
 
 # Proportion of the dataset used for validation split
 val_size: 0.1

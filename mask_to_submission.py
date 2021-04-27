@@ -7,6 +7,9 @@ import re
 import glob
 from box import Box
 import yaml
+import getpass
+
+from src.paths import paths_setter
 
 
 foreground_threshold = 0.6 # percentage of pixels > 1 required to assign a foreground label to a patch
@@ -47,6 +50,10 @@ if __name__ == '__main__':
 
     # load config
     config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
+
+    # update paths based on user name
+    username = getpass.getuser()
+    config.paths = paths_setter(username=username)
 
     submission_filename = 'submission.csv'
     image_filenames = glob.glob(config.paths.test_output_dir+"/*.png")
