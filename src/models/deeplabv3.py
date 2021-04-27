@@ -45,17 +45,20 @@ class DeepLabv3RunnerClass:
 
         def forward(input, target):
 
-            input = self.image_to_patched(input)
-            target = self.mask_to_patched(target)
-
             bce = nn.BCELoss()
             dice = dice_loss()
 
-            loss = 1 * bce(input, target) + 0.5 * dice(input, target)
+            loss1 = 1 * bce(input, target) + 0.5 * dice(input, target)
 
-            print("loss", loss)
 
-            return loss
+            input = self.image_to_patched(input)
+            target = self.mask_to_patched(target)
+
+            loss2 = 1 * bce(input, target) + 0.5 * dice(input, target)
+
+            print("loss1", loss1, "loss2", loss2 )
+
+            return loss1 + 0.2 * loss2
 
         self.criterion = forward
   
