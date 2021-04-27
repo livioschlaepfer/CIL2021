@@ -43,7 +43,7 @@ batch_size: 8
 
 # Viusualize model output
 visualize_model_output: True
-visualize_time: 10
+visualize_time: 1000
 
 # Number of epochs to train for
 num_epochs: 2
