@@ -9,7 +9,7 @@ from box import Box
 import yaml
 
 
-foreground_threshold = 0.25 # percentage of pixels > 1 required to assign a foreground label to a patch
+foreground_threshold = 0.7 # percentage of pixels > 1 required to assign a foreground label to a patch
 
 # assign a label to a patch
 def patch_to_label(patch):
@@ -25,6 +25,7 @@ def mask_to_submission_strings(image_filename):
     path_tail = os.path.split(image_filename)[1]
     img_number = int(re.search(r"\d+", path_tail).group(0))
     im = mpimg.imread(image_filename)
+    print(im.shape)
     patch_size = 16
     for j in range(0, im.shape[1], patch_size):
         for i in range(0, im.shape[0], patch_size):
@@ -46,10 +47,10 @@ if __name__ == '__main__':
     print("Load config")
 
     # load config
-    config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
+    #config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
 
     submission_filename = 'dummy_submission.csv'
-    image_filenames = glob.glob(config.paths.test_output_dir+"/*.png")
+    image_filenames = glob.glob("C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/predictions"+"/*.png")
 
     print("Start masks to submission")
 

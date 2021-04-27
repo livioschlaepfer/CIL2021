@@ -14,10 +14,12 @@ def visualize_output(outputs, inputs, labels=None):
         # binary[binary<=config.predict_threshold] = 0
         
         lab = torch.tensor(lab, dtype=torch.float64)
-        print(out.shape)
+        # print("inp shape: ", inp.shape)
+        # print("lab shape: ", lab.shape)
+        # print("out shape: ", out.shape)
         input = transforms.ToPILImage(mode="RGB")(inp)
-        label = transforms.ToPILImage(mode="RGB")(lab) #.convert("RGB")
-        output = transforms.ToPILImage(mode="RGB")(out) #.convert("RGB")
+        label = transforms.ToPILImage(mode="L")(lab).convert("RGB")
+        output = transforms.ToPILImage(mode="L")(out).convert("RGB")
         # binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 
         Image.fromarray(np.hstack((np.array(input), np.array(label), np.array(output)))).show() # , np.array(binary)
@@ -49,27 +51,6 @@ def visualize_pred(inputs, outputs, labels=None):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import numpy as np
 import os
 import sys
@@ -85,7 +66,7 @@ from . import util
 #     VisdomExceptionBase = ConnectionError
 
 
-def save_images(opt, img, number, image_path, aspect_ratio=1.0, width=256):
+def save_images(opt, img, number, image_path, aspect_ratio=1.0, resize=None):
     """Save images to the disk.
 
     Parameters:
@@ -107,7 +88,7 @@ def save_images(opt, img, number, image_path, aspect_ratio=1.0, width=256):
     im = util.tensor2im(img)
     image_name = '%s.png' % (name)
     save_path = os.path.join(image_dir, image_name)
-    util.save_image(im, save_path, aspect_ratio=aspect_ratio)
+    util.save_image(im, save_path, aspect_ratio=aspect_ratio, resize=resize)
     # ims.append(image_name)
     # txts.append(label)
     # links.append(image_name)
