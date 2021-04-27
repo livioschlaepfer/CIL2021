@@ -50,24 +50,16 @@ class DeepLabv3RunnerClass:
 
             loss1 = 0 * bce(input, target) + 1 * dice(input, target)
 
-            input_8 = self.image_to_patched(input, 8)
-            target_8 = self.mask_to_patched(target, 8)
-
-            loss2 = 0 * bce(input_8, target_8) + 1 * dice(input_8, target_8)
-
             input_16 = self.image_to_patched(input, 16)
             target_16 = self.mask_to_patched(target, 16)
 
             loss3 = 0 * bce(input_16, target_16) + 1 * dice(input_16, target_16)
 
-            input_4 = self.image_to_patched(input, 4)
-            target_4 = self.mask_to_patched(target, 4)
+           
 
-            loss4 = 0 * bce(input_4, target_4) + 1 * dice(input_4, target_4)
+            print("loss1", loss1,"loss3", loss3, )
 
-            print("loss1", loss1, "loss2", loss2, "loss3", loss3, "loss4", loss4 )
-
-            return loss1 + 0.2 * loss2 + 0.2 * loss3 + 0.2 * loss4
+            return loss1 + 0.2 * loss3 
 
         self.criterion = forward
   
