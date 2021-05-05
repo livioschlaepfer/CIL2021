@@ -29,9 +29,10 @@ def transform_test(image):
     total_image.append(cur_image)
 
     # Apply color jitter twice
-    jitter = transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0)
+    cur_image = TF.adjust_brightness(image, 1.2)
+    total_image.append(cur_image)
 
-    cur_image =jitter(image)
+    cur_image = TF.adjust_brightness(image, 0.8)
     total_image.append(cur_image)
 
     # Stack transforms
@@ -53,7 +54,7 @@ def transform_test_aggregate(output):
     # Average output
     dims = (0)
     output = torch.sum(output, dims)
-    output = output / 4
+    output = output / 5
 
     output = torch.unsqueeze(output, 0)
 

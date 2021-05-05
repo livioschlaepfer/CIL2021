@@ -115,7 +115,7 @@ def h_flip(image, mask, path_tail, index):
     transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_h_flip" + ".png")
 
     rotate_90(image, mask, path_tail + "_h_flip", index)
-    color_jitter(image, mask, path_tail + "_h_flip", index)
+    # color_jitter(image, mask, path_tail + "_h_flip", index)
 
 
 # Rotation by 90s multiply
@@ -129,12 +129,16 @@ def rotate_90(image, mask, path_tail, index):
 
 # Apply random color jitter
 def color_jitter(image, mask, path_tail, index):
-    jitter = transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0)
 
-    image = jitter(image)
+    image_bright = TF.adjust_brightness(image, 1.2)
 
-    transform_to_png(image).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_jitter" + ".png")
-    transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_jitter" + ".png")
+    transform_to_png(image_bright).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_jitter_bright" + ".png")
+    transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_jitter_bright" + ".png")
+
+    image_dark = TF.adjust_brightness(image, 0.8)
+
+    transform_to_png(image_dark).convert("RGB").save(config.paths.train_image_dir_aug_output + "/" + path_tail + "_jitter_dark" + ".png")
+    transform_to_png(mask).save(config.paths.train_mask_dir_aug_output + "/" + path_tail + "_jitter_dark" + ".png")
 
 
 if __name__ == "__main__":

@@ -63,6 +63,6 @@ pseudo_labeling: False
 
 # Configure transforms
 transforms:
-  apply_test_transforms: False
+  apply_test_transforms: True
   apply_transforms: False
   crop_size: 208
