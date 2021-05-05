@@ -25,7 +25,7 @@ assert len(os.listdir(folder_AB)) == 0, "please delete old images"
 
 img_names = os.listdir(folder_A) # suffices to look at folder A since corresponding images have the same name
 
-for name in img_names:
+for name in tqdm(img_names):
     img_A = Image.open(os.path.join(folder_A, name))
     img_B = Image.open(os.path.join(folder_B, name)).convert("RGB")
 
@@ -78,6 +78,6 @@ for name in img_names:
             AB_rot.save(path_AB)
             AB_rot_jit.save(path_AB_jit)  
 
-    print(name)
+    #print(name)
 
 print("done!")
