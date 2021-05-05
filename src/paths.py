@@ -22,5 +22,17 @@ def paths_setter(username):
                     'test_image_dir': '/Users/livioschlapfer/Documents/OneDrive/Daten Livio/Schule/ETH/Master/2. Semester/Computational Intelligence Lab/3 - Project/2 - Data/cil-road-segmentation-2021/test_images/test_images',
                     'test_output_dir': '/Users/livioschlapfer/Documents/OneDrive/Daten Livio/Schule/ETH/Master/2. Semester/Computational Intelligence Lab/3 - Project/2 - Data/cil-road-segmentation-2021/test_images/test_output',
             }
+        
+        elif username == 'livios':
+            path_dict = {
+                    'train_mask_dir': '/cluster/home/livios/data/training/training/groundtruth_aug',
+                    'train_mask_dir_aug_input': '/cluster/home/livios/data/training/training/groundtruth', 
+                    'train_mask_dir_aug_output': '/cluster/home/livios/data/training/training//groundtruth_aug', 
+                    'train_image_dir': '/cluster/home/livios/data/training/training/images_aug',
+                    'train_image_dir_aug_input': '/cluster/home/livios/data/training/training/images',
+                    'train_image_dir_aug_output': '/cluster/home/livios/data/training/training/images_aug',
+                    'test_image_dir': '/cluster/home/livios/data/test_images/test_images',
+                    'test_output_dir': '/cluster/home/livios/data/test_images/test_output',
+            }
 
         return path_dict
