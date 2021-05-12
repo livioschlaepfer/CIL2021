@@ -56,7 +56,7 @@ class BaseOptions():
         parser.add_argument('--suffix', default='', type=str, help='customized suffix: opt.name = opt.name + suffix: e.g., {model}_{netG}_size{load_size}')
         parser.add_argument('--visualize_model_output', default=True, type=bool, help='whether or not to display output progress')
         parser.add_argument('--vis_time', default=300, type=int, help='define visualize time')
-        parser.add_argument('--use_CRF', action="store_true", help='whether to add a CRF layer at the end')
+        parser.add_argument('--use_CRF', default=True, help='whether to add a CRF layer at the end')
         self.initialized = True
         return parser
 

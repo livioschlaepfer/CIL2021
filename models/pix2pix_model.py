@@ -54,6 +54,7 @@ class Pix2PixModel(BaseModel):
             self.model_names = ['G']
         # define networks (both generator and discriminator)
         print("use_CRF:",opt.use_CRF)
+        print("no_dropout: ",opt.no_dropout)
         self.netG = networks.define_G(opt.input_nc, opt.output_nc, opt.ngf, opt.netG, opt.norm,
                                       not opt.no_dropout, opt.init_type, opt.init_gain, self.gpu_ids, use_CRF=opt.use_CRF)
 

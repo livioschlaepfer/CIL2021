@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from torch.nn import init
-from crfseg import CRF
+from models.CRF_layer import CRF
 import functools
 from torch.optim import lr_scheduler
 
@@ -508,7 +508,7 @@ class UnetSkipConnectionBlock(nn.Module):
             down = [downconv]
             up = [uprelu, upconv, nn.Tanh()]
             if use_CRF:
-                up + CRF()
+                up = up + [CRF(n_spatial_dims=2)]
                 print("CRF Layer added.")
             model = down + [submodule] + up
         elif innermost:
