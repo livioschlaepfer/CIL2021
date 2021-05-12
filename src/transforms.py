@@ -35,7 +35,7 @@ def init_data_transforms(config):
 
         # Random rotation
         if np.random.uniform(0,1) > 0.5:
-            angle = np.random.uniform(low=-45, high=45)
+            angle = np.random.uniform(low=5, high=355)
             image = TF.rotate(image, angle)
             mask = TF.rotate(mask, angle)
 
@@ -54,6 +54,18 @@ def init_data_transforms(config):
 
             image = images[rand]
             mask = masks[rand]
+
+            # Random 90 degree rotation
+            rot90 = [90, 180, 270]
+            rand = np.random.randint(0,3)
+
+            image = TF.rotate(image, rot90[rand])
+            mask = TF.rotate(mask, rot90[rand])
+
+            # Random color jitter
+            color_jitter = transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0, hue=0)
+            image = color_jitter(image)
+            mask = color_jitter(mask)
 
         return image, mask
 

@@ -18,10 +18,6 @@ def transform_test(image):
 
     # Horizontal flipping
     cur_image = TF.hflip(image)
-
-    print("image shape", image.shape)
-    print("cur_image shape", cur_image.shape)
-
     total_image.append(cur_image)
 
     # Vertical flipping
@@ -37,7 +33,6 @@ def transform_test(image):
 
     # Stack transforms
     total_image = torch.stack(total_image)
-    print("total image", total_image.shape)
     
     return total_image
 

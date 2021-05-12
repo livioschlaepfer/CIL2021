@@ -55,7 +55,7 @@ class DeepLabv3RunnerClass:
 
             loss3 = 0.2 * bce(input_16, target_16) + 0.8 * dice(input_16, target_16)
 
-            print("loss1", loss1,"loss3", loss3, )
+            # print("loss1", loss1,"loss3", loss3, )
 
             return loss1 + 0.2 * loss3 
 

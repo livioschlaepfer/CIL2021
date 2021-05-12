@@ -7,8 +7,10 @@ import torch
 from torch.nn.functional import log_softmax
 import time
 import copy
+from tqdm import tqdm
 
 from src.visualizer import visualize_output
+from src.criterion.dice_loss import dice_loss
 
 
 def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
@@ -36,35 +38,40 @@ def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
             # running_corrects = 0
 
             # Iterate over data.
-            for inputs, labels in dataloaders[phase]:
-                inputs = inputs.to(device)
-                labels = labels.to(device)
+            with tqdm(dataloaders[phase], unit="batch") as tqdm_dataloader:
+                for inputs, labels in tqdm_dataloader:
+                    tqdm_dataloader.set_description(f"Epoch {epoch}")
 
-                # zero the parameter gradients
-                optimizer.zero_grad()
+                    inputs = inputs.to(device)
+                    labels = labels.to(device)
 
-                # forward
-                # track history if only in train
-                with torch.set_grad_enabled(phase == 'train'):
-                    # Get model outputs and calculate loss
+                    # zero the parameter gradients
+                    optimizer.zero_grad()
 
-                    outputs = runner.forward(inputs)
+                    # forward
+                    # track history if only in train
+                    with torch.set_grad_enabled(phase == 'train'):
+                        # Get model outputs and calculate loss
 
-                    # Visualize output
-                    if config.visualize_model_output and (time.time()-vis_time>config.visualize_time):
-                        visualize_output(outputs, inputs, labels, config=config)
-                        vis_time=time.time()
-                    
+                        outputs = runner.forward(inputs)
 
-                    loss = runner.criterion(outputs.float(), labels.float())
-                    
-                    preds = outputs.argmax(1)
+                        # Visualize output
+                        if config.visualize_model_output and (time.time()-vis_time>config.visualize_time):
+                            visualize_output(outputs, inputs, labels, config=config)
+                            vis_time=time.time()
+                        
 
-                    # backward + optimize only if in training phase
-                    if phase == 'train':
-                        loss.backward()
-                        optimizer.step()
-                        print("=========================== updated weights")
+                        loss = runner.criterion(outputs.float(), labels.float())
+                        
+                        # batch statistics
+                        dice = dice_loss()
+                        tqdm_dataloader.set_postfix(loss = loss.item(), accuracy = 100. * dice(outputs.float(), labels.float()).item())
+
+                        # backward + optimize only if in training phase
+                        if phase == 'train':
+                            loss.backward()
+                            optimizer.step()
+                            # print("=========================== updated weights")
 
                 # statistics
                 # running_loss += loss.item() * inputs.size(0)

@@ -61,14 +61,11 @@ if config.freeze:
 optimizer_ft = optim.Adam(params_to_update, lr=0.0001)
 
 # Train and evaluate model
-if config.runs.train_run:
-    runner, hist = train_model(runner, dataloaders_dict_train, optimizer_ft, num_epochs = config.num_epochs, config = config, device = device)
+runner, hist = train_model(runner, dataloaders_dict_train, optimizer_ft, num_epochs = config.num_epochs, config = config, device = device)
 
+# Store model
+if not os.path.exists(config.paths.model_store):
+    os.makedirs(config.paths.model_store)
 
-# Test model
-if config.runs.test_run:
-    # Create test datasets + dataloader
-    image_datasets, dataloaders_dict_test = init_test_dataloaders(config)
-
-    # Test model
-    test_model(runner, dataloaders_dict_test, dataloaders_dict_train, device, optimizer_ft, config)
+torch.save(runner.model.state_dict(), config.paths.model_store + "/" + config.checkpoint_name + ".pth")
+print("Stored model statedict under:", config.paths.model_store + "/" + config.checkpoint_name + ".pth")
