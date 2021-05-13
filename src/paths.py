@@ -26,15 +26,15 @@ def paths_setter(username):
         
         elif username == 'livios':
             path_dict = {
-                    'train_mask_dir': '/cluster/home/livios/data/training/training/groundtruth_aug',
+                    'train_mask_dir': '/cluster/home/livios/data/training/training/groundtruth',
                     'train_mask_dir_aug_input': '/cluster/home/livios/data/training/training/groundtruth', 
                     'train_mask_dir_aug_output': '/cluster/home/livios/data/training/training//groundtruth_aug', 
-                    'train_image_dir': '/cluster/home/livios/data/training/training/images_aug',
+                    'train_image_dir': '/cluster/home/livios/data/training/training/images',
                     'train_image_dir_aug_input': '/cluster/home/livios/data/training/training/images',
                     'train_image_dir_aug_output': '/cluster/home/livios/data/training/training/images_aug',
                     'test_image_dir': '/cluster/home/livios/data/test_images/test_images',
                     'test_output_dir': '/cluster/home/livios/data/test_images/test_output',
-                    'model_store:': '/cluster/home/livios/data/test_images/model_store'
+                    'model_store:': '/cluster/home/livios/data/model_store'
             }
 
         return path_dict

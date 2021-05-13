@@ -25,11 +25,11 @@ def transform_test(image):
     total_image.append(cur_image)
 
     # Apply color jitter twice
-    cur_image = TF.adjust_brightness(image, 1.2)
-    total_image.append(cur_image)
+    # cur_image = TF.adjust_brightness(image, 1.3)
+    # total_image.append(cur_image)
 
-    cur_image = TF.adjust_brightness(image, 0.8)
-    total_image.append(cur_image)
+    # cur_image = TF.adjust_brightness(image, 0.7)
+    # total_image.append(cur_image)
 
     # Stack transforms
     total_image = torch.stack(total_image)
@@ -47,10 +47,14 @@ def transform_test_back(output):
 def transform_test_aggregate(output):
 
     # Average output
-    dims = (0)
-    output = torch.sum(output, dims)
-    output = output / 5
+    # dims = (0)
+    # output = torch.sum(output, dims)
+    # output = output / 3
 
-    output = torch.unsqueeze(output, 0)
+    # output = torch.unsqueeze(output, 0)
+
+    # Take max output
+    dims = (0)
+    output = torch.max(output, dims, keepdim = True)[0]
 
     return output

@@ -88,19 +88,17 @@ class SegmentationDataSet(data.Dataset):
     def __getitem__(self, index: int):
         # Load input and target
         image = Image.open(self.image_paths[index])
+            
         if self.training_run:
+            # Load target
             mask = Image.open(self.mask_paths[index])
 
-        # image.show() # For testing only
-        # mask.show() # For testing only
-
-        # Normalize image
-        image = self.prep_image(image)
-
-        if self.training_run:
             # Transformation / Augmentation
             if self.transform is not None:
                 image, mask =  self.transform(image, mask)
+
+            # Normalize image
+            image = self.prep_image(image)
 
             # One hot encode segmentation classes based on segmentation class colors
             mask = np.array(mask)
@@ -112,7 +110,9 @@ class SegmentationDataSet(data.Dataset):
 
             mask = np.stack((road, background)) # Merge road and background
 
-        if self.training_run:
             return image, mask
         else:
+            # Normalize image
+            image = self.prep_image(image)
+
             return image, self.image_paths[index]

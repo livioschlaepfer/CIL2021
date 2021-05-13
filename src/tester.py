@@ -48,7 +48,7 @@ def test_model(runner, dataloaders_test, device, config):
                     vis_time=time.time()
 
                 # Convert output to .png and store
-                png = runner.convert_to_png(output[0])
+                png = runner.convert_to_png(output.squeeze())
 
                 # Store output
                 png.save(config.paths.test_output_dir + "/" + os.path.split(paths[index])[1])

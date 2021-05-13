@@ -34,7 +34,7 @@ def init_data_transforms(config):
             mask = TF.vflip(mask)
 
         # Random rotation
-        if np.random.uniform(0,1) > 0.5:
+        if np.random.uniform(0,1) > 0.9:
             angle = np.random.uniform(low=5, high=355)
             image = TF.rotate(image, angle)
             mask = TF.rotate(mask, angle)
@@ -43,6 +43,11 @@ def init_data_transforms(config):
             cc = transforms.CenterCrop(config.transforms.crop_size)
             image = cc(image)
             mask = cc(mask) 
+
+            # Random color jitter
+            color_jitter = transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0, hue=0)
+            image = color_jitter(image)
+            
         else:
             # Five crop image
             fc = transforms.FiveCrop(config.transforms.crop_size)
@@ -56,16 +61,15 @@ def init_data_transforms(config):
             mask = masks[rand]
 
             # Random 90 degree rotation
-            rot90 = [90, 180, 270]
-            rand = np.random.randint(0,3)
+            rot90 = [0, 90, 180, 270]
+            rand = np.random.randint(0,4)
 
             image = TF.rotate(image, rot90[rand])
             mask = TF.rotate(mask, rot90[rand])
 
             # Random color jitter
-            color_jitter = transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0, hue=0)
+            color_jitter = transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0, hue=0)
             image = color_jitter(image)
-            mask = color_jitter(mask)
 
         return image, mask
 
