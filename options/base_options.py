@@ -21,9 +21,9 @@ class BaseOptions():
         """Define the common options that are used in both training and test."""
         # basic parameters
         parser.add_argument('--dataroot', default="/home/svkohler/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/data", help='path to images (should have subfolders trainA, trainB, valA, valB, etc)')
-        parser.add_argument('--name', type=str, default='road_seg_single_output_dim_5_5_2021', help='name of the experiment. It decides where to store samples and models')
+        parser.add_argument('--name', type=str, default='road_seg_crf_12_05_21', help='name of the experiment. It decides where to store samples and models')
         parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
-        parser.add_argument('--checkpoints_dir', type=str, default="C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/checkpoints", help='models are saved here')
+        parser.add_argument('--checkpoints_dir', type=str, default="/home/svkohler/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/checkpoints", help='models are saved here')
         # model parameters
         parser.add_argument('--model', type=str, default='pix2pix', help='chooses which model to use. [cycle_gan | pix2pix | test | colorization]')
         parser.add_argument('--input_nc', type=int, default=3, help='# of input image channels: 3 for RGB and 1 for grayscale')
@@ -54,7 +54,7 @@ class BaseOptions():
         parser.add_argument('--load_iter', type=int, default='0', help='which iteration to load? if load_iter > 0, the code will load models by iter_[load_iter]; otherwise, the code will load models by [epoch]')
         parser.add_argument('--verbose', action='store_true', help='if specified, print more debugging information')
         parser.add_argument('--suffix', default='', type=str, help='customized suffix: opt.name = opt.name + suffix: e.g., {model}_{netG}_size{load_size}')
-        parser.add_argument('--visualize_model_output', default=True, type=bool, help='whether or not to display output progress')
+        parser.add_argument('--visualize_model_output', default=False, type=bool, help='whether or not to display output progress')
         parser.add_argument('--vis_time', default=300, type=int, help='define visualize time')
         parser.add_argument('--use_CRF', default=True, help='whether to add a CRF layer at the end')
         self.initialized = True
