@@ -26,8 +26,14 @@ def init_train_dataloaders(config):
     # Create training and validation splits
     image_paths_train, image_paths_val, mask_paths_train, mask_paths_val = train_test_split(image_paths, mask_paths, test_size = config.val_size, random_state = config.seed)
     
-    image_paths = {'train': image_paths_train, 'val': image_paths_val}
-    mask_paths = {'train': mask_paths_train, 'val': mask_paths_val}
+    #  Train on full dataset if configured
+    if config.use_train_val_split:
+        image_paths = {'train': image_paths_train, 'val': image_paths_val}
+        mask_paths = {'train': mask_paths_train, 'val': mask_paths_val}
+    else:
+        image_paths = {'train': image_paths, 'val': image_paths_val}
+        mask_paths = {'train': mask_paths, 'val': mask_paths_val}
+
 
     # Get transforms
     data_transforms = init_data_transforms(config)

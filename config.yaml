@@ -45,6 +45,7 @@ visualize_time: 1000
 num_epochs: 800
 
 # Proportion of the dataset used for validation split
+use_train_val_split: False
 val_size: 0.1
 
 # Freeze pretrained layer weights
