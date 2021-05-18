@@ -1,5 +1,6 @@
 """This module contains simple helper functions """
 from __future__ import print_function
+from numpy.lib.type_check import imag
 import torch
 import numpy as np
 from PIL import Image
@@ -24,7 +25,6 @@ def tensor2im(input_image, imtype=np.uint8):
         input_image (tensor) --  the input image tensor array
         imtype (type)        --  the desired type of the converted numpy array
     """
-    print(input_image)
     if not isinstance(input_image, np.ndarray):
         if isinstance(input_image, torch.Tensor):  # get the data from a variable
             image_tensor = input_image.data
@@ -121,15 +121,14 @@ def mkdir(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
-def crf_postprocessing(model):
+def crf_postprocessing(model, data):
     """ take the output of the model and apply crf postprocessing """
 
     # convert the input image to an rgb
-    input_rgb = (np.squeeze(model.real.cpu().float().numpy() * 255).astype(np.uint8)).transpose((2, 1, 0))
-
+    input_rgb = cv2.cvtColor(cv2.resize(cv2.imread(data["A_paths"][0]), (512,512)), cv2.COLOR_BGR2RGB)
+    
     # coerce mask in range 0 to 255
-    mask = (model.fake.cpu().float().numpy()*255).astype(np.uint8)
-
+    mask = np.squeeze(model.fake.cpu().float().numpy()*255).astype(np.uint8)
     # create "negative" of mask by bitwise operation
     not_mask = cv2.bitwise_not(mask)
 
@@ -144,8 +143,6 @@ def crf_postprocessing(model):
     # get unary potentials 
     unary = unary_from_softmax(feat_first)
     unary = np.ascontiguousarray(unary)
-    print(input_rgb.shape)
-    print(unary.shape)
 
     # initialize the CRF object
     d = dcrf.DenseCRF2D(input_rgb.shape[0], input_rgb.shape[1], 2)
@@ -164,17 +161,6 @@ def crf_postprocessing(model):
     # extract argmax
     res = np.argmax(Q, axis=0).reshape((input_rgb.shape[0], input_rgb.shape[1]))
 
-    print("done")
+    crf_mask = np.array(res*255, dtype=np.uint8)
 
-                #     d = dcrf.DenseCRF2D(output.shape[2], output.shape[3], 1)
-                # print(output)
-                # U = unary_from_softmax(np.array(output.cpu()))
-                # print(U)
-                # d.setUnaryEnergy(U)
-                # d.addPairwiseGaussian(sxy=(3,3), compat=3, kernel=dcrf.DIAG_KERNEL, normalization=dcrf.NORMALIZE_SYMMETRIC)
-                # #d.addPairwiseBilateral(sxy=(80,80), srgb=(13,13,13), rgbim=model.real, compat=10, kernel=dcrf.DIAG_KERNEL, normalization=dcrf.NORMALIZE_SYMMETRIC)
-                # output = np.array(d.inference(5)).reshape(output.shape[2], output.shape[3])
-                # print("shape after crf:", output.shape)
-                # print(output)
-                # print(model.real)
-                # break
+    return crf_mask

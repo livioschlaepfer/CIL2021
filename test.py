@@ -66,7 +66,7 @@ if __name__ == '__main__':
             #print(output.shape)
             #print(output[0])
             if opt.crf_post:
-                output = crf_postprocessing(model)
+                output = crf_postprocessing(model, data)
                 
 
             #print(model.fake.shape)
@@ -77,6 +77,5 @@ if __name__ == '__main__':
             if i % 5 == 0:  # save images to an HTML file
                 print('processing (%04d)-th image... %s' % (i, img_path))
             save_images(opt, output, i, img_path, aspect_ratio=opt.aspect_ratio, resize = (608,608))
-            break
         # else:
         #     print("Not found: ", "".join(data["A_paths"]), "------ ", i)
