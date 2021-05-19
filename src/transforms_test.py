@@ -62,11 +62,10 @@ def transform_test_aggregate(output):
     dims = (0)
     for i in range(0,19,5):
         output[i] = torch.max(output[i:i+4], dims, keepdim = True)[0]
+    
     # Rebuild image from 5 crop
-    output[0][:][0:303][0:303]= output[0]
-    output[0][:][0:303][303:303]= output[5]
-    output[0][:][303:303][0:303]= output[10]
-    output[0][:][303:303][303:303]= output[15]
-    # output[0][:][0:303][0:303]= output[i] ignore center crop
+    output = output.view(1,5,-1).avg(1)
+
+    print("output shape", output.shape)
  
-    return output[0]
+    return output
