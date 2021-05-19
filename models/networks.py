@@ -4,6 +4,7 @@ from torch.nn import init
 from models.CRF_layer import CRF
 import functools
 from torch.optim import lr_scheduler
+from models.loss_functions import SoftDiceLoss, IoULoss
 
 
 ###############################################################################
@@ -235,6 +236,10 @@ class GANLoss(nn.Module):
             self.loss = nn.BCEWithLogitsLoss()
         elif gan_mode in ['wgangp']:
             self.loss = None
+        elif gan_mode == "softdice":
+            self.loss = SoftDiceLoss()
+        elif gan_mode == "IoU":
+            self.loss = IoULoss()
         else:
             raise NotImplementedError('gan mode %s not implemented' % gan_mode)
 
@@ -265,7 +270,7 @@ class GANLoss(nn.Module):
         Returns:
             the calculated loss.
         """
-        if self.gan_mode in ['lsgan', 'vanilla']:
+        if self.gan_mode in ['lsgan', 'vanilla', 'softdice', 'IoU']:
             target_tensor = self.get_target_tensor(prediction, target_is_real)
             loss = self.loss(prediction, target_tensor)
         elif self.gan_mode == 'wgangp':
