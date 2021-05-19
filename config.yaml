@@ -25,7 +25,7 @@ paths:
 
 # Model name
 model_name: "deeplabv3"
-checkpoint_name: "deeplab_epoch_800_jitter_03"
+checkpoint_name: "deeplab_epoch_800_jitter03_bce00_dice08_no_val_split"
 # checkpoint_name: "checkpoint_test"
 
 # Number of classes for segmentation
