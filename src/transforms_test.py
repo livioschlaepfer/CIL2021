@@ -64,13 +64,13 @@ def transform_test_aggregate(output):
         output[i] = torch.max(output[i:i+4], dims, keepdim = True)[0]
     
     # Rebuild image from 5 crop
-    output_t = np.hstack(output[0], output[5]) # merge upper half
+    output_t = np.hstack((output[0], output[5])) # merge upper half
     print("output top shape", output_t.shape)
 
-    output_b = np.hstack(output[10], output[15]) # merge lower half
+    output_b = np.hstack((output[10], output[15])) # merge lower half
     print("output bottom shape", output_b.shape)
 
-    output = np.vstack(output_t, output_b) # merge upper and lower half
+    output = np.vstack((output_t, output_b)) # merge upper and lower half
     
     print("output shape", output.shape)
     
