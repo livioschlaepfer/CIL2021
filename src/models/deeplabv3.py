@@ -48,12 +48,12 @@ class DeepLabv3RunnerClass:
             bce = nn.BCELoss()
             dice = dice_loss()
 
-            loss1 = 0.0 * bce(input, target) + 0.8 * dice(input, target)
+            loss1 = 0.2 * bce(input, target) + 0.8 * dice(input, target)
 
             input_16 = self.image_to_patched(input, 16)
             target_16 = self.mask_to_patched(target, 16)
 
-            loss3 = 0.0 * bce(input_16, target_16) + 0.8 * dice(input_16, target_16)
+            loss3 = 0.2 * bce(input_16, target_16) + 0.8 * dice(input_16, target_16)
 
             # print("loss1", loss1,"loss3", loss3, )
 
@@ -72,7 +72,8 @@ class DeepLabv3RunnerClass:
         return loss
 
     def convert_to_png(self, output):
-        binary = output.argmin(0)
+        # binary = output.argmin(0)
+        binary = output[0]
         binary = torch.tensor(binary, dtype=torch.float64)
         binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 
