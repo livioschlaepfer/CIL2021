@@ -21,7 +21,7 @@ class TestOptions(BaseOptions):
         parser.set_defaults(load_size=512)
         parser.set_defaults(crop_size=512)
         # CRF postprocessing
-        parser.add_argument('--crf_post', type=bool, default=False, help='whether to apply crf postprocessing')
+        parser.add_argument('--crf_post', type=bool, default=True, help='whether to apply crf postprocessing')
         # To avoid cropping, the load_size should be the same as crop_size
         #parser.set_defaults(load_size=parser.get_default('crop_size'))
         self.isTrain = False
