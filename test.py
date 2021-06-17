@@ -53,7 +53,6 @@ if __name__ == '__main__':
     model.setup(opt)               # regular setup: load and print networks; create schedulers
     # setup the crf 
 
-
     if opt.eval:
         model.eval()
     for i, data in enumerate(dataset):

@@ -15,9 +15,11 @@ def get_concat_h(im1, im2):
     dst.paste(im2, (im1.size[1], 0))
     return dst
 
-folder_A = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data/training/images/'
-folder_B = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data/training/groundtruth/'
-folder_AB = 'C:/Users/svenk/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/data/train/'
+folder_A = '/home/svkohler/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data/training/images/'
+folder_B = '/home/svkohler/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data/training/groundtruth/'
+folder_AB = '/home/svkohler/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/data/train/'
+
+filtering = True
 
 assert len(os.listdir(folder_A)) == len(os.listdir(folder_B)), "make sure number of images is equal to number of masks"
 
@@ -27,6 +29,8 @@ img_names = os.listdir(folder_A) # suffices to look at folder A since correspond
 
 for name in tqdm(img_names):
     img_A = Image.open(os.path.join(folder_A, name))
+    if filtering:
+        img_A = cv2.bilateralFilter(np.array(img_A), 15, 150, 150)
     img_B = Image.open(os.path.join(folder_B, name)).convert("RGB")
 
     img_A_ten = transforms.ToTensor()(img_A)
