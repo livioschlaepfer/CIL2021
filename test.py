@@ -36,6 +36,7 @@ import torch
 from util.visualizer import visualize_pred
 # crf packages
 from util.util import crf_postprocessing
+from test_trans import transform_test_back, transform_test_aggregate
 
 
 print(torch.__version__)
@@ -62,10 +63,14 @@ if __name__ == '__main__':
             model.set_input(data)  # unpack data from data loader
             model.test()           # run inference
             output = model.fake
-            #print(output.shape)
+            if opt.test_trans:
+                outputs_back = transform_test_back(output)
+                print(output.shape)
+                output = transform_test_aggregate(outputs_back)
+                print(output.shape)
             #print(output[0])
             if opt.crf_post:
-                output = crf_postprocessing(model, data)
+                output = crf_postprocessing(output, data)
                 
 
             #print(model.fake.shape)

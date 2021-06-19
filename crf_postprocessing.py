@@ -29,7 +29,8 @@ def crf_postprocessing(paths):
 
     # stacka and convert to softmax values
     softmax = np.concatenate([not_mask, mask], axis=2)/255
-    feat_first = np.squeeze(softmax).transpose((2, 0, 1)).reshape((2,-1))
+    print(softmax.shape)
+    feat_first = np.squeeze(softmax) #.transpose((2, 0, 1)).reshape((2,-1))
 
     # get unary potentials 
     unary = unary_from_softmax(feat_first)

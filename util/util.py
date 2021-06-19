@@ -121,14 +121,17 @@ def mkdir(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
-def crf_postprocessing(model, data):
+def crf_postprocessing(output, data):
     """ take the output of the model and apply crf postprocessing """
 
     # convert the input image to an rgb
     input_rgb = cv2.cvtColor(cv2.resize(cv2.imread(data["A_paths"][0]), (512,512)), cv2.COLOR_BGR2RGB)
     
     # coerce mask in range 0 to 255
-    mask = np.squeeze(model.fake.cpu().float().numpy()*255).astype(np.uint8)
+    if isinstance(output, np.ndarray):
+        mask = np.squeeze(output*255).astype(np.uint8)
+    if isinstance(output, torch.Tensor):
+        mask = np.squeeze(output.cpu().float().numpy()*255).astype(np.uint8)
     # create "negative" of mask by bitwise operation
     not_mask = cv2.bitwise_not(mask)
 
