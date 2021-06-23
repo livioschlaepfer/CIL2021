@@ -1,7 +1,8 @@
 from .base_model import BaseModel
 from . import networks
-from test_trans import transform_test
+from test_trans import transform_test, test_plot
 import torch
+import numpy as np
 
 
 class TestModel(BaseModel):
@@ -66,8 +67,11 @@ class TestModel(BaseModel):
         """Run forward pass."""
         if self.opt.model == "test" and self.opt.test_trans:
             self.real = transform_test(self.real)
+            #print(torch.squeeze(self.real.cpu()).permute((0, 2, 3,1)).shape)
+            #test_plot(torch.squeeze(self.real.cpu()).permute((0, 2, 3,1)))
             self.fake = self.netG(torch.squeeze(self.real))  # G(real)
-        self.fake = self.netG(self.real) # G(real)
+        else:
+            self.fake = self.netG(self.real) # G(real)
 
     def optimize_parameters(self):
         """No optimization for test model."""

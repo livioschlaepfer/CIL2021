@@ -93,4 +93,4 @@ if __name__ == '__main__':
                 model.save_networks('latest')
                 model.save_networks(epoch)
 
-            print('End of epoch %d / %d \t Epoch loss generator/discriminator/total: %.2f / %.2f / %.2f \t Time Taken: %d sec' % (epoch, opt.n_epochs + opt.n_epochs_decay, time.time() - epoch_start_time))
+            print('End of epoch %d / %d \t Epoch loss generator/discriminator/total: %.2f / %.2f / %.2f \t Time Taken: %d sec' % (epoch, opt.n_epochs + opt.n_epochs_decay, epoch_loss_G, epoch_loss_D, epoch_loss_total,time.time() - epoch_start_time))

@@ -88,8 +88,6 @@ class Pix2PixModel(BaseModel):
 
     def forward(self):
         """Run forward pass; called by both functions <optimize_parameters> and <test>."""
-        print("ok")
-        print(self.opt.model,self.opt.test_trans)
         if self.opt.model == "test" and self.opt.test_trans:
             self.real_A = transform_test(self.real_A)
         self.fake_B = self.netG(self.real_A)  # G(A)

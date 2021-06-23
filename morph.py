@@ -1,5 +1,5 @@
 import cv2
-from skimage.morphology import erosion, dilation, rectangle, octagon, closing, disk, skeletonize
+from skimage.morphology import erosion, dilation, rectangle, octagon, closing, disk, skeletonize, area_closing, area_opening
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -16,17 +16,21 @@ def plot_comparison(original, filtered, filter_name):
     plt.show()
 
 
-img_0 = cv2.imread("/home/svkohler/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/predictions/no_blur_test/test_7.png", cv2.IMREAD_GRAYSCALE)
+img_0 = cv2.imread("/home/svkohler/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data_GAN/predictions/test_92.png", cv2.IMREAD_GRAYSCALE)
 _, img_0 = cv2.threshold(img_0, 127, 1, cv2.THRESH_BINARY)
 
-selem = disk(20)
-print(np.array(img_0).shape)
+selem = rectangle(10, 2)
+selem1 = rectangle(2, 10)
+selem2 = disk(10)
 
 eroded = erosion(np.array(img_0), selem)
-dilated = dilation(eroded, selem)
 closed = closing(img_0, selem)
 skelet = skeletonize(closed)
-plot_comparison(img_0, skelet, 'modified')
+area_open = area_opening(img_0, 1000)
+dilated = dilation(area_open, selem)
+inter = closing(area_open, selem)
+closed = closing(inter, selem1)
+plot_comparison(img_0, closed, 'modified')
 
 #print(img_0)
 

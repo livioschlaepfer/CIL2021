@@ -36,7 +36,7 @@ import torch
 from util.visualizer import visualize_pred
 # crf packages
 from util.util import crf_postprocessing
-from test_trans import transform_test_back, transform_test_aggregate
+from test_trans import transform_test_back, transform_test_aggregate, test_plot
 
 
 print(torch.__version__)
@@ -63,12 +63,17 @@ if __name__ == '__main__':
             model.set_input(data)  # unpack data from data loader
             model.test()           # run inference
             output = model.fake
+            #print("model output:", output.shape)
+            img_path = model.get_image_paths()     # get image paths
+            #print(img_path)
             if opt.test_trans:
+                #test_plot(output.cpu())
                 outputs_back = transform_test_back(output)
-                print(output.shape)
-                output = transform_test_aggregate(outputs_back)
-                print(output.shape)
-            #print(output[0])
+                #test_plot(outputs_back.cpu())
+                #print("back transformed shape:", output.shape)
+                output_agg = transform_test_aggregate(outputs_back)
+                #print("aggregated shape:", output_agg.shape)
+                output = output_agg
             if opt.crf_post:
                 output = crf_postprocessing(output, data)
                 
@@ -77,7 +82,6 @@ if __name__ == '__main__':
             #print("".join(data["A_paths"]))
             # if i % 5 == 0:
             #     visualize_pred(data["A"], model.fake)
-            img_path = model.get_image_paths()     # get image paths
             if i % 5 == 0:  # save images to an HTML file
                 print('processing (%04d)-th image... %s' % (i, img_path))
             save_images(opt, output, i, img_path, aspect_ratio=opt.aspect_ratio, resize = (608,608))

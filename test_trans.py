@@ -41,7 +41,7 @@ def transform_test(image):
 
 # Reverse transforms on output
 def transform_test_back(output):
-    for i in range(0,19,5):
+    for i in range(0,19,4):
         output[i+1] = TF.hflip(output[i+1])    
         output[i+2] = TF.vflip(output[i+2])
         output[i+3] = TF.hflip(TF.vflip(output[i+3]))
@@ -61,18 +61,25 @@ def transform_test_aggregate(output):
     # Take max output
     output = torch.squeeze(output.cpu())
     dims = (0)
-    for i in range(0,19,5):
-        output[i] = torch.max(output[i:i+4], dims, keepdim = True)[0]
-    print(output.shape)
+    for i in range(0,19,4):
+        output[i] = torch.mean(output[i:i+4], dims, keepdim = True)[0]
+    #print(output.shape)
     # Rebuild image from 5 crop
-    output_t = np.hstack((output[0], output[5])) # merge upper half
-    print("output top shape", output_t.shape)
+    output_t = np.hstack((output[0], output[4])) # merge upper half
+    #print("output top shape", output_t.shape)
 
-    output_b = np.hstack((output[10], output[15])) # merge lower half
-    print("output bottom shape", output_b.shape)
+    output_b = np.hstack((output[8], output[12])) # merge lower half
+    #print("output bottom shape", output_b.shape)
 
     output = np.vstack((output_t, output_b)) # merge upper and lower half
     
-    print("output shape", output.shape)
+    #print("output shape", output.shape)
     
     return output
+
+def test_plot(outputs):
+    plt.figure(figsize=(10,10))
+    for i in range(20):
+        plt.subplot(5,4,i+1)    # the number of images in the grid is 5*5 (25)
+        plt.imshow(torch.squeeze(outputs[i]))
+    plt.show()

@@ -152,12 +152,15 @@ def define_G(input_nc, output_nc, ngf, netG, norm='batch', use_dropout=False, in
         net = ResnetGenerator(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=9)
     elif netG == 'resnet_6blocks':
         net = ResnetGenerator(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=6)
+    elif netG == 'unet_64':
+        net = UnetGenerator(input_nc, output_nc, 6, ngf, norm_layer=norm_layer, use_dropout=use_dropout, use_CRF=use_CRF)
     elif netG == 'unet_128':
         net = UnetGenerator(input_nc, output_nc, 7, ngf, norm_layer=norm_layer, use_dropout=use_dropout, use_CRF=use_CRF)
     elif netG == 'unet_256':
         net = UnetGenerator(input_nc, output_nc, 8, ngf, norm_layer=norm_layer, use_dropout=use_dropout, use_CRF=use_CRF)
     else:
         raise NotImplementedError('Generator model name [%s] is not recognized' % netG)
+    print(net)
     return init_net(net, init_type, init_gain, gpu_ids)
 
 
@@ -202,6 +205,7 @@ def define_D(input_nc, ndf, netD, n_layers_D=3, norm='batch', init_type='normal'
         net = PixelDiscriminator(input_nc, ndf, norm_layer=norm_layer)
     else:
         raise NotImplementedError('Discriminator model name [%s] is not recognized' % netD)
+    print(net)
     return init_net(net, init_type, init_gain, gpu_ids)
 
 
@@ -457,7 +461,7 @@ class UnetGenerator(nn.Module):
         """
         super(UnetGenerator, self).__init__()
         # construct unet structure
-        unet_block = UnetSkipConnectionBlock(ngf * 8, ngf * 8, input_nc=None, submodule=None, norm_layer=norm_layer, innermost=True)  # add the innermost layer
+        unet_block = UnetSkipConnectionBlock(ngf * 8, ngf * 8, input_nc=None, submodule=None, norm_layer=norm_layer, innermost=True, use_dropout=use_dropout)  # add the innermost layer
         for i in range(num_downs - 5):          # add intermediate layers with ngf * 8 filters
             unet_block = UnetSkipConnectionBlock(ngf * 8, ngf * 8, input_nc=None, submodule=unet_block, norm_layer=norm_layer, use_dropout=use_dropout)
         # gradually reduce the number of filters from ngf * 8 to ngf
@@ -521,7 +525,10 @@ class UnetSkipConnectionBlock(nn.Module):
                                         kernel_size=4, stride=2,
                                         padding=1, bias=use_bias)
             down = [downrelu, downconv]
-            up = [uprelu, upconv, upnorm]
+            if use_dropout:
+                up = [uprelu, upconv, upnorm] + [nn.Dropout(0.5)]
+            else:
+                up = [uprelu, upconv, upnorm]
             model = down + up
         else:
             upconv = nn.ConvTranspose2d(inner_nc * 2, outer_nc,
@@ -531,7 +538,7 @@ class UnetSkipConnectionBlock(nn.Module):
             up = [uprelu, upconv, upnorm]
 
             if use_dropout:
-                model = down + [submodule] + up + [nn.Dropout(0.5)]
+                model = down + [submodule] + up #+ [nn.Dropout(0.5)]
             else:
                 model = down + [submodule] + up
 

@@ -6,7 +6,7 @@ import numpy as np
 
 
 def visualize_output(outputs, inputs, labels=None):
-    print("Started visualizer")
+    #print("Started visualizer")
 
     for (out, inp, lab) in zip(outputs, inputs, labels):
         # binary = out.detach().clone()
