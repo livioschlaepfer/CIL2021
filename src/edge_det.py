@@ -74,99 +74,93 @@ class Canny(nn.Module):
         self.directional_filter.bias.data.copy_(torch.from_numpy(np.zeros(shape=(all_filters.shape[0],))))
 
     def forward(self, img):
-        img_r = img[:,0:1]
-        img_g = img[:,1:2]
-        img_b = img[:,2:3]
+        with torch.no_grad():
+            img_r = img[:,0:1]
+            img_g = img[:,1:2]
+            img_b = img[:,2:3]
 
-        blur_horizontal = self.gaussian_filter_horizontal(img_r)
-        blurred_img_r = self.gaussian_filter_vertical(blur_horizontal)
-        blur_horizontal = self.gaussian_filter_horizontal(img_g)
-        blurred_img_g = self.gaussian_filter_vertical(blur_horizontal)
-        blur_horizontal = self.gaussian_filter_horizontal(img_b)
-        blurred_img_b = self.gaussian_filter_vertical(blur_horizontal)
+            blur_horizontal = self.gaussian_filter_horizontal(img_r)
+            blurred_img_r = self.gaussian_filter_vertical(blur_horizontal)
+            blur_horizontal = self.gaussian_filter_horizontal(img_g)
+            blurred_img_g = self.gaussian_filter_vertical(blur_horizontal)
+            blur_horizontal = self.gaussian_filter_horizontal(img_b)
+            blurred_img_b = self.gaussian_filter_vertical(blur_horizontal)
 
-        blurred_img = torch.stack([blurred_img_r,blurred_img_g,blurred_img_b],dim=1)
-        blurred_img = torch.stack([torch.squeeze(blurred_img)])
+            blurred_img = torch.stack([blurred_img_r,blurred_img_g,blurred_img_b],dim=1)
+            blurred_img = torch.stack([torch.squeeze(blurred_img)])
 
-        grad_x_r = self.sobel_filter_horizontal(blurred_img_r)
-        grad_y_r = self.sobel_filter_vertical(blurred_img_r)
-        grad_x_g = self.sobel_filter_horizontal(blurred_img_g)
-        grad_y_g = self.sobel_filter_vertical(blurred_img_g)
-        grad_x_b = self.sobel_filter_horizontal(blurred_img_b)
-        grad_y_b = self.sobel_filter_vertical(blurred_img_b)
+            grad_x_r = self.sobel_filter_horizontal(blurred_img_r)
+            grad_y_r = self.sobel_filter_vertical(blurred_img_r)
+            grad_x_g = self.sobel_filter_horizontal(blurred_img_g)
+            grad_y_g = self.sobel_filter_vertical(blurred_img_g)
+            grad_x_b = self.sobel_filter_horizontal(blurred_img_b)
+            grad_y_b = self.sobel_filter_vertical(blurred_img_b)
 
-        # COMPUTE THICK EDGES
+            # COMPUTE THICK EDGES
 
-        grad_mag = torch.sqrt(grad_x_r**2 + grad_y_r**2)
-        grad_mag += torch.sqrt(grad_x_g**2 + grad_y_g**2)
-        grad_mag += torch.sqrt(grad_x_b**2 + grad_y_b**2)
-        grad_orientation = (torch.atan2(grad_y_r+grad_y_g+grad_y_b, grad_x_r+grad_x_g+grad_x_b) * (180.0/3.14159))
-        grad_orientation += 180.0
-        grad_orientation =  torch.round( grad_orientation / 45.0 ) * 45.0
+            grad_mag = torch.sqrt(grad_x_r**2 + grad_y_r**2)
+            grad_mag += torch.sqrt(grad_x_g**2 + grad_y_g**2)
+            grad_mag += torch.sqrt(grad_x_b**2 + grad_y_b**2)
+            grad_orientation = (torch.atan2(grad_y_r+grad_y_g+grad_y_b, grad_x_r+grad_x_g+grad_x_b) * (180.0/3.14159))
+            grad_orientation += 180.0
+            grad_orientation =  torch.round( grad_orientation / 45.0 ) * 45.0
 
-        # THIN EDGES (NON-MAX SUPPRESSION)
+            # THIN EDGES (NON-MAX SUPPRESSION)
 
-        all_filtered = self.directional_filter(grad_mag)
+            all_filtered = self.directional_filter(grad_mag)
 
-        inidices_positive = (grad_orientation / 45) % 8
-        inidices_negative = ((grad_orientation / 45) + 4) % 8
+            inidices_positive = (grad_orientation / 45) % 8
+            inidices_negative = ((grad_orientation / 45) + 4) % 8
 
-        height = inidices_positive.size()[2]
-        width = inidices_positive.size()[3]
-        pixel_count = height * width
-        pixel_range = torch.FloatTensor([range(pixel_count)])
-        if self.use_cuda:
-            pixel_range = torch.cuda.FloatTensor([range(pixel_count)])
+            height = inidices_positive.size()[2]
+            width = inidices_positive.size()[3]
+            pixel_count = height * width
+            pixel_range = torch.FloatTensor([range(pixel_count)])
+            if self.use_cuda:
+                pixel_range = torch.cuda.FloatTensor([range(pixel_count)])
 
-        indices = (inidices_positive.view(-1).data * pixel_count + pixel_range).squeeze()
-        channel_select_filtered_positive = all_filtered.view(-1)[indices.long()].view(1,height,width)
+            indices = (inidices_positive.view(-1).data * pixel_count + pixel_range).squeeze()
+            channel_select_filtered_positive = all_filtered.view(-1)[indices.long()].view(1,height,width)
 
-        indices = (inidices_negative.view(-1).data * pixel_count + pixel_range).squeeze()
-        channel_select_filtered_negative = all_filtered.view(-1)[indices.long()].view(1,height,width)
+            indices = (inidices_negative.view(-1).data * pixel_count + pixel_range).squeeze()
+            channel_select_filtered_negative = all_filtered.view(-1)[indices.long()].view(1,height,width)
 
-        channel_select_filtered = torch.stack([channel_select_filtered_positive,channel_select_filtered_negative])
+            channel_select_filtered = torch.stack([channel_select_filtered_positive,channel_select_filtered_negative])
 
-        is_max = channel_select_filtered.min(dim=0)[0] > 0.0
-        is_max = torch.unsqueeze(is_max, dim=0)
+            is_max = channel_select_filtered.min(dim=0)[0] > 0.0
+            is_max = torch.unsqueeze(is_max, dim=0)
 
-        thin_edges = grad_mag.clone()
-        thin_edges[is_max==0] = 0.0
+            thin_edges = grad_mag.clone()
+            thin_edges[is_max==0] = 0.0
 
-        # THRESHOLD
+            # THRESHOLD
 
-        thresholded = thin_edges.clone()
-        thresholded[thin_edges<self.threshold] = 0.0
+            thresholded = thin_edges.clone()
+            thresholded[thin_edges<self.threshold] = 0.0
 
-        early_threshold = grad_mag.clone()
-        early_threshold[grad_mag<self.threshold] = 0.0
+            early_threshold = grad_mag.clone()
+            early_threshold[grad_mag<self.threshold] = 0.0
 
-        assert grad_mag.size() == grad_orientation.size() == thin_edges.size() == thresholded.size() == early_threshold.size()
+            assert grad_mag.size() == grad_orientation.size() == thin_edges.size() == thresholded.size() == early_threshold.size()
 
-        return img, blurred_img, grad_mag, grad_orientation, thin_edges, thresholded, early_threshold
-
-class spatial_voting:
-    def __init__(self):
-        pass
-
-    def forward(self, mag_mat, grad_mat):
-        pass
-
+            return img, blurred_img, grad_mag, grad_orientation, thin_edges, thresholded, early_threshold
 
 def canny(raw_img, filter_size=5, threshold=3.0, use_cuda=False):
-    #img = transforms.ToTensor()(raw_img) # from_numpy(raw_img.transpose((2, 0, 1)))
-    batch = torch.stack([raw_img]).float()
+    with torch.no_grad():
+        #img = transforms.ToTensor()(raw_img) # from_numpy(raw_img.transpose((2, 0, 1)))
+        batch = torch.stack([raw_img]).float()
 
-    net = Canny(threshold=threshold, filter_size= filter_size, use_cuda=use_cuda)
-    if use_cuda:
-        net.cuda()
-    net.eval()
+        net = Canny(threshold=threshold, filter_size= filter_size, use_cuda=use_cuda)
+        if use_cuda:
+            net.cuda()
+        net.eval()
 
-    data = Variable(batch)
-    if use_cuda:
-        data = Variable(batch).cuda()
+        data = Variable(batch)
+        if use_cuda:
+            data = Variable(batch).cuda()
 
-    img, blurred_img, grad_mag, grad_orientation, thin_edges, thresholded, early_threshold = net(data)
+        img, blurred_img, grad_mag, grad_orientation, thin_edges, thresholded, early_threshold = net(data)
 
-    edge_aug = img - thin_edges
+        edge_aug = img - thin_edges
 
-    return torch.squeeze(edge_aug)
+        return torch.squeeze(edge_aug)

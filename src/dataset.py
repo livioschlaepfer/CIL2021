@@ -61,7 +61,7 @@ def init_test_dataloaders(config):
     print('Initializing datasets and dataloader for testing')
 
     # Create training and validation datasets
-    image_datasets = {'test': SegmentationDataSet(image_paths=image_paths)}
+    image_datasets = {'test': SegmentationDataSet(image_paths=image_paths, config=config)}
     
     # Create training and validation dataloaders
     dataloaders_dict = {'test': data.DataLoader(image_datasets['test'], batch_size=config.batch_size, shuffle=False)}
@@ -110,7 +110,6 @@ class SegmentationDataSet(data.Dataset):
 
             image = canny(image, filter_size=self.config.transforms.edge_filter_size, threshold=self.config.transforms.edge_thresh, use_cuda=True)
 
-
             # One hot encode segmentation classes based on segmentation class colors
             mask = np.array(mask)
             road = np.zeros(mask.shape)
@@ -125,5 +124,7 @@ class SegmentationDataSet(data.Dataset):
         else:
             # Normalize image
             image = self.prep_image(image)
+
+            image = canny(image, filter_size=self.config.transforms.edge_filter_size, threshold=self.config.transforms.edge_thresh, use_cuda=True)
 
             return image, self.image_paths[index]
