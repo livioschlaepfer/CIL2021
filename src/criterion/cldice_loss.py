@@ -8,7 +8,7 @@ import torch.nn.functional as F
 
 def soft_erode(img):
 
-    print("soft erode shape", img.shape)
+    # print("soft erode shape", img.shape)
 
     if len(img.shape)==4:
         p1 = -F.max_pool2d(-img, (3,1), (1,1), (1,0))
@@ -23,7 +23,7 @@ def soft_erode(img):
 
 def soft_dilate(img):
 
-    print("soft dilate shape", img.shape)
+    # print("soft dilate shape", img.shape)
 
     if len(img.shape)==4:
         return F.max_pool2d(img, (3,3), (1,1), (1,1))

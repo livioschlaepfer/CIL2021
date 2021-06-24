@@ -59,7 +59,7 @@ class DeepLabv3RunnerClass:
 
             # return loss1 + 0.5 * loss3 
 
-            cldice = soft_dice_cldice()
+            cldice = soft_dice_cldice(iter_=self.config.loss.iter, smooth=self.config.loss.smooth, alpha=self.config.loss.alpha)
             loss1 = cldice(input, target)
 
             return loss1
