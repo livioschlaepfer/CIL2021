@@ -15,6 +15,7 @@ import copy
 from box import Box
 import yaml
 import getpass
+import random
 
 from src.dataset import init_test_dataloaders, init_train_dataloaders
 from src.trainer import train_model
@@ -33,6 +34,8 @@ config.paths = paths_setter(username=username)
 # fix seed
 np.random.seed(config.seed)
 torch.manual_seed(config.seed)
+random.seed(config.seed)
+torch.backends.cudnn.deterministic = True
 
 # Initialize the runner for the selected model
 runner = init_runner(config)
