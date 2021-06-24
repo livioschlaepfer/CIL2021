@@ -3,16 +3,82 @@ import os
 import torch
 import torch.nn as nn
 from torchvision import models
-from torchvision.models.segmentation.deeplabv3 import DeepLabHead
-from torchvision.models.segmentation.fcn import FCNHead
 from torchvision import transforms
+import torch.nn.functional as F
 
+from torchvision.models.segmentation.fcn import FCNHead
 
 from src.criterion.dice_loss import dice_loss
 from src.criterion.cldice_loss import soft_dice_cldice
 
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
+
+class DeepLabHead(nn.Sequential):
+    def __init__(self, in_channels, num_classes):
+        super(DeepLabHead, self).__init__(
+            ASPP(in_channels, [12, 24, 36]),
+            nn.Conv2d(256, 256, 3, padding=1, bias=False),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.Conv2d(256, num_classes, 1)
+        )
+
+
+class ASPPConv(nn.Sequential):
+    def __init__(self, in_channels, out_channels, dilation):
+        modules = [
+            nn.Conv2d(in_channels, out_channels, 3, padding=dilation, dilation=dilation, bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU()
+        ]
+        super(ASPPConv, self).__init__(*modules)
+
+
+class ASPPPooling(nn.Sequential):
+    def __init__(self, in_channels, out_channels):
+        super(ASPPPooling, self).__init__(
+            nn.AdaptiveAvgPool2d(1),
+            nn.Conv2d(in_channels, out_channels, 1, bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU())
+
+    def forward(self, x):
+        size = x.shape[-2:]
+        for mod in self:
+            x = mod(x)
+        return F.interpolate(x, size=size, mode='bilinear', align_corners=False)
+
+
+class ASPP(nn.Module):
+    def __init__(self, in_channels, atrous_rates, out_channels=256):
+        super(ASPP, self).__init__()
+        modules = []
+        modules.append(nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, 1, bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU()))
+
+        rates = tuple(atrous_rates)
+        for rate in rates:
+            modules.append(ASPPConv(in_channels, out_channels, rate))
+
+        modules.append(ASPPPooling(in_channels, out_channels))
+
+        self.convs = nn.ModuleList(modules)
+
+        self.project = nn.Sequential(
+            nn.Conv2d(len(self.convs) * out_channels, out_channels, 1, bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(),
+            nn.Dropout(0.5))
+
+    def forward(self, x):
+        res = []
+        for conv in self.convs:
+            res.append(conv(x))
+        res = torch.cat(res, dim=1)
+        return self.project(res)
 
 class DeepLabv3RunnerClass:
     def __init__(self, config):
@@ -26,11 +92,11 @@ class DeepLabv3RunnerClass:
 
         model = models.segmentation.deeplabv3_resnet101(pretrained=True, progress=True, aux_loss=None)
         
-        # Update number of segmentation classes in classifier and auxillary classifier
+        # Adapted deeplab head for given classification problem
         model.classifier = DeepLabHead(2048, self.config.num_classes)
         model.aux_classifier = FCNHead(1024, self.config.num_classes)
         
-        # Print the model we just instantiated
+        # Print the instantiated model 
         print(model)
 
         self.model = model
@@ -41,28 +107,37 @@ class DeepLabv3RunnerClass:
         # self.criterion = nn.CrossEntropyLoss()
         # self.criterion = nn.BCELoss()
         # self.criterion = nn.NLLLoss()
-        # self.criterion = DiceLoss()
-
+        
         def forward(input, target):
 
-            # bce = nn.BCELoss()
-            # dice = dice_loss()
+            if self.config.loss.name == "bce":
+                loss = nn.BCELoss()
 
-            # loss1 = 0.2 * bce(input, target) + 0.8 * dice(input, target)
+            elif self.config.loss.name == "dice":
+                loss = dice_loss()
 
-            # # input_16 = self.image_to_patched(input, 16)
-            # # target_16 = self.mask_to_patched(target, 16)
+            elif self.config.loss.name == "cl_dice":
+                loss = soft_dice_cldice(iter_=self.config.loss.iter, smooth=self.config.loss.smooth, alpha=self.config.loss.alpha)
 
-            # # loss3 = 0.2 * bce(input_16, target_16) + 0.8 * dice(input_16, target_16)
+            elif self.config.loss.name == "bce_dice_with_patch":
+                bce = nn.BCELoss()
+                dice = dice_loss()
 
-            # print("loss1", loss1,"loss3", loss3, )
+                loss1 = 0.2 * bce(input, target) + 0.8 * dice(input, target)
 
-            # return loss1 + 0.5 * loss3 
+                input_16 = self.image_to_patched(input, 16)
+                target_16 = self.mask_to_patched(target, 16)
 
-            cldice = soft_dice_cldice(iter_=self.config.loss.iter, smooth=self.config.loss.smooth, alpha=self.config.loss.alpha)
-            loss1 = cldice(input, target)
+                loss3 = 0.2 * bce(input_16, target_16) + 0.8 * dice(input_16, target_16)
 
-            return loss1
+                print("loss1", loss1,"loss3", loss3)
+
+                return loss1 + 0.5 * loss3 
+
+            else: 
+                raise OSError("Loss not exist:", self.config.loss.name)
+        
+            return loss(input, target)
 
         self.criterion = forward
   

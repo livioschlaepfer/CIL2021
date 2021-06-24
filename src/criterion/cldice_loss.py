@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 def soft_erode(img):
 
     # print("soft erode shape", img.shape)
@@ -17,7 +16,6 @@ def soft_erode(img):
         p3 = -F.max_pool3d(-img,(1,1,3),(1,1,1),(0,0,1))
         return torch.min(torch.min(p1, p2), p3)
 
-
 def soft_dilate(img):
 
     # print("soft dilate shape", img.shape)
@@ -31,7 +29,6 @@ def soft_dilate(img):
 def soft_open(img):
     return soft_dilate(soft_erode(img))
 
-
 def soft_skel(img, iter_):
     img1  =  soft_open(img)
     skel  =  F.relu(img-img1)
@@ -39,9 +36,8 @@ def soft_skel(img, iter_):
         img  =  soft_erode(img)
         img1  =  soft_open(img)
         delta  =  F.relu(img-img1)
-        skel  =  skel +  F.relu(delta-skel*delta)
+        skel  =  skel + F.relu(delta-skel*delta)
     return skel
-
 
 class soft_cldice(nn.Module):
     def __init__(self, iter_=3, smooth = 1.):
@@ -50,22 +46,23 @@ class soft_cldice(nn.Module):
         self.smooth = smooth
 
     def forward(self, y_true, y_pred):
+        dims = (1,2)
+
         skel_pred = soft_skel(y_pred, self.iter)
         skel_true = soft_skel(y_true, self.iter)
-        tprec = (torch.sum(torch.multiply(skel_pred, y_true)[:,0]) + self.smooth) / (torch.sum(skel_pred[:,0]) + self.smooth)    
-        tsens = (torch.sum(torch.multiply(skel_true, y_pred)[:,0]) + self.smooth) / (torch.sum(skel_true[:,0]) + self.smooth)    
+        tprec = (torch.sum(torch.multiply(skel_pred, y_true)[:,0], dims, keepdim=True) + self.smooth) / (torch.sum(skel_pred[:,0], dims, keepdim=True) + self.smooth)    
+        tsens = (torch.sum(torch.multiply(skel_true, y_pred)[:,0], dims, keepdim=True) + self.smooth) / (torch.sum(skel_true[:,0], dims, keepdim=True) + self.smooth)    
         cl_dice = 1.- 2.0 * (tprec * tsens) / (tprec + tsens)
         
-        return cl_dice
-
+        return torch.mean(cl_dice)
 
 def soft_dice(y_true, y_pred):
     smooth = 1
+    dims = (1,2)
 
-    intersection = torch.sum((y_true * y_pred)[:,0])
-    coeff = (2. *  intersection + smooth) / (torch.sum(y_true[:,0]) + torch.sum(y_pred[:,0]) + smooth)
-    return (1. - coeff)
-
+    intersection = torch.sum((y_true * y_pred)[:,0], dims)
+    coeff = (2. *  intersection + smooth) / (torch.sum(y_true[:,0], dims, keepdim=True) + torch.sum(y_pred[:,0], dims, keepdim=True) + smooth)
+    return torch.mean(1. - coeff)
 
 class soft_dice_cldice(nn.Module):
     def __init__(self, iter_=3, alpha=0.5, smooth = 1.):
@@ -75,12 +72,14 @@ class soft_dice_cldice(nn.Module):
         self.alpha = alpha
 
     def forward(self, y_true, y_pred):
+        dims = (1,2)
+
         dice = soft_dice(y_true, y_pred)
         skel_pred = soft_skel(y_pred, self.iter)
         skel_true = soft_skel(y_true, self.iter)
-        tprec = (torch.sum(torch.multiply(skel_pred, y_true)[:,0]) + self.smooth) / (torch.sum(skel_pred[:,0]) + self.smooth)    
-        tsens = (torch.sum(torch.multiply(skel_true, y_pred)[:,0]) + self.smooth) / (torch.sum(skel_true[:,0]) + self.smooth)    
+        tprec = (torch.sum(torch.multiply(skel_pred, y_true)[:,0], dims, keepdim=True) + self.smooth) / (torch.sum(skel_pred[:,0], dims, keepdim=True) + self.smooth)    
+        tsens = (torch.sum(torch.multiply(skel_true, y_pred)[:,0], dims, keepdim=True) + self.smooth) / (torch.sum(skel_true[:,0], dims, keepdim=True) + self.smooth)    
         cl_dice = 1. - 2.0 * (tprec * tsens) / (tprec + tsens)
         
-        return (1.0 - self.alpha) * dice + self.alpha * cl_dice
+        return (1.0 - self.alpha) * dice + self.alpha * torch.mean(cl_dice)
 
