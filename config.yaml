@@ -35,14 +35,14 @@ num_classes: 2
 seed: 12345678
 
 # Batch size for training (change depending on how much memory you have)
-batch_size: 2
+batch_size: 4
 
 # Viusualize model output
 visualize_model_output: True
 visualize_time: 60
 
 # Number of epochs to train for
-num_epochs: 10
+num_epochs: 20
 
 # Proportion of the dataset used for validation split
 use_train_val_split: False
@@ -62,7 +62,12 @@ pseudo_labeling: False
 transforms:
   apply_test_transforms: True
   apply_transforms: True
-  crop_size: 224
+  crop_size: 280
+  flip_prob: 0.5
+  rot_prob: 0.5
+  canny: False
+  canny_filter_size: 5
+  canny_thresh: 250
 
 # loss
 loss:
@@ -76,5 +81,5 @@ loss:
 
 # lr
 lr:
-  init_lr: 0.01
+  init_lr: 0.0001
   lr_policy: "linear"

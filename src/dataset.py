@@ -7,6 +7,7 @@ import glob
 from PIL import Image
 
 from src.transforms import init_data_transforms
+from src.edge import canny
 
 
 def init_train_dataloaders(config):
@@ -41,7 +42,7 @@ def init_train_dataloaders(config):
     print('Initializing datasets and dataloader for training')
 
     # Create training and validation datasets
-    image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], mask_paths=mask_paths[x], transform=data_transforms, phase=x) for x in ['train', 'val']}
+    image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], mask_paths=mask_paths[x], config=config, transform=data_transforms, phase=x) for x in ['train', 'val']}
     
     # Create training and validation dataloaders
     dataloaders_dict = {x: data.DataLoader(image_datasets[x], batch_size=config.batch_size, shuffle=True) for x in ['train', 'val']}
@@ -60,7 +61,7 @@ def init_test_dataloaders(config):
     print('Initializing datasets and dataloader for testing')
 
     # Create training and validation datasets
-    image_datasets = {'test': SegmentationDataSet(image_paths=image_paths)}
+    image_datasets = {'test': SegmentationDataSet(image_paths=image_paths, config = config)}
     
     # Create training and validation dataloaders
     dataloaders_dict = {'test': data.DataLoader(image_datasets['test'], batch_size=config.batch_size, shuffle=False)}
@@ -68,11 +69,12 @@ def init_test_dataloaders(config):
     return image_datasets, dataloaders_dict
 
 class SegmentationDataSet(data.Dataset):
-    def __init__(self, image_paths, mask_paths=None, transform=None, phase=None):
+    def __init__(self, image_paths, config, mask_paths=None, transform=None, phase=None):
         self.image_paths = image_paths
         self.mask_paths = mask_paths
         self.transform = transform
         self.phase = phase
+        self.config = config
         self.prep_image =   transforms.Compose([
                                 transforms.ToTensor(),
                                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
@@ -107,6 +109,10 @@ class SegmentationDataSet(data.Dataset):
             # Normalize image
             image = self.prep_image(image)
 
+            # apply canny
+            if self.config.transforms.canny:
+                image = canny(image, filter_size = self.config.transforms.canny_filter_size, threshold=self.config.transforms.canny_thresh)
+
             # One hot encode segmentation classes based on segmentation class colors
             mask = np.array(mask)
             road = np.zeros(mask.shape)
@@ -121,5 +127,9 @@ class SegmentationDataSet(data.Dataset):
         else:
             # Normalize image
             image = self.prep_image(image)
+
+            # apply canny
+            if self.config.transforms.canny:
+                image = canny(image, filter_size = self.config.transforms.canny_filter_size, threshold=self.config.transforms.canny_thresh)
 
             return image, self.image_paths[index]

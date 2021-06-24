@@ -24,17 +24,17 @@ def init_data_transforms(config):
     def transform(image, mask):
 
         # Random horizontal flipping
-        if np.random.uniform(0,1) > 0.5:
+        if np.random.uniform(0,1) > config.transforms.flip_prob:
             image = TF.hflip(image)
             mask = TF.hflip(mask)
 
         # Random vertical flipping
-        if np.random.uniform(0,1) > 0.5:
+        if np.random.uniform(0,1) > config.transforms.flip_prob:
             image = TF.vflip(image)
             mask = TF.vflip(mask)
 
         # Random rotation
-        if np.random.uniform(0,1) > 0.9:
+        if np.random.uniform(0,1) > config.transforms.rot_prob:
             angle = np.random.uniform(low=5, high=355)
             image = TF.rotate(image, angle)
             mask = TF.rotate(mask, angle)

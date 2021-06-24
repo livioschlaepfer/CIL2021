@@ -137,7 +137,8 @@ class DeepLabv3RunnerClass:
             else: 
                 raise OSError("Loss not exist:", self.config.loss.name)
         
-            return loss(input, target)
+            bce = nn.BCELoss()
+            return bce(input, target) + loss(input, target)
 
         self.criterion = forward
   
@@ -153,8 +154,8 @@ class DeepLabv3RunnerClass:
         return loss
 
     def convert_to_png(self, output):
-        #binary = output.argmin(0)
-        binary = output[0]
+        binary = output.argmin(0)
+        #binary = output[0]
         binary = torch.tensor(binary, dtype=torch.float64)
         binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 
