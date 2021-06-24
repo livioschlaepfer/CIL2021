@@ -39,9 +39,9 @@ class UNet_baseline(nn.Module):
         self.dec_blocks = nn.ModuleList([Block(in_ch, out_ch) for in_ch, out_ch in zip(dec_chs[:-1], dec_chs[1:])])  # decoder blocks
         # To output PROBABILITES (sigmoid at the end) or to output LOGITS: (no sigmoid at the end)
         if output_prob:
-            self.head = nn.Sequential(nn.Conv2d(dec_chs[-1], 1, 1), nn.Sigmoid()) # 1x1 convolution for producing the output # Sigmoid for PROBABILITES
+            self.head = nn.Sequential(nn.Conv2d(dec_chs[-1], 2, 1), nn.Sigmoid()) # 1x1 convolution for producing the 2 output classes # Sigmoid for PROBABILITES
         else:
-            self.head = nn.Sequential(nn.Conv2d(dec_chs[-1], 1, 1)) # 1x1 convolution for producing the output # LOGITS (no sigmoid at the end)
+            self.head = nn.Sequential(nn.Conv2d(dec_chs[-1], 2, 1)) # 1x1 convolution for producing the 2 output classes # LOGITS (no sigmoid at the end)
 
     def forward(self, x):
         # encode

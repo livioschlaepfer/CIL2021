@@ -4,7 +4,7 @@ import torch
 
         
 class Trivial_baseline(nn.Module):
-    """ Trivial Baseline that predicts all background/ zeros.
+    """ Trivial Baseline that predicts all background/ zeros in both channels.
     By default outputs probabilites. If Logits are needed, change output_prob to False"""
     def __init__(self, output_prob=True):
         super().__init__()
@@ -17,11 +17,11 @@ class Trivial_baseline(nn.Module):
 
         if self.output_prob:
             # To output probabilities:
-            y_hat = torch.zeros_like(x)[:, 0:1] #select C dimension via "one-element slice" to keep dim "1" in [B, 1, H, W]
+            y_hat = torch.zeros_like(x)[:, 0:2] #select C dimension via "two-element slice" to keep dim "2" in [B, 2, H, W]
         else:
             # To output logits:
             # has to be very large negative number (-10 enough actually)
-            y_hat = torch.ones_like(x)[:, 0:1] * -1e1
+            y_hat = torch.ones_like(x)[:, 0:2] * -1e1
             
         # Need dummy grad, otherwise "training" gives error. In inference, with torch.no_grad() deactivates this anyway.
         y_hat.requires_grad = True
