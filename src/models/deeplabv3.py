@@ -107,7 +107,7 @@ class DeepLabv3RunnerClass:
         # self.criterion = nn.CrossEntropyLoss()
         # self.criterion = nn.BCELoss()
         # self.criterion = nn.NLLLoss()
-        
+
         def forward(input, target):
 
             if self.config.loss.name == "bce":
