@@ -8,8 +8,9 @@ import torch.nn.functional as F
 
 from torchvision.models.segmentation.fcn import FCNHead
 
-from src.criterion.dice_loss import dice_loss
-from src.criterion.cldice_loss import soft_dice_cldice
+from src.criterion.dice_loss import DiceLoss
+from src.criterion.cldice_loss import SoftDiceCLDice
+from src.criterion.focal_loss import FocalLoss
 
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -114,14 +115,17 @@ class DeepLabv3RunnerClass:
                 loss = nn.BCELoss()
 
             elif self.config.loss.name == "dice":
-                loss = dice_loss()
+                loss = DiceLoss()
+                
+            elif self.config.loss.name == "focal":
+                loss = FocalLoss()
 
             elif self.config.loss.name == "cl_dice":
-                loss = soft_dice_cldice(iter_=self.config.loss.iter, smooth=self.config.loss.smooth, alpha=self.config.loss.alpha)
+                loss = SoftDiceCLDice(iter_=self.config.loss.iter, smooth=self.config.loss.smooth, alpha=self.config.loss.alpha)
 
             elif self.config.loss.name == "bce_dice_with_patch":
                 bce = nn.BCELoss()
-                dice = dice_loss()
+                dice = DiceLoss()
 
                 loss1 = 0.2 * bce(input, target) + 0.8 * dice(input, target)
 

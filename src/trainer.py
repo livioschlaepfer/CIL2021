@@ -10,8 +10,7 @@ import copy
 from tqdm import tqdm
 
 from src.visualizer import visualize_output
-from src.criterion.dice_loss import dice_loss
-
+from src.criterion.dice_loss import DiceLoss
 
 def train_model(runner, dataloaders, optimizer, scheduler, device, config, num_epochs=25):
     since = time.time()
@@ -77,7 +76,7 @@ def train_model(runner, dataloaders, optimizer, scheduler, device, config, num_e
                             print("=" * 20 , "validation loss:", loss.item())
                         
                         # batch statistics
-                        dice = dice_loss()
+                        dice = DiceLoss()
                         tqdm_dataloader.set_postfix(loss = loss.item(), accuracy = 100. * dice(outputs.float(), labels.float()).item())
 
             # deep copy the model

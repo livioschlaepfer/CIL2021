@@ -61,9 +61,9 @@ def soft_dice(y_true, y_pred):
     coeff = (2. *  intersection + smooth) / (torch.sum(y_true[:,0]) + torch.sum(y_pred[:,0]) + smooth)
     return (1. - coeff)
 
-class soft_dice_cldice(nn.Module):
+class SoftDiceCLDice(nn.Module):
     def __init__(self, iter_=3, alpha=0.5, smooth = 1.):
-        super(soft_dice_cldice, self).__init__()
+        super(SoftDiceCLDice, self).__init__()
         self.iter = iter_
         self.smooth = smooth
         self.alpha = alpha

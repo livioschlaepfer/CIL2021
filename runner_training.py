@@ -33,6 +33,7 @@ config.paths = paths_setter(username=username)
 
 # fix seed
 np.random.seed(config.seed)
+torch.manual_seed(config.seed)
 
 # Initialize the runner for the selected model
 runner = init_runner(config)

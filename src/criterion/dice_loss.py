@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 
 
-class dice_loss(nn.Module):
+class DiceLoss(nn.Module):
     def __init__(self):
-        super(dice_loss, self).__init__()
+        super(DiceLoss, self).__init__()
 
     def forward(self, input, target):
         # Compute area of intersection
