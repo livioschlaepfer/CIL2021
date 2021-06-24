@@ -41,7 +41,7 @@ def init_train_dataloaders(config):
     print('Initializing datasets and dataloader for training')
 
     # Create training and validation datasets
-    image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], mask_paths=mask_paths[x], transform=data_transforms) for x in ['train', 'val']}
+    image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], mask_paths=mask_paths[x], transform=data_transforms, phase=x) for x in ['train', 'val']}
     
     # Create training and validation dataloaders
     dataloaders_dict = {x: data.DataLoader(image_datasets[x], batch_size=config.batch_size, shuffle=True) for x in ['train', 'val']}
@@ -68,10 +68,11 @@ def init_test_dataloaders(config):
     return image_datasets, dataloaders_dict
 
 class SegmentationDataSet(data.Dataset):
-    def __init__(self, image_paths, mask_paths=None, transform=None):
+    def __init__(self, image_paths, mask_paths=None, transform=None, phase=None):
         self.image_paths = image_paths
         self.mask_paths = mask_paths
         self.transform = transform
+        self.phase = phase
         self.prep_image =   transforms.Compose([
                                 transforms.ToTensor(),
                                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
@@ -100,7 +101,7 @@ class SegmentationDataSet(data.Dataset):
             mask = Image.open(self.mask_paths[index])
 
             # Transformation / Augmentation
-            if self.transform is not None:
+            if self.transform is not None and self.phase!="val":
                 image, mask =  self.transform(image, mask)
 
             # Normalize image
