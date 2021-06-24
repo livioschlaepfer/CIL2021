@@ -39,10 +39,10 @@ batch_size: 8
 
 # Viusualize model output
 visualize_model_output: True
-visualize_time: 30
+visualize_time: 60
 
 # Number of epochs to train for
-num_epochs: 50
+num_epochs: 10
 
 # Proportion of the dataset used for validation split
 use_train_val_split: False
@@ -62,7 +62,7 @@ pseudo_labeling: False
 transforms:
   apply_test_transforms: True
   apply_transforms: True
-  crop_size: 208
+  crop_size: 224
 
 # loss
 loss:
@@ -70,3 +70,8 @@ loss:
   iter: 20
   alpha: 0.5
   smooth: 1
+
+# lr
+lr:
+  init_lr: 0.01
+  lr_policy: "linear"

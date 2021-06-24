@@ -13,7 +13,7 @@ from src.visualizer import visualize_output
 from src.criterion.dice_loss import dice_loss
 
 
-def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
+def train_model(runner, dataloaders, optimizer, scheduler, device, config, num_epochs=25):
     since = time.time()
     vis_time = time.time()
 
@@ -26,6 +26,10 @@ def train_model(runner, dataloaders, optimizer, device, config, num_epochs=25):
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
+
+        # update lr at the beginning of epoch
+        scheduler.step()
+        print("new lr: ", optimizer.param_groups[0]['lr'])
 
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:

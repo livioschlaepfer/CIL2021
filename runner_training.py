@@ -21,6 +21,7 @@ from src.trainer import train_model
 from src.tester import test_model
 from src.models.model_runner import init_runner
 from src.paths import paths_setter
+from src.scheduler import get_scheduler
 
 
 # load config
@@ -58,10 +59,13 @@ if config.freeze:
             print("\t",name)
 
 # Observe that all parameters are being optimized
-optimizer_ft = optim.Adam(params_to_update, lr=0.0001)
+optimizer_ft = optim.Adam(params_to_update, lr=config.lr.init_lr)
+
+# set a lr schedule
+scheduler_ft = get_scheduler(optimizer_ft, config)
 
 # Train and evaluate model
-runner, hist = train_model(runner, dataloaders_dict_train, optimizer_ft, num_epochs = config.num_epochs, config = config, device = device)
+runner, hist = train_model(runner, dataloaders_dict_train, optimizer_ft, scheduler_ft, num_epochs = config.num_epochs, config = config, device = device)
 
 # Store model
 if not os.path.exists(config.paths.model_store):
