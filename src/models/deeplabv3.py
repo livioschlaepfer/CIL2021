@@ -9,7 +9,7 @@ from torchvision import transforms
 
 
 from src.criterion.dice_loss import dice_loss
-
+from src.criterion.cldice_loss import soft_dice_cldice
 
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -45,19 +45,23 @@ class DeepLabv3RunnerClass:
 
         def forward(input, target):
 
-            bce = nn.BCELoss()
-            dice = dice_loss()
+            # bce = nn.BCELoss()
+            # dice = dice_loss()
 
-            loss1 = 0.2 * bce(input, target) + 0.8 * dice(input, target)
+            # loss1 = 0.2 * bce(input, target) + 0.8 * dice(input, target)
 
-            # input_16 = self.image_to_patched(input, 16)
-            # target_16 = self.mask_to_patched(target, 16)
+            # # input_16 = self.image_to_patched(input, 16)
+            # # target_16 = self.mask_to_patched(target, 16)
 
-            # loss3 = 0.2 * bce(input_16, target_16) + 0.8 * dice(input_16, target_16)
+            # # loss3 = 0.2 * bce(input_16, target_16) + 0.8 * dice(input_16, target_16)
 
             # print("loss1", loss1,"loss3", loss3, )
 
             # return loss1 + 0.5 * loss3 
+
+            cldice = soft_dice_cldice()
+            loss1 = cldice(input, target)
+
             return loss1
 
         self.criterion = forward

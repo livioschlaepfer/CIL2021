@@ -1,13 +1,12 @@
-from typing import Optional
-
-from numpy.lib.function_base import interp
-
 import torch
+import torch.nn as nn
 
-def dice_loss():
 
-    def forward(input, target):
-        
+class dice_loss(nn.Module):
+    def __init__(self):
+        super(dice_loss, self).__init__()
+
+    def forward(self, input, target):
         # Compute area of intersection
         dims = (1,2,3)
         intersection = torch.sum(input * target, dims)
@@ -20,5 +19,3 @@ def dice_loss():
         dice_score = 2. * intersection / (union + eps)
 
         return torch.mean(1. - dice_score)
-    
-    return forward
