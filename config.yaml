@@ -63,3 +63,5 @@ transforms:
   apply_test_transforms: True
   apply_transforms: True
   crop_size: 208
+  edge_thresh: 250
+  edge_filter_size: 3
