@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 import time
 import os
 import copy
-from src.edge_det import canny
 print("PyTorch Version: ",torch.__version__)
 print("Torchvision Version: ",torchvision.__version__)
 
@@ -71,8 +70,6 @@ def init_data_transforms(config):
             # Random color jitter
             color_jitter = transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0, hue=0)
             image = color_jitter(image)
-
-        image = canny(image, filter_size=config.transforms.edge_filter_size, threshold=config.transforms.edge_thresh, use_cuda=True)
 
         return image, mask
 

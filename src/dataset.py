@@ -7,6 +7,7 @@ import glob
 from PIL import Image
 
 from src.transforms import init_data_transforms
+from src.edge_det import canny
 
 
 def init_train_dataloaders(config):
@@ -41,7 +42,7 @@ def init_train_dataloaders(config):
     print('Initializing datasets and dataloader for training')
 
     # Create training and validation datasets
-    image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], mask_paths=mask_paths[x], transform=data_transforms) for x in ['train', 'val']}
+    image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], config=config, mask_paths=mask_paths[x], transform=data_transforms) for x in ['train', 'val']}
     
     # Create training and validation dataloaders
     dataloaders_dict = {x: data.DataLoader(image_datasets[x], batch_size=config.batch_size, shuffle=True) for x in ['train', 'val']}
@@ -68,9 +69,10 @@ def init_test_dataloaders(config):
     return image_datasets, dataloaders_dict
 
 class SegmentationDataSet(data.Dataset):
-    def __init__(self, image_paths, mask_paths=None, transform=None):
+    def __init__(self, image_paths, config, mask_paths=None, transform=None):
         self.image_paths = image_paths
         self.mask_paths = mask_paths
+        self.config = config
         self.transform = transform
         self.prep_image =   transforms.Compose([
                                 transforms.ToTensor(),
@@ -105,6 +107,9 @@ class SegmentationDataSet(data.Dataset):
 
             # Normalize image
             image = self.prep_image(image)
+
+            image = canny(image, filter_size=self.config.transforms.edge_filter_size, threshold=self.config.transforms.edge_thresh, use_cuda=True)
+
 
             # One hot encode segmentation classes based on segmentation class colors
             mask = np.array(mask)

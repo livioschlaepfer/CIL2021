@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 from scipy.signal import gaussian
 from torch.autograd import Variable
+from torchvision import transforms
 
 class Canny(nn.Module):
     def __init__(self, threshold=10.0, filter_size=5, use_cuda=False):
@@ -152,8 +153,8 @@ class spatial_voting:
 
 
 def canny(raw_img, filter_size=5, threshold=3.0, use_cuda=False):
-    img = torch.from_numpy(raw_img.transpose((2, 0, 1)))
-    batch = torch.stack([img]).float()
+    #img = transforms.ToTensor()(raw_img) # from_numpy(raw_img.transpose((2, 0, 1)))
+    batch = torch.stack([raw_img]).float()
 
     net = Canny(threshold=threshold, filter_size= filter_size, use_cuda=use_cuda)
     if use_cuda:
@@ -168,4 +169,4 @@ def canny(raw_img, filter_size=5, threshold=3.0, use_cuda=False):
 
     edge_aug = img - thin_edges
 
-    return edge_aug
+    return torch.squeeze(edge_aug)
