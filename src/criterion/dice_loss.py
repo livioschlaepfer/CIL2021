@@ -9,18 +9,16 @@ def dice_loss():
     def forward(input, target):
         
         # Compute area of intersection
-        dims = (2,3)
+        dims = (1,2,3)
         intersection = torch.sum(input * target, dims)
 
         # Compute area of union
         union = torch.sum(input + target, dims)
 
         # Compute dice coefficient
-        dims = (1)
         eps = 0.000001
-        dice_score = (intersection + eps)  / union
-        dice_score = torch.mean(dice_score)
+        dice_score = 2. * intersection / (union + eps)
 
-        return 1. - dice_score
+        return torch.mean(1. - dice_score)
     
     return forward

@@ -28,11 +28,6 @@ def transform_test(image):
     cur_image = TF.hflip(cur_image)
     total_image.append(cur_image)
 
-    # Apply color jitter twice
-    # color_jitter = transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0, hue=0)
-    # cur_image = color_jitter(image)
-    # total_image.append(cur_image)
-
     # color_jitter = transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0, hue=0)
     # cur_image = color_jitter(image)
     # total_image.append(cur_image)
@@ -62,14 +57,14 @@ def transform_test_back(output):
 def transform_test_aggregate(output):
 
     # Average output
-    dims = (0)
-    output = torch.sum(output, dims)
-    output = output / 4
+    # dims = (0)
+    # output = torch.sum(output, dims)
+    # output = output / 4
 
-    output = torch.unsqueeze(output, 0)
+    # output = torch.unsqueeze(output, 0)
 
     # Take max output
-    # dims = (0)
-    # output = torch.max(output, dims, keepdim = True)[0]
+    dims = (0)
+    output = torch.max(output, dims, keepdim = True)[0]
 
     return output
