@@ -11,7 +11,6 @@ from torchvision.models.segmentation.fcn import FCNHead
 from src.criterion.dice_loss import DiceLoss
 from src.criterion.cldice_loss import SoftDiceCLDice
 from src.criterion.focal_loss import FocalLoss
-from src.criterion.topology_loss import TopoLoss
 
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -124,9 +123,6 @@ class DeepLabv3RunnerClass:
             elif self.config.loss.name == "cl_dice":
                 loss = SoftDiceCLDice(iter_=self.config.loss.iter, smooth=self.config.loss.smooth, alpha=self.config.loss.alpha)
 
-            elif self.config.loss.name == "topo":
-                loss = TopoLoss()
-
             elif self.config.loss.name == "bce_dice_with_patch":
                 bce = nn.BCELoss()
                 dice = DiceLoss()
@@ -146,7 +142,7 @@ class DeepLabv3RunnerClass:
                 raise OSError("Loss not exist:", self.config.loss.name)
         
             bce = nn.BCELoss()
-            return self.config.loss.bce_weight*bce(input, target) + loss(input, target)
+            return self.config.loss.bce_weight * bce(input, target) + (1. - self.config.loss.bce_weight) * loss(input, target)
 
         self.criterion = forward
   
