@@ -25,6 +25,13 @@ def test_model(runner, dataloaders_test, device, config):
     runner.model.eval()
     phase = 'test'
 
+    # Set output path
+    output_path = config.paths.test_output_dir + "/" + config.model_name + "_" + str(round(time.time())) + "/"
+    print("Outputs are stored under", output_path)
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
     # Iterate over data.
     for inputs, paths in dataloaders_test[phase]:
 
@@ -51,7 +58,7 @@ def test_model(runner, dataloaders_test, device, config):
                 png = runner.convert_to_png(output.squeeze())
 
                 # Store output
-                png.save(config.paths.test_output_dir + "/" + os.path.split(paths[index])[1])
+                png.save(output_path + os.path.split(paths[index])[1])
                 print("Stored output for", os.path.split(paths[index])[1])
 
         else: 
@@ -71,7 +78,7 @@ def test_model(runner, dataloaders_test, device, config):
                 png = runner.convert_to_png(outputs[index])
 
                 # Store output
-                png.save(config.paths.test_output_dir + "/" + os.path.split(paths[index])[1])
+                png.save(output_path + os.path.split(paths[index])[1])
                 print("Stored output for", os.path.split(paths[index])[1])
 
             

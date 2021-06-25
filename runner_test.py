@@ -58,12 +58,12 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 if not os.path.exists(config.paths.model_store + "/" + config.checkpoint_name + ".pth"):
     print("Error: Unable to load model, path does not exist:", config.paths.model_store + "/" + config.checkpoint_name + ".pth")
     exit()
-    
-runner.model.load_state_dict(torch.load(config.paths.model_store + "/" + config.checkpoint_name + ".pth"))
+
+checkpoint = torch.load(config.paths.model_store + "/" + config.checkpoint_name + ".pth")
+runner.model.load_state_dict(checkpoint['model_state_dict'])
 
 # Send the model to GPU
 runner.model = runner.model.to(device)
-
 
 # Test model
 test_model(runner, dataloaders_dict_test, device, config)

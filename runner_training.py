@@ -74,6 +74,16 @@ optimizer_ft = optim.Adam(params_to_update, lr=config.lr.init_lr)
 # set a lr schedule
 scheduler_ft = get_scheduler(optimizer_ft, config)
 
+if config.continue_training:
+    print("Continue training on", config.checkpoint_name)
+    # Load trained model
+    if not os.path.exists(config.paths.model_store + "/" + config.checkpoint_name + ".pth"):
+        print("Error: Unable to load model, path does not exist:", config.paths.model_store + "/" + config.checkpoint_name + ".pth")
+        exit()
+
+    checkpoint = torch.load(config.paths.model_store + "/" + config.checkpoint_name + ".pth")
+    runner.model.load_state_dict(checkpoint['model_state_dict'])
+
 # Train and evaluate model
 runner, hist = train_model(runner, dataloaders_dict_train, optimizer_ft, scheduler_ft, num_epochs = config.num_epochs, config = config, device = device)
 
@@ -81,5 +91,8 @@ runner, hist = train_model(runner, dataloaders_dict_train, optimizer_ft, schedul
 if not os.path.exists(config.paths.model_store):
     os.makedirs(config.paths.model_store)
 
-torch.save(runner.model.state_dict(), config.paths.model_store + "/" + config.checkpoint_name + ".pth")
+torch.save({
+    'model_state_dict': runner.model.state_dict()
+    }, 
+    config.paths.model_store + "/" + config.checkpoint_name + ".pth")
 print("Stored model statedict under:", config.paths.model_store + "/" + config.checkpoint_name + ".pth")
