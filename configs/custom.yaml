@@ -35,7 +35,7 @@ num_classes: 2
 seed: 12345678
 
 # Batch size for training (change depending on how much memory you have)
-batch_size: 2
+batch_size: 5
 
 # Viusualize model output
 visualize_model_output: True
@@ -76,7 +76,11 @@ transforms:
 loss:
   # Select desired loss
   # options: ["bce", "dice", "cl_dice", "focal", "topo"]
+<<<<<<< HEAD:config.yaml
+  name: "cl_dice" 
+=======
   name: "bce" 
+>>>>>>> 9ac6ed1da83a2b285e4935bf14a8b6602e9c7437:configs/custom.yaml
   patched_loss: True
   iter: 20
   alpha: 0.5
