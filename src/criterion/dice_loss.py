@@ -21,6 +21,6 @@ class DiceLoss(nn.Module):
 
         # Compute dice coefficient
         eps = 0.000001
-        dice_score = 2. * intersection / (union + eps)
+        dice_score = (2. * intersection + eps) / (union + eps)
 
         return torch.mean(1. - dice_score)

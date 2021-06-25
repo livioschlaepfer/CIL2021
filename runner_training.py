@@ -14,8 +14,24 @@ import yaml
 import getpass
 import random
 
+
+import argparse
+
+# parser to select desired
+parser = argparse.ArgumentParser()
+parser.add_argument('--config', 
+    default = 'custom',
+    choices = ['custom', 'baseline1', 'baseline2'],
+    help = 'Select on of the experiments described in our report or setup a custom config file'
+)
+args = parser.parse_args()
+
 # load config
-config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
+try: 
+    config = Box.from_yaml(filename="./configs/"+ args.config + ".yaml", Loader=yaml.FullLoader)
+except:
+    raise OSError("Does not exist", args.config)
+
 
 from src.seed import seed_all
 # fix seed

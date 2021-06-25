@@ -54,6 +54,7 @@ def compute_dgm_force(lh_dgm, gt_dgm, pers_thresh=0.03, pers_thresh_perfect=0.99
         idx_holes_to_remove: The index of persistent points that require to remove for the following training
         process
     """
+
     lh_pers = abs(lh_dgm[:, 1] - lh_dgm[:, 0])
     if (gt_dgm.shape[0] == 0):
         gt_pers = None;
@@ -218,6 +219,6 @@ class TopoLoss(nn.Module):
                 topo_cp_ref_map = torch.tensor(topo_cp_ref_map, dtype=torch.float).cuda()
 
                 # Measuring the MSE loss between predicted critical points and reference critical points
-                loss = (((img * topo_cp_weight_map) - topo_cp_ref_map) ** 2).sum()
+                topo_loss = (((img * topo_cp_weight_map) - topo_cp_ref_map) ** 2).sum()
 
-            return torch.mean(loss)
+            return torch.mean(topo_loss)
