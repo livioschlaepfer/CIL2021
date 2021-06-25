@@ -45,7 +45,7 @@ def init_train_dataloaders(config):
     image_datasets = {x: SegmentationDataSet(image_paths=image_paths[x], mask_paths=mask_paths[x], config=config, transform=data_transforms, phase=x) for x in ['train', 'val']}
     
     # Create training and validation dataloaders
-    dataloaders_dict = {x: data.DataLoader(image_datasets[x], batch_size=config.batch_size, shuffle=True) for x in ['train', 'val']}
+    dataloaders_dict = {x: data.DataLoader(image_datasets[x], batch_size=config.batch_size, shuffle=True, num_workers=0) for x in ['train', 'val']}
 
     return image_datasets, dataloaders_dict
 

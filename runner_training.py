@@ -6,37 +6,30 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
-import torchvision
 from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
-import time
 import os
-import copy
 from box import Box
 import yaml
 import getpass
 import random
 
-from src.dataset import init_test_dataloaders, init_train_dataloaders
+# load config
+config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
+
+from src.seed import seed_all
+# fix seed
+seed_all(config.seed)
+
+from src.dataset import init_train_dataloaders
 from src.trainer import train_model
-from src.tester import test_model
 from src.models.model_runner import init_runner
 from src.paths import paths_setter
 from src.scheduler import get_scheduler
 
-
-# load config
-config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
-
 # update paths based on user name
 username = getpass.getuser()
 config.paths = paths_setter(username=username)
-
-# fix seed
-np.random.seed(config.seed)
-torch.manual_seed(config.seed)
-random.seed(config.seed)
-torch.backends.cudnn.deterministic = True
 
 # Initialize the runner for the selected model
 runner = init_runner(config)
