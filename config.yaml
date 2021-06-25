@@ -39,10 +39,10 @@ batch_size: 4
 
 # Viusualize model output
 visualize_model_output: True
-visualize_time: 60
+visualize_time: 30
 
 # Number of epochs to train for
-num_epochs: 2
+num_epochs: 10
 
 # Proportion of the dataset used for validation split
 use_train_val_split: False
@@ -64,7 +64,7 @@ transforms:
   apply_transforms: True
   crop_size: 280
   flip_prob: 0.5
-  rot_prob: 0.5
+  rot_prob: 0.25
   canny: False
   canny_filter_size: 5
   canny_thresh: 250
@@ -72,12 +72,13 @@ transforms:
 # loss
 loss:
   # Select desired loss
-  # options: ["bce", "dice", "cl_dice", "focal"]
-  name: "cl_dice" 
+  # options: ["bce", "dice", "cl_dice", "focal", "topo"]
+  name: "topo" 
   patched_loss: True
   iter: 20
   alpha: 0.5
   smooth: 1
+  bce_weight: 0.5
 
 # lr
 lr:

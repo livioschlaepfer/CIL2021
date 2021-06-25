@@ -1,0 +1,13 @@
+parameters to fix:
+
+n_epochs:
+lr:
+
+cobinations to test:
+
+baselines: Unet, Logistic regression
+
+deeplabv3 raw
+deeplabv3 + augmentation separately (flipping/rotation | five crop | colorjitter)
+deeplabv3 + 
+
