@@ -63,8 +63,7 @@ def soft_dice(y_true, y_pred):
 
 class SoftDiceCLDice(nn.Module):
     """
-    Implementation of clDice based on https://arxiv.org/abs/2003.07311
-    Presented on CVPR 2021
+    Implementation of clDice based on https://arxiv.org/abs/2003.07311 (Accepted CVPR 2021)
     """
 
 
