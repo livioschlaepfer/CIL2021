@@ -13,9 +13,8 @@ from box import Box
 import yaml
 import getpass
 import random
-
-
 import argparse
+from src.seed import seed_all
 
 # parser to select desired
 parser = argparse.ArgumentParser()
@@ -32,8 +31,6 @@ try:
 except:
     raise OSError("Does not exist", args.config)
 
-
-from src.seed import seed_all
 # fix seed
 seed_all(config.seed)
 
