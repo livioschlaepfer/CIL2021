@@ -42,7 +42,7 @@ visualize_model_output: True
 visualize_time: 30
 
 # Number of epochs to train for
-num_epochs: 10
+num_epochs: 25
 
 # Proportion of the dataset used for validation split
 use_train_val_split: False
@@ -73,11 +73,7 @@ transforms:
 loss:
   # Select desired loss
   # options: ["bce", "dice", "cl_dice", "focal", "topo"]
-<<<<<<< HEAD:config.yaml
-  name: "cl_dice" 
-=======
-  name: "bce" 
->>>>>>> 9ac6ed1da83a2b285e4935bf14a8b6602e9c7437:configs/custom.yaml
+  name: "cl_dice"
   patched_loss: True
   iter: 20
   alpha: 0.5
