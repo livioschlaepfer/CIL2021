@@ -22,9 +22,26 @@ import torchvision.transforms.functional as TF
 
 from src.paths import paths_setter
 
+import argparse
+from src.seed import seed_all
+
+# parser to select desired
+parser = argparse.ArgumentParser()
+parser.add_argument('--config', 
+    default = 'custom',
+    choices = ['custom', 'baseline1', 'baseline2'],
+    help = 'Select on of the experiments described in our report or setup a custom config file'
+)
+args = parser.parse_args()
 
 # load config
-config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
+try: 
+    config = Box.from_yaml(filename="./configs/"+ args.config + ".yaml", Loader=yaml.FullLoader)
+except:
+    raise OSError("Does not exist", args.config)
+
+# fix seed
+seed_all(config.seed)
 
 # update paths based on user name
 username = getpass.getuser()
@@ -34,9 +51,6 @@ to_tensor = transforms.ToTensor()
 transform_to_png = transforms.ToPILImage()
 
 def main():
-
-    # fix seed
-    np.random.seed(config.seed)
 
     # Load data paths for input
     if not os.path.exists(config.paths.train_image_dir_aug_input):
