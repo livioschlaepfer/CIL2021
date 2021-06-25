@@ -3,7 +3,6 @@ import os
 import torch
 import torch.nn as nn
 from torchvision import models
-from torchvision.models.segmentation.deeplabv3 import DeepLabHead
 from torchvision.models.segmentation.fcn import FCNHead
 from torchvision import transforms
 
@@ -14,7 +13,7 @@ from src.criterion.dice_loss import dice_loss
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
-class TrivialRunnerClass:
+class FCNResnet50RunnerClass:
     def __init__(self, config):
         self.config = config
 
@@ -24,7 +23,11 @@ class TrivialRunnerClass:
     def init_model(self):
         print('Initializing model')
 
-        model = Trivial_baseline(output_prob=True) # Mathias: adjusted model here compared to deeplabrunner
+        model = models.segmentation.fcn_resnet50(pretrained=True, progress=True, aux_loss=None)  # Mathias: adjusted model here compared to Deeplabrunner
+        
+        # Update number of segmentation classes in classifier and auxillary classifier
+        model.classifier = FCNHead(2048, self.config.num_classes) # Mathias: adjusted to FCNHead here compared to Deeplabrunner
+        model.aux_classifier = FCNHead(1024, self.config.num_classes)
         
         # Print the model we just instantiated
         print(model)
@@ -58,8 +61,8 @@ class TrivialRunnerClass:
         self.criterion = forward
   
     def forward(self, inputs):
-        outputs = self.model(inputs) # Mathias: removed ["out"] compared to deeplab runner -> not needed
-        # outputs = torch.sigmoid(outputs) # Mathias: already outputting sigmoids if output_prob = True (by default)
+        outputs = self.model(inputs)['out']
+        outputs = torch.sigmoid(outputs)
 
         return outputs
 
@@ -93,62 +96,3 @@ class TrivialRunnerClass:
 
         return patcher(image)
         
-
-
-
-        
-class Trivial_baseline(nn.Module):
-    """ Trivial Baseline that predicts all background/ zeros in both channels.
-    By default outputs probabilites. If Logits are needed, change output_prob to False"""
-    def __init__(self, output_prob=True):
-        super().__init__()
-        # Dummy parameters needed, otherwise optimizer gives error. But can directly predict without training obviously...
-        self.dummy_parameters = nn.Sequential(nn.Conv2d(in_channels=3, out_channels=1, kernel_size=3, padding=1))
-        self.output_prob = output_prob
-
-    def forward(self, x):
-        # Predict background for every pixel
-
-        if self.output_prob:
-            # To output probabilities:
-            y_hat = torch.zeros_like(x)[:, 0:2] #select C dimension via "two-element slice" to keep dim "2" in [B, 2, H, W]
-        else:
-            # To output logits:
-            # has to be very large negative number (-10 enough actually)
-            y_hat = torch.ones_like(x)[:, 0:2] * -1e1
-            
-        # Need dummy grad, otherwise "training" gives error. In inference, with torch.no_grad() deactivates this anyway.
-        y_hat.requires_grad = True
-
-        return y_hat 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
