@@ -3,6 +3,11 @@ import torch.nn as nn
 
 
 class DiceLoss(nn.Module):
+    """
+    Implementation of dice loss
+    """
+
+
     def __init__(self):
         super(DiceLoss, self).__init__()
 

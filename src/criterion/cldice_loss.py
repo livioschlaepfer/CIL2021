@@ -62,6 +62,12 @@ def soft_dice(y_true, y_pred):
     return (1. - coeff)
 
 class SoftDiceCLDice(nn.Module):
+    """
+    Implementation of clDice based on https://arxiv.org/abs/2003.07311
+    Presented on CVPR 2021
+    """
+
+
     def __init__(self, iter_=3, alpha=0.5, smooth = 1.):
         super(SoftDiceCLDice, self).__init__()
         self.iter = iter_
