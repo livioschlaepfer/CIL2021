@@ -1,16 +1,13 @@
 from box import Box
 import yaml
 import glob
+import json
 
 from torch.utils import data
 
-config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
+config = Box.from_yaml(filename="./configs/custom.yaml", Loader=yaml.FullLoader)
 
 print("loaded config")
 
-# Get names of test images
-test_image_paths = glob.glob(config.paths.test_image_dir + '/*.png')
-
-image_names = [x.split("/")[-1] for x in test_image_paths]
-
-print(image_names)
+with open('/home/svkohler/OneDrive/Desktop/'+'config.txt', 'w') as f: # config.paths.model_store + '/' + config.checkpoint_name +'/config/'+
+    f.write(json.dumps(config.to_dict()))

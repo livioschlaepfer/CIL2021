@@ -10,6 +10,8 @@ from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
 import os
 from box import Box
+import pickle
+import json
 import yaml
 import getpass
 import random
@@ -42,7 +44,7 @@ from src.scheduler import get_scheduler
 
 # update paths based on user name
 username = getpass.getuser()
-config.paths = paths_setter(username=username)
+config.paths = paths_setter(username=username, pretrain=config.pretrain)
 
 # Initialize the runner for the selected model
 runner = init_runner(config)
@@ -77,11 +79,11 @@ scheduler_ft = get_scheduler(optimizer_ft, config)
 if config.continue_training:
     print("Continue training on", config.continue_training_on_checkpoint)
     # Load trained model
-    if not os.path.exists(config.paths.model_store + "/" + config.continue_training_on_checkpoint + ".pth"):
-        print("Error: Unable to load model, path does not exist:", config.paths.model_store + "/" + config.continue_training_on_checkpoint + ".pth")
+    if not os.path.exists(config.paths.model_store + "/" + config.continue_training_on_checkpoint + "/weights/weights.pth"):
+        print("Error: Unable to load model, path does not exist:", config.paths.model_store + "/" + config.continue_training_on_checkpoint + "/weights/weights.pth")
         exit()
 
-    checkpoint = torch.load(config.paths.model_store + "/" + config.continue_training_on_checkpoint + ".pth")
+    checkpoint = torch.load(config.paths.model_store + "/" + config.continue_training_on_checkpoint + "/weights/weights.pth")
     runner.model.load_state_dict(checkpoint['model_state_dict'])
 
 # Train and evaluate model
@@ -90,9 +92,17 @@ runner, hist = train_model(runner, dataloaders_dict_train, optimizer_ft, schedul
 # Store model
 if not os.path.exists(config.paths.model_store):
     os.makedirs(config.paths.model_store)
+if not os.path.exists(config.paths.model_store+ '/' + config.checkpoint_name):
+    os.makedirs(config.paths.model_store + '/' + config.checkpoint_name +'/weights')
+    os.makedirs(config.paths.model_store + '/' + config.checkpoint_name +'/config')
 
 torch.save({
     'model_state_dict': runner.model.state_dict()
     }, 
-    config.paths.model_store + "/" + config.checkpoint_name + ".pth")
-print("Stored model statedict under:", config.paths.model_store + "/" + config.checkpoint_name + ".pth")
+    config.paths.model_store + '/' + config.checkpoint_name +'/weights/weights.pth')
+
+
+with open(config.paths.model_store + '/' + config.checkpoint_name +'/config/'+'config.txt', 'w') as f: # config.paths.model_store + '/' + config.checkpoint_name +'/config/'+
+    f.write(json.dumps(config.to_dict()))
+
+print("Stored model statedict under:", config.paths.model_store + config.checkpoint_name  +'/weights/weights.pth')

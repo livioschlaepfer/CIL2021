@@ -25,7 +25,10 @@ paths:
 
 # Model name
 model_name: "deeplabv3"
-checkpoint_name: "deeplab_massa_100epochs"
+checkpoint_name: "pretrain_deeplab_massa_100epochs_clDice"
+
+# if run is to pretrain
+pretrain: True
 
 # Number of classes for segmentation
 num_classes: 2
@@ -38,10 +41,10 @@ batch_size: 5
 
 # Viusualize model output
 visualize_model_output: True
-visualize_time: 30
+visualize_time: 150
 
 # Number of epochs to train for
-num_epochs: 25
+num_epochs: 100
 
 # Proportion of the dataset used for validation split
 use_train_val_split: False
@@ -58,13 +61,9 @@ feature_extract: False
 pseudo_labeling: False
 
 # Continue training
-<<<<<<< HEAD
 continue_training: False
-=======
-continue_training: True
-continue_training_on_checkpoint: "deeplab_massa_100epochs_pretrained"
+continue_training_on_checkpoint: "pretrain_deeplab_massa_100epochs"
 
->>>>>>> f9b01902d61d399e69e105ff2d18a21ac271ea18
 
 # Configure transforms
 transforms:
@@ -91,4 +90,4 @@ loss:
 # lr
 lr:
   init_lr: 0.0001
-  lr_policy: "none" # options: ["none", linear", "step", "plateau"]
+  lr_policy: "step" # options: ["none", linear", "step", "plateau"]

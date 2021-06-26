@@ -28,6 +28,9 @@ model_name: "fcnres50_baseline"
 checkpoint_name: "check_fcnres50_baseline"
 # checkpoint_name: "checkpoint_test"
 
+# if run is to pretrain
+pretrain: False
+
 # Number of classes for segmentation
 num_classes: 2
 

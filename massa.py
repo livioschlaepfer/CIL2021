@@ -11,15 +11,18 @@ import argparse
 import os
 
 from src.paths import paths_setter
+from src.seed import seed_all
 
 parser = argparse.ArgumentParser()
 parser.add_argument("name", help="name of the image production run")
 parser.add_argument("--small_then_zoom", action="store_true", help = "option to pick a smaller section of the crop and resize it to 400x400")
 parser.add_argument("--make_multiple", action="store_true", help="option to produce multiple random images from one crop")
-parser.add_argument("--n_multiple", default=3, help="number of random images per crop")
+parser.add_argument("--n_multiple", default=3, type=int, help="number of random images per crop")
 args = parser.parse_args()
 
 config = Box.from_yaml(filename="./configs/custom.yaml", Loader=yaml.FullLoader)
+
+seed_all(config.seed)
 
 # update paths based on user name
 username = getpass.getuser()
