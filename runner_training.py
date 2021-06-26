@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--config', 
     default = 'custom',
     choices = ['custom', 'baseline1', 'baseline2'],
-    help = 'Select on of the experiments described in our report or setup a custom config file'
+    help = 'Select one of the experiments described in our report or setup a custom config file'
 )
 args = parser.parse_args()
 

@@ -25,7 +25,7 @@ paths:
 
 # Model name
 model_name: "deeplabv3"
-checkpoint_name: "deeplab_epoch_800_jitter03_bce00_dice08_no_val_split"
+checkpoint_name: "deeplab_massa_100epochs"
 # checkpoint_name: "checkpoint_test"
 
 # Number of classes for segmentation
@@ -42,11 +42,7 @@ visualize_model_output: True
 visualize_time: 30
 
 # Number of epochs to train for
-<<<<<<< HEAD
 num_epochs: 25
-=======
-num_epochs: 1
->>>>>>> a336b993f10a21e99b121090a4f68b38e660ce2f
 
 # Proportion of the dataset used for validation split
 use_train_val_split: False
