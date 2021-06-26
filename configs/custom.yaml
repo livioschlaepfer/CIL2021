@@ -26,7 +26,6 @@ paths:
 # Model name
 model_name: "deeplabv3"
 checkpoint_name: "deeplab_massa_100epochs"
-# checkpoint_name: "checkpoint_test"
 
 # Number of classes for segmentation
 num_classes: 2
@@ -59,7 +58,13 @@ feature_extract: False
 pseudo_labeling: False
 
 # Continue training
+<<<<<<< HEAD
 continue_training: False
+=======
+continue_training: True
+continue_training_on_checkpoint: "deeplab_massa_100epochs_pretrained"
+
+>>>>>>> f9b01902d61d399e69e105ff2d18a21ac271ea18
 
 # Configure transforms
 transforms:
