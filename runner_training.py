@@ -75,13 +75,13 @@ optimizer_ft = optim.Adam(params_to_update, lr=config.lr.init_lr)
 scheduler_ft = get_scheduler(optimizer_ft, config)
 
 if config.continue_training:
-    print("Continue training on", config.checkpoint_name)
+    print("Continue training on", config.continue_training_on_checkpoint)
     # Load trained model
-    if not os.path.exists(config.paths.model_store + "/" + config.checkpoint_name + ".pth"):
-        print("Error: Unable to load model, path does not exist:", config.paths.model_store + "/" + config.checkpoint_name + ".pth")
+    if not os.path.exists(config.paths.model_store + "/" + config.continue_training_on_checkpoint + ".pth"):
+        print("Error: Unable to load model, path does not exist:", config.paths.model_store + "/" + config.continue_training_on_checkpoint + ".pth")
         exit()
 
-    checkpoint = torch.load(config.paths.model_store + "/" + config.checkpoint_name + ".pth")
+    checkpoint = torch.load(config.paths.model_store + "/" + config.continue_training_on_checkpoint + ".pth")
     runner.model.load_state_dict(checkpoint['model_state_dict'])
 
 # Train and evaluate model
