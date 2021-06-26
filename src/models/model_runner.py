@@ -1,8 +1,7 @@
 from src.models.deeplabv3 import DeepLabv3RunnerClass
-from src.models.deeplabv3_regularizer import DeepLabv3RegularizerRunnerClass
-from models.trivial_baseline import TrivialRunnerClass
-from models.fcn_resnet50_baseline import FCNResnet50RunnerClass
-from models.unet_baseline import UNetRunnerClass
+from src.models.trivial_baseline import TrivialRunnerClass
+from src.models.fcn_resnet50_baseline import FCNResnet50RunnerClass
+from src.models.unet_baseline import UNetRunnerClass
 
 
 def init_runner(config):

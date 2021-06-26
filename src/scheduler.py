@@ -12,17 +12,17 @@ def get_scheduler(optimizer, config):
     For other schedulers (step, plateau, and cosine), we use the default PyTorch schedulers.
     See https://pytorch.org/docs/stable/configim.html for more details.
     """
-    if config.lr.lr_policy == 'linear':
+    if config.lr.lr_policy == 'none':
+        scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=1)
+    elif config.lr.lr_policy == 'linear':
         def lambda_rule(epoch):
             lr_l = 1.0 - max(0, epoch + 1 - config.num_epochs/2) / float(config.num_epochs/2 + 1)
             return lr_l
         scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule)
     elif config.lr.lr_policy == 'step':
-        scheduler = lr_scheduler.StepLR(optimizer, step_size=config.lr_decay_iters, gamma=0.1)
+        scheduler = lr_scheduler.StepLR(optimizer, step_size=config.num_epochs/5, gamma=0.5)
     elif config.lr.lr_policy == 'plateau':
         scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.2, threshold=0.01, patience=5)
-    elif config.lr.lr_policy == 'cosine':
-        scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=config.n_epochs, eta_min=0)
     else:
         return NotImplementedError('learning rate policy [%s] is not implemented', config.lr_policy)
     return scheduler

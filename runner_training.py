@@ -20,7 +20,7 @@ from src.seed import seed_all
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', 
     default = 'custom',
-    choices = ['custom', 'baseline1', 'baseline2'],
+    choices = ['custom', 'baseline1', 'baseline2', 'baseline3'],
     help = 'Select one of the experiments described in our report or setup a custom config file'
 )
 args = parser.parse_args()

@@ -5,7 +5,7 @@ import torch.nn as nn
 from torchvision import transforms
 
 
-from src.criterion.dice_loss import dice_loss
+from src.criterion.dice_loss import DiceLoss
 
 
 import ssl
@@ -39,7 +39,7 @@ class UNetRunnerClass:
         def forward(input, target):
 
             bce = nn.BCELoss()
-            dice = dice_loss()
+            dice = DiceLoss()
 
             loss1 = 0.0 * bce(input, target) + 0.8 * dice(input, target)
 

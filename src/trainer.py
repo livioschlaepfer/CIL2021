@@ -26,19 +26,13 @@ def train_model(runner, dataloaders, optimizer, scheduler, device, config, num_e
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
 
-        # update lr at the beginning of epoch
-        scheduler.step()
-        print("new lr: ", optimizer.param_groups[0]['lr'])
-
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
             if phase == 'train':
                 runner.model.train()  # Set model to training mode
             else:
                 runner.model.eval()   # Set model to evaluate mode
-
-            # running_loss = 0.0
-            # running_corrects = 0
+                val_loss = 0          # init val loss
 
             # Iterate over data.
             with tqdm(dataloaders[phase], unit="batch") as tqdm_dataloader:
@@ -73,7 +67,7 @@ def train_model(runner, dataloaders, optimizer, scheduler, device, config, num_e
                             # print("=========================== updated weights")
 
                         if phase == 'val':
-                            print("=" * 20 , "validation loss:", loss.item())
+                            val_loss = val_loss + loss.item()
                         
                         # batch statistics
                         dice = DiceLoss()
@@ -85,6 +79,14 @@ def train_model(runner, dataloaders, optimizer, scheduler, device, config, num_e
                 best_model_wts = copy.deepcopy(runner.model.state_dict())
             if phase == 'val':
                 val_acc_history.append(loss)
+                print("=" * 20 , "validation loss:", val_loss)
+
+        # update lr at the end of epoch
+        if config.lr.lr_policy == 'plateau':
+                scheduler.step(val_loss)
+        else:
+            scheduler.step()
+        print("new lr: ", optimizer.param_groups[0]['lr'])
 
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))

@@ -24,8 +24,8 @@ paths:
 
 
 # Model name
-model_name: "deeplabv3"
-checkpoint_name: "deeplab_massa_100epochs"
+model_name: "unet_baseline"
+checkpoint_name: "check_unet_baseline"
 # checkpoint_name: "checkpoint_test"
 
 # Number of classes for segmentation
@@ -65,7 +65,7 @@ continue_training: False
 transforms:
   apply_test_transforms: True
   apply_transforms: True
-  crop_size: 280
+  crop_size: 256 # might lead to an error for other crop size
   flip_prob: 0.5
   rot_prob: 0.25
   canny: False
@@ -86,4 +86,4 @@ loss:
 # lr
 lr:
   init_lr: 0.0001
-  lr_policy: "none" # options: ["none", linear", "step", "plateau"]
+  lr_policy: "linear"

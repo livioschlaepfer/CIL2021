@@ -24,8 +24,8 @@ paths:
 
 
 # Model name
-model_name: "deeplabv3"
-checkpoint_name: "deeplab_massa_100epochs"
+model_name: "fcnres50_baseline"
+checkpoint_name: "check_fcnres50_baseline"
 # checkpoint_name: "checkpoint_test"
 
 # Number of classes for segmentation
@@ -86,4 +86,4 @@ loss:
 # lr
 lr:
   init_lr: 0.0001
-  lr_policy: "none" # options: ["none", linear", "step", "plateau"]
+  lr_policy: "linear"
