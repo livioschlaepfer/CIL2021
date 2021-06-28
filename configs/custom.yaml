@@ -25,7 +25,7 @@ paths:
 
 # Model name
 model_name: "deeplabv3"
-checkpoint_name: "pretrain_deeplab_massa_100epochs_clDice"
+checkpoint_name: "pretrain_deeplab_massa_100epochs_focal"
 
 # if run is to pretrain
 pretrain: True
@@ -41,7 +41,7 @@ batch_size: 5
 
 # Viusualize model output
 visualize_model_output: True
-visualize_time: 150
+visualize_time: 30
 
 # Number of epochs to train for
 num_epochs: 100
@@ -80,12 +80,12 @@ transforms:
 loss:
   # Select desired loss
   # options: ["bce", "dice", "cl_dice", "focal", "topo"]
-  name: "cl_dice"
+  name: "focal"
   patched_loss: True
   iter: 20
   alpha: 0.5
   smooth: 1
-  bce_weight: 0.5
+  bce_weight: 0.0
 
 # lr
 lr:

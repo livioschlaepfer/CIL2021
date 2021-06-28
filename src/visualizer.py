@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 def visualize_output(outputs, inputs = None, labels = None, config=None):
-    print("Started visualizer")
+    #print("Started visualizer")
 
     for idx, output in enumerate(outputs):
         if idx == 0:
