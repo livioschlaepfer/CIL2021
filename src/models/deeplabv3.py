@@ -98,7 +98,7 @@ class DeepLabv3RunnerClass:
         model.aux_classifier = FCNHead(1024, self.config.num_classes)
         
         # Print the instantiated model 
-        print(model)
+        # print(model)
 
         self.model = model
 
@@ -158,8 +158,8 @@ class DeepLabv3RunnerClass:
         return loss
 
     def convert_to_png(self, output):
-        #binary = output.argmin(0)
-        binary = output[0]
+        binary = output.argmin(0)
+        #binary = output[0]
         binary = torch.tensor(binary, dtype=torch.float64)
         binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 

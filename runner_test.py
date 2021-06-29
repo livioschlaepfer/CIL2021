@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import os
 from box import Box
 import yaml
+import ast
 import getpass
 import random
 import argparse
@@ -45,25 +46,41 @@ from src.paths import paths_setter
 username = getpass.getuser()
 config.paths = paths_setter(username=username)
 
-# Initialize the runner for the selected model
-runner = init_runner(config)
+# list all models to run tester
 
-# Create test datasets + dataloader
-image_datasets, dataloaders_dict_test = init_test_dataloaders(config)
+models = os.listdir(config.paths.model_store)
 
-# Detect if we have a GPU available
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# make predictions per model
+for model in models:
+    # check if dir exists, otherwise create
+    if not os.path.exists(config.paths.model_store + "/" + model +"/"+ "predictions/"):
+        os.makedirs(config.paths.model_store + "/" + model +"/"+ "predictions/")
+    
+    # try to initialize the runner and load corresponding weights
+    try:
+        # Initialize the runner for the selected model
+        runner = init_runner(config)
+        
+        # Load trained model
+        if not os.path.exists(config.paths.model_store + "/" + model + "/weights/weights.pth"):
+            print("Error: Unable to load model, path does not exist:", config.paths.model_store + "/" + config.checkpoint_name + ".pth")
+            exit()
 
-# Load trained model
-if not os.path.exists(config.paths.model_store + "/" + config.checkpoint_name + ".pth"):
-    print("Error: Unable to load model, path does not exist:", config.paths.model_store + "/" + config.checkpoint_name + ".pth")
-    exit()
+        checkpoint = torch.load(config.paths.model_store + "/" + model +"/" + "weights/weights.pth")
+        runner.model.load_state_dict(checkpoint['model_state_dict'])
+    except:
+        print("Failure: could not load weights for ---->", model, ". Likely cause are that model_name in config file and model are not compatible. Please adjust config in a later run! ")
+        continue
 
-checkpoint = torch.load(config.paths.model_store + "/" + config.checkpoint_name + ".pth")
-runner.model.load_state_dict(checkpoint['model_state_dict'])
+    # Create test datasets + dataloader
+    image_datasets, dataloaders_dict_test = init_test_dataloaders(config)
 
-# Send the model to GPU
-runner.model = runner.model.to(device)
+    # Detect if we have a GPU available
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-# Test model
-test_model(runner, dataloaders_dict_test, device, config)
+    # Send the model to GPU
+    runner.model = runner.model.to(device)
+
+    # Test model
+    test_model(runner, dataloaders_dict_test, device, config, model=model)
+

@@ -11,7 +11,7 @@ import time
 from src.visualizer import visualize_output
 from src.transforms_test import transform_test, transform_test_aggregate, transform_test_back
 
-def test_model(runner, dataloaders_test, device, config):   
+def test_model(runner, dataloaders_test, device, config, model=None):   
     since = time.time()
     vis_time = time.time()
 
@@ -26,7 +26,7 @@ def test_model(runner, dataloaders_test, device, config):
     phase = 'test'
 
     # Set output path
-    output_path = config.paths.test_output_dir + "/" + config.model_name + "_" + str(round(time.time())) + "/"
+    output_path = config.paths.test_output_dir + "/" + model +"/predictions/"
     print("Outputs are stored under", output_path)
 
     if not os.path.exists(output_path):
