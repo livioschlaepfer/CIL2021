@@ -26,7 +26,7 @@ def test_model(runner, dataloaders_test, device, config, model=None):
     phase = 'test'
 
     # Set output path
-    output_path = config.paths.test_output_dir + "/" + model +"/predictions/"
+    output_path = config.paths.test_output_dir + "/" + model +'/predictions_seed_'+str(config.seed_run)+'/'
     print("Outputs are stored under", output_path)
 
     if not os.path.exists(output_path):

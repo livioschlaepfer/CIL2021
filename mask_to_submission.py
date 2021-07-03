@@ -8,6 +8,7 @@ import glob
 from box import Box
 import yaml
 import getpass
+import argparse
 
 from src.paths import paths_setter
 
@@ -46,18 +47,40 @@ def masks_to_submission(submission_filename, *image_filenames):
 
 if __name__ == '__main__':
 
-    print("Load config")
+    # parser to select desired
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', 
+        default = 'custom',
+        choices = ['custom', 'baseline1', 'baseline2', 'baseline3'],
+        help = 'Select on of the experiments described in our report or setup a custom config file'
+    )
+    args = parser.parse_args()
 
     # load config
-    config = Box.from_yaml(filename="./config.yaml", Loader=yaml.FullLoader)
+    try: 
+        config = Box.from_yaml(filename="./configs/"+ args.config + ".yaml", Loader=yaml.FullLoader)
+    except:
+        raise OSError("Does not exist", args.config)
+
+    print("Load config")
+
+    # list all models to run tester
 
     # update paths based on user name
     username = getpass.getuser()
     config.paths = paths_setter(username=username)
 
-    submission_filename = 'submission.csv'
-    image_filenames = glob.glob(config.paths.test_output_dir+"/*.png")
+    models = os.listdir(config.paths.model_store)
 
-    print("Start masks to submission")
+    for model in models:
+        # check if dir exists, otherwise create
+        if not os.path.exists(config.paths.model_store + "/" + model +"/"+ "submission/"):
+            os.makedirs(config.paths.model_store + "/" + model +"/"+ "submission/")
 
-    masks_to_submission(submission_filename, *image_filenames)
+
+        submission_filename = config.paths.model_store + "/" + model +"/"+ "submission/submission.csv"
+        image_filenames = glob.glob(config.paths.model_store + "/" + model +"/"+ "predictions/"+"/*.png")
+
+        print("Start masks to submission")
+
+        masks_to_submission(submission_filename, *image_filenames)

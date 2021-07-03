@@ -30,7 +30,7 @@ class FCNResnet50RunnerClass:
         model.aux_classifier = FCNHead(1024, self.config.num_classes)
         
         # Print the model we just instantiated
-        print(model)
+        #print(model)
 
         self.model = model
 

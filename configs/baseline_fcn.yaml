@@ -24,8 +24,8 @@ paths:
 
 
 # Model name
-model_name: "trivial_baseline"
-checkpoint_name: "check_trivial_baseline"
+model_name: "fcnres50_baseline"
+checkpoint_name: "baseline_fcn_100epochs"
 # checkpoint_name: "checkpoint_test"
 
 # if run is to pretrain
@@ -35,20 +35,21 @@ pretrain: False
 num_classes: 2
 
 # Set seed for reproducability
+seed_run: 1
 seed: 12345678
 
 # Batch size for training (change depending on how much memory you have)
 batch_size: 5
 
 # Viusualize model output
-visualize_model_output: True
+visualize_model_output: False
 visualize_time: 30
 
 # Number of epochs to train for
 num_epochs: 1
 
 # Proportion of the dataset used for validation split
-use_train_val_split: False
+use_train_val_split: True
 val_size: 0.1
 
 # Freeze pretrained layer weights
@@ -66,8 +67,8 @@ continue_training: False
 
 # Configure transforms
 transforms:
-  apply_test_transforms: True
-  apply_transforms: True
+  apply_test_transforms: False
+  apply_transforms: False
   crop_size: 280
   flip_prob: 0.5
   rot_prob: 0.25
@@ -79,14 +80,16 @@ transforms:
 loss:
   # Select desired loss
   # options: ["bce", "dice", "cl_dice", "focal", "topo"]
-  name: "cl_dice"
+  name: "bce"
   patched_loss: True
   iter: 20
   alpha: 0.5
   smooth: 1
-  bce_weight: 0.5
+  bce_weight: 0.0
 
 # lr
 lr:
   init_lr: 0.0001
-  lr_policy: "linear"
+  lr_policy: "step"
+
+best_epoch: None

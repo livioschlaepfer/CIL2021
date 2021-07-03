@@ -24,7 +24,7 @@ class UNetRunnerClass:
         model = UNet_baseline(output_prob=True) # Mathias: adjusted model here compared to deeplabrunner
         
         # Print the model we just instantiated
-        print(model)
+        #print(model)
 
         self.model = model
 

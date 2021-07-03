@@ -1,13 +1,25 @@
-parameters to fix:
+1. Baselines
+    1. Baseline 1 (FCNN + BCE)
+    2. Baseline 2 (Unet + BCE)
+    3. Baseline 3 (DeepLabv3 + BCE)
+2. Augmentation
+    1. Best Baseline + Training Augmentation
+    2. Best Baseline + Training + Test Augmentation
+3. Comparison of Loss functions
+    1. Best Baseline + Focal loss
+    2. Best Baseline + Dice loss
+    3. Best Baseline + clDice loss
+    4. Best Baseline + Compounded loss (with BCE weight 0.3)
+4. Kaggle Submission
+    1. Pretraining
+    2. (Model bagging)
 
-n_epochs:
-lr:
 
-cobinations to test:
 
-baselines: Unet, Logistic regression
+cldice loss with different values for alpha/iter
 
-deeplabv3 raw
-deeplabv3 + augmentation separately (flipping/rotation | five crop | colorjitter)
-deeplabv3 + 
+push the best submission with canny/morph layer
+
+?? how many epochs ?? 
+
 

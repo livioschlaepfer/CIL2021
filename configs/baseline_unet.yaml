@@ -25,7 +25,7 @@ paths:
 
 # Model name
 model_name: "unet_baseline"
-checkpoint_name: "check_unet_baseline"
+checkpoint_name: "baseline_unet_100epochs"
 # checkpoint_name: "checkpoint_test"
 
 # if run is to pretrain
@@ -41,14 +41,14 @@ seed: 12345678
 batch_size: 5
 
 # Viusualize model output
-visualize_model_output: True
+visualize_model_output: False
 visualize_time: 30
 
 # Number of epochs to train for
-num_epochs: 25
+num_epochs: 100
 
 # Proportion of the dataset used for validation split
-use_train_val_split: False
+use_train_val_split: True
 val_size: 0.1
 
 # Freeze pretrained layer weights
@@ -67,7 +67,7 @@ continue_training: False
 # Configure transforms
 transforms:
   apply_test_transforms: True
-  apply_transforms: True
+  apply_transforms: False
   crop_size: 256 # might lead to an error for other crop size due to specific conv layers
   flip_prob: 0.5
   rot_prob: 0.25
@@ -79,7 +79,7 @@ transforms:
 loss:
   # Select desired loss
   # options: ["bce", "dice", "cl_dice", "focal", "topo"]
-  name: "cl_dice"
+  name: "bce"
   patched_loss: True
   iter: 20
   alpha: 0.5
@@ -89,4 +89,6 @@ loss:
 # lr
 lr:
   init_lr: 0.0001
-  lr_policy: "linear"
+  lr_policy: "step"
+
+best_epoch: None

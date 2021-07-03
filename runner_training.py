@@ -22,7 +22,7 @@ from src.seed import seed_all
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', 
     default = 'custom',
-    choices = ['custom', 'baseline1', 'baseline2', 'baseline3'],
+    choices = ['custom', 'baseline_fcn', 'baseline_unet', 'baseline_deeplab'],
     help = 'Select one of the experiments described in our report or setup a custom config file'
 )
 args = parser.parse_args()
@@ -93,16 +93,20 @@ runner, hist = train_model(runner, dataloaders_dict_train, optimizer_ft, schedul
 if not os.path.exists(config.paths.model_store):
     os.makedirs(config.paths.model_store)
 if not os.path.exists(config.paths.model_store+ '/' + config.checkpoint_name):
-    os.makedirs(config.paths.model_store + '/' + config.checkpoint_name +'/weights')
-    os.makedirs(config.paths.model_store + '/' + config.checkpoint_name +'/config')
+    os.makedirs(config.paths.model_store+ '/' + config.checkpoint_name)
+if not os.path.exists(config.paths.model_store+ '/' + config.checkpoint_name +'/weights_seed_' +str(config.seed_run)):
+    os.makedirs(config.paths.model_store+ '/' + config.checkpoint_name +'/weights_seed_' +str(config.seed_run))
+if not os.path.exists(config.paths.model_store+ '/' + config.checkpoint_name +'/config_seed_' +str(config.seed_run)):
+    os.makedirs(config.paths.model_store+ '/' + config.checkpoint_name +'/config_seed_' +str(config.seed_run))
+    
 
 torch.save({
     'model_state_dict': runner.model.state_dict()
     }, 
-    config.paths.model_store + '/' + config.checkpoint_name +'/weights/weights.pth')
+    config.paths.model_store + '/' + config.checkpoint_name +'/weights_seed_' + str(config.seed_run)+ '/weights.pth')
 
 
-with open(config.paths.model_store + '/' + config.checkpoint_name +'/config/'+'config.txt', 'w') as f: # config.paths.model_store + '/' + config.checkpoint_name +'/config/'+
+with open(config.paths.model_store + '/' + config.checkpoint_name +'/config_seed_' +str(config.seed_run) +'/config.txt', 'w') as f: # config.paths.model_store + '/' + config.checkpoint_name +'/config/'+
     f.write(json.dumps(config.to_dict()))
 
-print("Stored model statedict under:", config.paths.model_store + config.checkpoint_name  +'/weights/weights.pth')
+print("Stored model statedict under:", config.paths.model_store + config.checkpoint_name  +'/weights_seed_' + str(config.seed_run)+'/weights.pth')

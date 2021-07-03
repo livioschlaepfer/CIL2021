@@ -103,7 +103,7 @@ class SegmentationDataSet(data.Dataset):
             mask = Image.open(self.mask_paths[index])
 
             # Transformation / Augmentation
-            if self.transform is not None and self.phase!="val":
+            if self.transform is not None:
                 image, mask =  self.transform(image, mask)
 
             # Normalize image

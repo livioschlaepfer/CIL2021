@@ -75,6 +75,8 @@ def train_model(runner, dataloaders, optimizer, scheduler, device, config, num_e
 
             # deep copy the model
             if phase == 'val' and loss < best_acc:
+                print("Found new best weight, epoch", epoch)
+                config.best_epoch = epoch
                 best_acc = loss
                 best_model_wts = copy.deepcopy(runner.model.state_dict())
             if phase == 'val':

@@ -22,7 +22,7 @@ from src.seed import seed_all
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', 
     default = 'custom',
-    choices = ['custom', 'baseline1', 'baseline2'],
+    choices = ['custom', 'baseline_fcn', 'baseline_unet', 'baseline_deeplab'],
     help = 'Select on of the experiments described in our report or setup a custom config file'
 )
 args = parser.parse_args()
@@ -53,8 +53,8 @@ models = os.listdir(config.paths.model_store)
 # make predictions per model
 for model in models:
     # check if dir exists, otherwise create
-    if not os.path.exists(config.paths.model_store + "/" + model +"/"+ "predictions/"):
-        os.makedirs(config.paths.model_store + "/" + model +"/"+ "predictions/")
+    if not os.path.exists(config.paths.model_store + "/" + model +"/"+ 'predictions_seed_'+str(config.seed_run)+'/'):
+        os.makedirs(config.paths.model_store + "/" + model +"/"+ 'predictions_seed_'+str(config.seed_run)+'/')
     
     # try to initialize the runner and load corresponding weights
     try:
@@ -62,11 +62,11 @@ for model in models:
         runner = init_runner(config)
         
         # Load trained model
-        if not os.path.exists(config.paths.model_store + "/" + model + "/weights/weights.pth"):
+        if not os.path.exists(config.paths.model_store + "/" + model + '/weights_seed_'+str(config.seed_run)+'/weights.pth'):
             print("Error: Unable to load model, path does not exist:", config.paths.model_store + "/" + config.checkpoint_name + ".pth")
             exit()
 
-        checkpoint = torch.load(config.paths.model_store + "/" + model +"/" + "weights/weights.pth")
+        checkpoint = torch.load(config.paths.model_store + "/" + model + '/weights_seed_'+str(config.seed_run)+'/weights.pth')
         runner.model.load_state_dict(checkpoint['model_state_dict'])
     except:
         print("Failure: could not load weights for ---->", model, ". Likely cause are that model_name in config file and model are not compatible. Please adjust config in a later run! ")

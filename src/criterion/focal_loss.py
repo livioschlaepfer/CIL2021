@@ -40,4 +40,4 @@ class FocalLoss(nn.Module):
         # focal_1 = torch.clamp(focal_1, self.smooth, 1. - self.smooth)
         # focal_1 = torch.clamp(focal_0, self.smooth, 1. - self.smooth)
 
-        return focal_loss.sum()     
+        return focal_loss.mean()     
