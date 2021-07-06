@@ -51,7 +51,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', 
         default = 'custom',
-        choices = ['custom', 'baseline1', 'baseline2', 'baseline3'],
+        choices = ['custom', 'baseline_fcn', 'baseline_unet', 'baseline_deeplab'],
         help = 'Select on of the experiments described in our report or setup a custom config file'
     )
     args = parser.parse_args()
@@ -74,12 +74,11 @@ if __name__ == '__main__':
 
     for model in models:
         # check if dir exists, otherwise create
-        if not os.path.exists(config.paths.model_store + "/" + model +"/"+ "submission/"):
-            os.makedirs(config.paths.model_store + "/" + model +"/"+ "submission/")
+        if not os.path.exists(config.paths.model_store + "/" + model +"/"+ 'submission_seed_' + str(config.seed_run)+'/'):
+            os.makedirs(config.paths.model_store + "/" + model +"/"+ 'submission_seed_' + str(config.seed_run)+'/')
 
-
-        submission_filename = config.paths.model_store + "/" + model +"/"+ "submission/submission.csv"
-        image_filenames = glob.glob(config.paths.model_store + "/" + model +"/"+ "predictions/"+"/*.png")
+        submission_filename = config.paths.model_store + "/" + model +"/"+ 'submission_seed_' + str(config.seed_run)+'/' 'submission.csv'
+        image_filenames = glob.glob(config.paths.model_store + "/" + model +"/"+ 'predictions_seed_' + str(config.seed_run) +"/*.png")
 
         print("Start masks to submission")
 

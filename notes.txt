@@ -1,8 +1,11 @@
-1. Baselines
+
+
+
+1. Baselines (100epochs)
     1. Baseline 1 (FCNN + BCE)
     2. Baseline 2 (Unet + BCE)
-    3. Baseline 3 (DeepLabv3 + BCE)
-2. Augmentation
+    3. Baseline 3 (DeepLabv3 + BCE), batch_size modified (3) for memory reasons
+2. Augmentation 
     1. Best Baseline + Training Augmentation
     2. Best Baseline + Training + Test Augmentation
 3. Comparison of Loss functions
@@ -19,6 +22,11 @@
 cldice loss with different values for alpha/iter
 
 push the best submission with canny/morph layer
+
+seed 1: 36573
+seed 2: 90708
+seed 3: 23012
+
 
 ?? how many epochs ?? 
 

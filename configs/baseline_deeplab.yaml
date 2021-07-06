@@ -35,10 +35,11 @@ pretrain: False
 num_classes: 2
 
 # Set seed for reproducability
-seed: 12345678
+seed_run: 3
+seed: 23012 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
 
 # Batch size for training (change depending on how much memory you have)
-batch_size: 5
+batch_size: 3
 
 # Viusualize model output
 visualize_model_output: False
@@ -66,7 +67,7 @@ continue_training: False
 
 # Configure transforms
 transforms:
-  apply_test_transforms: True
+  apply_test_transforms: False
   apply_transforms: False
   crop_size: 280
   flip_prob: 0.5
@@ -84,7 +85,7 @@ loss:
   iter: 20
   alpha: 0.5
   smooth: 1
-  bce_weight: 0.5
+  bce_weight: 0.0
 
 # lr
 lr:

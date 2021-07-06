@@ -79,11 +79,11 @@ scheduler_ft = get_scheduler(optimizer_ft, config)
 if config.continue_training:
     print("Continue training on", config.continue_training_on_checkpoint)
     # Load trained model
-    if not os.path.exists(config.paths.model_store + "/" + config.continue_training_on_checkpoint + "/weights/weights.pth"):
-        print("Error: Unable to load model, path does not exist:", config.paths.model_store + "/" + config.continue_training_on_checkpoint + "/weights/weights.pth")
+    if not os.path.exists(config.paths.model_store + "/" + config.continue_training_on_checkpoint + "/weights_seed_"+str(config.seed_run)+"/weights.pth"):
+        print("Error: Unable to load model, path does not exist:", config.paths.model_store + "/" + config.continue_training_on_checkpoint + "/weights_seed_"+str(config.seed_run)+"/weights.pth")
         exit()
 
-    checkpoint = torch.load(config.paths.model_store + "/" + config.continue_training_on_checkpoint + "/weights/weights.pth")
+    checkpoint = torch.load(config.paths.model_store + "/" + config.continue_training_on_checkpoint + "/weights_seed_"+str(config.seed_run)+"/weights.pth")
     runner.model.load_state_dict(checkpoint['model_state_dict'])
 
 # Train and evaluate model

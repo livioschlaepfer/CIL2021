@@ -48,7 +48,7 @@ config.paths = paths_setter(username=username)
 
 # list all models to run tester
 
-models = os.listdir(config.paths.model_store)
+models = ['deeplab_compound_focal']#os.listdir(config.paths.model_store)
 
 # make predictions per model
 for model in models:

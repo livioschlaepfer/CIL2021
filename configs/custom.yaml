@@ -25,7 +25,7 @@ paths:
 
 # Model name
 model_name: "deeplabv3"
-checkpoint_name: "focal_test"
+checkpoint_name: "deeplab_compound_focal"
 
 # if run is to pretrain
 pretrain: False
@@ -34,17 +34,18 @@ pretrain: False
 num_classes: 2
 
 # Set seed for reproducability
-seed: 12345678
+seed_run: 1
+seed: 36573 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
 
 # Batch size for training (change depending on how much memory you have)
 batch_size: 5
 
 # Viusualize model output
-visualize_model_output: True
+visualize_model_output: False
 visualize_time: 60
 
 # Number of epochs to train for
-num_epochs: 50
+num_epochs: 100
 
 # Proportion of the dataset used for validation split
 use_train_val_split: True
@@ -62,7 +63,7 @@ pseudo_labeling: False
 
 # Continue training
 continue_training: False
-continue_training_on_checkpoint: "pretrain_deeplab_massa_10epochs_cldice"
+continue_training_on_checkpoint: "deeplab_train_aug"
 
 
 # Configure transforms
@@ -85,7 +86,7 @@ loss:
   iter: 20
   alpha: 0.5
   smooth: 1
-  bce_weight: 0.5
+  bce_weight: 0.3
 
 # lr
 lr:
