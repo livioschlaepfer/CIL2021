@@ -2,10 +2,7 @@ from __future__ import print_function
 from __future__ import division
 
 import os
-import glob
-import numpy as np
 import torch
-from PIL import Image
 import time
 
 from src.visualizer import visualize_output

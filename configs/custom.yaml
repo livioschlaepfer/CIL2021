@@ -25,46 +25,35 @@ paths:
 
 # Model name
 model_name: "deeplabv3"
-checkpoint_name: "deeplab_compound_focal"
+checkpoint_name: "pretrain_deeplab_dice"
 
 # if run is to pretrain
-pretrain: False
+pretrain: True
 
 # Number of classes for segmentation
 num_classes: 2
 
 # Set seed for reproducability
-seed_run: 1
-seed: 36573 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
+seed_run: 2
+seed: 90708 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
 
 # Batch size for training (change depending on how much memory you have)
 batch_size: 5
 
 # Viusualize model output
 visualize_model_output: False
-visualize_time: 60
+visualize_time: 600
 
 # Number of epochs to train for
-num_epochs: 100
+num_epochs: 25
 
 # Proportion of the dataset used for validation split
 use_train_val_split: True
 val_size: 0.1
 
-# Freeze pretrained layer weights
-freeze: False
-
-# Flag for feature extracting. When False, we finetune the whole model,
-#   when True we only update the reshaped layer params
-feature_extract: False
-
-# Enable pseudo labeling
-pseudo_labeling: False
-
 # Continue training
 continue_training: False
-continue_training_on_checkpoint: "deeplab_train_aug"
-
+continue_training_on_checkpoint: "pretrain_deeplab_dice"
 
 # Configure transforms
 transforms:
@@ -77,16 +66,24 @@ transforms:
   canny_filter_size: 5
   canny_thresh: 250
 
+#morphological postprocessing
+morph:
+  apply: False
+  area_closing: True
+  area_opening: True
+  binary_closing: True
+  iter: 1
+
 # loss
 loss:
   # Select desired loss
   # options: ["bce", "dice", "cl_dice", "focal"]
-  name: "focal"
+  name: "dice"
   patched_loss: True
   iter: 20
   alpha: 0.5
   smooth: 1
-  bce_weight: 0.3
+  bce_weight: 0.0
 
 # lr
 lr:

@@ -2,8 +2,6 @@ import torch
 from torchvision import transforms
 import numpy as np
 from PIL import Image
-import matplotlib.pyplot as plt
-
 
 def visualize_output(outputs, inputs = None, labels = None, config=None):
     #print("Started visualizer")

@@ -3,18 +3,12 @@
 from __future__ import print_function
 from __future__ import division
 import torch
-import torch.nn as nn
 import torch.optim as optim
-import numpy as np
-from torchvision import datasets, models, transforms
-import matplotlib.pyplot as plt
 import os
 from box import Box
-import pickle
 import json
 import yaml
 import getpass
-import random
 import argparse
 from src.seed import seed_all
 
@@ -60,15 +54,6 @@ runner.model = runner.model.to(device)
 
 # Gather the parameters to be optimized/updated in this run. 
 params_to_update = runner.model.parameters()
-
-# Specify layers where we want to freeze weights
-if config.freeze:
-    print("Freeze layers, set trainable layers")
-    params_to_update = []
-    for name,param in runner.model.named_parameters():
-        if param.requires_grad == True:
-            params_to_update.append(param)
-            print("\t",name)
 
 # Observe that all parameters are being optimized
 optimizer_ft = optim.Adam(params_to_update, lr=config.lr.init_lr)

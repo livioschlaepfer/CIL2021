@@ -62,8 +62,7 @@ for i, (img_path, mask_path) in enumerate(zip(image_paths, mask_paths)):
             if args.small_then_zoom:
                 img_crop = img_crop.resize((400, 400))
                 mask_crop = mask_crop.resize((400, 400))
-                mask_crop = mask_crop.point(lambda x: 0 if x<128 else 255, '1')
+                #mask_crop = mask_crop.point(lambda x: 0 if x<128 else 255, '1')
             img_crop.save(config.paths.massa_images_aug + '/' + args.name + '/' + str(i) + '_' + str(k) + '_' + str(j) + '.png')
             mask_crop.save(config.paths.massa_masks_aug + '/' + args.name + '/' + str(i) + '_' + str(k) + '_' + str(j) + '.png')
-
 print("done")

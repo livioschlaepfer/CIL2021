@@ -1,4 +1,3 @@
-import torch
 from torch.optim import lr_scheduler
 
 def get_scheduler(optimizer, config):

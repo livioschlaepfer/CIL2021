@@ -8,6 +8,8 @@ import torch.nn.functional as F
 
 from torchvision.models.segmentation.fcn import FCNHead
 
+from skimage.morphology import area_closing, area_opening, binary_closing, binary_dilation, binary_erosion, disk, square
+
 from src.criterion.dice_loss import DiceLoss
 from src.criterion.cldice_loss import SoftDiceCLDice
 from src.criterion.focal_loss import FocalLoss
@@ -160,6 +162,19 @@ class DeepLabv3RunnerClass:
     def convert_to_png(self, output):
         binary = output.argmin(0)
         #binary = output[0]
+        if self.config.morph.apply:
+            binary = binary.cpu().detach().numpy()
+            if self.config.morph.area_closing:
+                binary = area_closing(binary, area_threshold=200)
+            if self.config.morph.area_opening:
+                binary = area_opening(binary, area_threshold=200)
+            if self.config.morph.binary_closing:  
+                for i in range(self.config.morph.iter):
+                    footprint = disk(10)
+                    footprint_1= disk(14)
+                    binary = binary_dilation(binary, footprint)
+                    binary = binary_erosion(binary, footprint_1)
+                #binary = binary_erosion(binary, footprint_1)  
         binary = torch.tensor(binary, dtype=torch.float64)
         binary = transforms.ToPILImage(mode="L")(binary).convert("RGB")
 

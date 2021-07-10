@@ -1,10 +1,7 @@
 from __future__ import print_function
 from __future__ import division
 
-import numpy as np
-
 import torch
-from torch.nn.functional import log_softmax
 import time
 import copy
 from tqdm import tqdm
@@ -74,13 +71,13 @@ def train_model(runner, dataloaders, optimizer, scheduler, device, config, num_e
                         tqdm_dataloader.set_postfix(loss = loss.item(), accuracy = 100. * dice(outputs.float(), labels.float()).item())
 
             # deep copy the model
-            if phase == 'val' and loss < best_acc:
+            if phase == 'val' and val_loss < best_acc:
                 print("Found new best weight, epoch", epoch)
                 config.best_epoch = epoch
-                best_acc = loss
+                best_acc = val_loss
                 best_model_wts = copy.deepcopy(runner.model.state_dict())
             if phase == 'val':
-                val_acc_history.append(loss)
+                val_acc_history.append(val_loss)
                 print("=" * 20 , "validation loss:", val_loss)
 
         # update lr at the end of epoch

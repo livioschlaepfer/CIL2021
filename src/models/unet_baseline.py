@@ -4,8 +4,9 @@ import torch
 import torch.nn as nn
 from torchvision import transforms
 
-
 from src.criterion.dice_loss import DiceLoss
+from src.criterion.cldice_loss import SoftDiceCLDice
+from src.criterion.focal_loss import FocalLoss
 
 
 import ssl
@@ -30,27 +31,45 @@ class UNetRunnerClass:
 
     def init_criterion(self):
         # Setup the loss
-        # self.criterion = torch.nn.MSELoss(reduction='mean')
-        # self.criterion = nn.CrossEntropyLoss()
-        # self.criterion = nn.BCELoss()
-        # self.criterion = nn.NLLLoss()
-        # self.criterion = DiceLoss()
+        # self.criterion = torch.nn.MSELoss(reduction='mean')
+        # self.criterion = nn.CrossEntropyLoss()
+        # self.criterion = nn.BCELoss()
+        # self.criterion = nn.NLLLoss()
 
         def forward(input, target):
 
+            if self.config.loss.name == "bce":
+                loss = nn.BCELoss()
+
+            elif self.config.loss.name == "dice":
+                loss = DiceLoss()
+                
+            elif self.config.loss.name == "focal":
+                loss = FocalLoss()
+
+            elif self.config.loss.name == "cl_dice":
+                loss = SoftDiceCLDice(iter_=self.config.loss.iter, smooth=self.config.loss.smooth, alpha=self.config.loss.alpha)
+
+            elif self.config.loss.name == "bce_dice_with_patch":
+                bce = nn.BCELoss()
+                dice = DiceLoss()
+
+                loss1 = 0.2 * bce(input, target) + 0.8 * dice(input, target)
+
+                input_16 = self.image_to_patched(input, 16)
+                target_16 = self.mask_to_patched(target, 16)
+
+                loss3 = 0.2 * bce(input_16, target_16) + 0.8 * dice(input_16, target_16)
+
+                print("loss1", loss1,"loss3", loss3)
+
+                return loss1 + 0.5 * loss3 
+
+            else: 
+                raise OSError("Loss not exist:", self.config.loss.name)
+        
             bce = nn.BCELoss()
-            dice = DiceLoss()
-
-            loss1 = 0.0 * bce(input, target) + 0.8 * dice(input, target)
-
-            input_16 = self.image_to_patched(input, 16)
-            target_16 = self.mask_to_patched(target, 16)
-
-            loss3 = 0.0 * bce(input_16, target_16) + 0.8 * dice(input_16, target_16)
-
-            # print("loss1", loss1,"loss3", loss3, )
-
-            return loss1 + 0.2 * loss3 
+            return self.config.loss.bce_weight * bce(input, target) + (1. - self.config.loss.bce_weight) * loss(input, target)
 
         self.criterion = forward
   
