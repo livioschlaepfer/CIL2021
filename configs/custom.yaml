@@ -25,17 +25,17 @@ paths:
 
 # Model name
 model_name: "deeplabv3"
-checkpoint_name: "pretrain_deeplab_dice"
+checkpoint_name: "deeplab_compound_focal"
 
 # if run is to pretrain
-pretrain: True
+pretrain: False
 
 # Number of classes for segmentation
 num_classes: 2
 
 # Set seed for reproducability
-seed_run: 2
-seed: 90708 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
+seed_run: 3
+seed: 23012 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
 
 # Batch size for training (change depending on how much memory you have)
 batch_size: 5
@@ -45,7 +45,7 @@ visualize_model_output: False
 visualize_time: 600
 
 # Number of epochs to train for
-num_epochs: 25
+num_epochs: 100
 
 # Proportion of the dataset used for validation split
 use_train_val_split: True
@@ -53,7 +53,7 @@ val_size: 0.1
 
 # Continue training
 continue_training: False
-continue_training_on_checkpoint: "pretrain_deeplab_dice"
+continue_training_on_checkpoint: "deeplab_trainaug"
 
 # Configure transforms
 transforms:
@@ -78,12 +78,12 @@ morph:
 loss:
   # Select desired loss
   # options: ["bce", "dice", "cl_dice", "focal"]
-  name: "dice"
+  name: "focal"
   patched_loss: True
   iter: 20
   alpha: 0.5
   smooth: 1
-  bce_weight: 0.0
+  bce_weight: 0.3
 
 # lr
 lr:
