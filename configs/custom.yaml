@@ -1,12 +1,12 @@
 # Model name
 model_name: "deeplabv3"
-checkpoint_name: "deeplab_cldice_modified"
+checkpoint_name: "test"
 
 # if run is to pretrain
 pretrain: False
 
 # if mixed dataset is used
-mixed_train: False
+mixed_train: True
 
 # Number of classes for segmentation
 num_classes: 2
