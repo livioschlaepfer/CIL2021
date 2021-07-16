@@ -1,41 +1,19 @@
-# Declare paths
-paths:
-  # Directory of training groundthruth
-  # train_mask_dir: 'C:\Users\svenk\OneDrive\Desktop\ETH_SS_21\Computational_Intelligence_Lab\Project\Data\training\groundtruth\1'
-  train_mask_dir: '/Users/livioschlapfer/Documents/OneDrive/Daten Livio/Schule/ETH/Master/2. Semester/Computational Intelligence Lab/3 - Project/2 - Data/cil-road-segmentation-2021/training/training/groundtruth_aug'
-  train_mask_dir_aug: '/Users/livioschlapfer/Documents/OneDrive/Daten Livio/Schule/ETH/Master/2. Semester/Computational Intelligence Lab/3 - Project/2 - Data/cil-road-segmentation-2021/training/training/groundtruth_aug'
-  # train_mask_dir: '/cluster/home/livios/data/training/training/groundtruth'
-  
-  # Directory of training images
-  # train_image_dir: 'C:\Users\svenk\OneDrive\Desktop\ETH_SS_21\Computational_Intelligence_Lab\Project\Data\training\images\1'
-  train_image_dir: '/Users/livioschlapfer/Documents/OneDrive/Daten Livio/Schule/ETH/Master/2. Semester/Computational Intelligence Lab/3 - Project/2 - Data/cil-road-segmentation-2021/training/training/images_aug'
-  train_image_dir_aug: '/Users/livioschlapfer/Documents/OneDrive/Daten Livio/Schule/ETH/Master/2. Semester/Computational Intelligence Lab/3 - Project/2 - Data/cil-road-segmentation-2021/training/training/images_aug'
-  # train_image_dir: '/cluster/home/livios/data/training/training/images'
-
-  # Directory of test images
-  # test_image_dir: 'C:\Users\svenk\OneDrive\Desktop\ETH_SS_21\Computational_Intelligence_Lab\Project\Data\test_images\test_images'
-  test_image_dir: '/Users/livioschlapfer/Documents/OneDrive/Daten Livio/Schule/ETH/Master/2. Semester/Computational Intelligence Lab/3 - Project/2 - Data/cil-road-segmentation-2021/test_images/test_images'
-  # test_image_dir: '/cluster/home/livios/data/test_images/test_images'
-
-  # Directory for test output
-  # test_output_dir: 'C:\Users\svenk\OneDrive\Desktop\ETH_SS_21\Computational_Intelligence_Lab\Project\Data\test_images'
-  test_output_dir: '/Users/livioschlapfer/Documents/OneDrive/Daten Livio/Schule/ETH/Master/2. Semester/Computational Intelligence Lab/3 - Project/2 - Data/cil-road-segmentation-2021/test_images/test_output'
-  #test_output_dir: '/cluster/home/livios/data/test_images/test_output'
-
-
 # Model name
 model_name: "deeplabv3"
-checkpoint_name: "deeplab_compound_focal"
+checkpoint_name: "deeplab_cldice_modified"
 
 # if run is to pretrain
 pretrain: False
+
+# if mixed dataset is used
+mixed_train: False
 
 # Number of classes for segmentation
 num_classes: 2
 
 # Set seed for reproducability
-seed_run: 3
-seed: 23012 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
+seed_run: 1
+seed: 36573 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
 
 # Batch size for training (change depending on how much memory you have)
 batch_size: 5
@@ -53,7 +31,7 @@ val_size: 0.1
 
 # Continue training
 continue_training: False
-continue_training_on_checkpoint: "deeplab_trainaug"
+continue_training_on_checkpoint: "deeplab_dice"
 
 # Configure transforms
 transforms:
@@ -78,12 +56,13 @@ morph:
 loss:
   # Select desired loss
   # options: ["bce", "dice", "cl_dice", "focal"]
-  name: "focal"
+  name: "cl_dice"
   patched_loss: True
   iter: 20
   alpha: 0.5
   smooth: 1
-  bce_weight: 0.3
+  bce_weight: 0.0
+  only_foreground: True
 
 # lr
 lr:

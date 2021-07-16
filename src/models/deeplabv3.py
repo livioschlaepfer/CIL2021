@@ -123,7 +123,7 @@ class DeepLabv3RunnerClass:
                 loss = FocalLoss()
 
             elif self.config.loss.name == "cl_dice":
-                loss = SoftDiceCLDice(iter_=self.config.loss.iter, smooth=self.config.loss.smooth, alpha=self.config.loss.alpha)
+                loss = SoftDiceCLDice(iter_=self.config.loss.iter, config = self.config, smooth=self.config.loss.smooth, alpha=self.config.loss.alpha)
 
             elif self.config.loss.name == "bce_dice_with_patch":
                 bce = nn.BCELoss()
@@ -165,13 +165,13 @@ class DeepLabv3RunnerClass:
         if self.config.morph.apply:
             binary = binary.cpu().detach().numpy()
             if self.config.morph.area_closing:
-                binary = area_closing(binary, area_threshold=200)
+                binary = area_closing(binary, area_threshold=500)
             if self.config.morph.area_opening:
-                binary = area_opening(binary, area_threshold=200)
+                binary = area_opening(binary, area_threshold=500)
             if self.config.morph.binary_closing:  
                 for i in range(self.config.morph.iter):
                     footprint = disk(10)
-                    footprint_1= disk(14)
+                    footprint_1= disk(12)
                     binary = binary_dilation(binary, footprint)
                     binary = binary_erosion(binary, footprint_1)
                 #binary = binary_erosion(binary, footprint_1)  

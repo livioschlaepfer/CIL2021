@@ -67,13 +67,18 @@ class SoftDiceCLDice(nn.Module):
     """
 
 
-    def __init__(self, iter_=3, alpha=0.5, smooth = 1.):
+    def __init__(self, config, iter_=3, alpha=0.5, smooth = 1.):
         super(SoftDiceCLDice, self).__init__()
         self.iter = iter_
         self.smooth = smooth
         self.alpha = alpha
+        self.config = config
 
     def forward(self, y_true, y_pred):
+        if self.config.loss.only_foreground:
+            y_true = torch.unsqueeze(y_true[:,0,:,:],1)
+            y_pred = torch.unsqueeze(y_pred[:,0,:,:],1)
+        
         dice = soft_dice(y_true, y_pred)
         skel_pred = soft_skel(y_pred, self.iter)
         skel_true = soft_skel(y_true, self.iter)

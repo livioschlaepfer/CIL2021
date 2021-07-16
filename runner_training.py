@@ -38,7 +38,7 @@ from src.scheduler import get_scheduler
 
 # update paths based on user name
 username = getpass.getuser()
-config.paths = paths_setter(username=username, pretrain=config.pretrain)
+config.paths = paths_setter(username=username, pretrain=config.pretrain, mixed_train=config.mixed_train)
 
 # Initialize the runner for the selected model
 runner = init_runner(config)
