@@ -28,23 +28,23 @@ Before trying to reproduce our results, please arrange the pretraining, training
 First the user has to complete the missing folder paths in paths.py:
 
 '''
-if username == "insert OS-username here" and pretrain==False and mixed_train==False:
-        path_dict = {
-                'train_mask_dir': 'please insert path to train masks',
-                'train_image_dir': 'please insert path to train images',
-                'test_image_dir': 'please insert path to test masks',
-                'test_output_dir': 'please insert path to test images',
-                'model_store': 'please insert path where you want information about your models to be stored (model weights, config, predictions, submission)',
-        }
+        if username == "insert OS-username here" and pretrain==False and mixed_train==False:
+                path_dict = {
+                        'train_mask_dir': 'please insert path to train masks',
+                        'train_image_dir': 'please insert path to train images',
+                        'test_image_dir': 'please insert path to test masks',
+                        'test_output_dir': 'please insert path to test images',
+                        'model_store': 'please insert path where you want information about your models to be stored (model weights, config, predictions, submission)',
+                }
         
         elif username == "insert OS-username here" and pretrain==True:
-            path_dict = {
-                    'train_mask_dir': 'please insert path to the Massachusetts Road Dataset train masks',
-                    'train_image_dir': 'please insert path to the Massachusetts Road Dataset train images',
-                    'test_image_dir': 'please insert path to test masks',
-                    'test_output_dir': 'please insert path to test images',
-                    'model_store': 'please insert path where you want information about your models to be stored (model weights, config, predictions, submission)',
-            }
+                path_dict = {
+                        'train_mask_dir': 'please insert path to the Massachusetts Road Dataset train masks',
+                        'train_image_dir': 'please insert path to the Massachusetts Road Dataset train images',
+                        'test_image_dir': 'please insert path to test masks',
+                        'test_output_dir': 'please insert path to test images',
+                        'model_store': 'please insert path where you want information about your models to be stored (model weights, config, predictions, submission)',
+                }
 
         elif username == "insert OS-username here" and mixed_train==True:
                 path_dict = {
