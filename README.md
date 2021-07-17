@@ -27,16 +27,15 @@ This is the Git Repo of Livio Schläpfer, Mathias Rouss and Sven Kohler containi
 Before trying to reproduce our results, please arrange the pretraining, training and test data as instructed below.
 First the user has to complete the missing folder paths in paths.py:
 
-"""
-
+'''
 if username == "insert OS-username here" and pretrain==False and mixed_train==False:
-            path_dict = {
-                    'train_mask_dir': 'please insert path to train masks',
-                    'train_image_dir': 'please insert path to train images',
-                    'test_image_dir': 'please insert path to test masks',
-                    'test_output_dir': 'please insert path to test images',
-                    'model_store': 'please insert path where you want information about your models to be stored (model weights, config, predictions, submission)',
-            }
+        path_dict = {
+                'train_mask_dir': 'please insert path to train masks',
+                'train_image_dir': 'please insert path to train images',
+                'test_image_dir': 'please insert path to test masks',
+                'test_output_dir': 'please insert path to test images',
+                'model_store': 'please insert path where you want information about your models to be stored (model weights, config, predictions, submission)',
+        }
         
         elif username == "insert OS-username here" and pretrain==True:
             path_dict = {
@@ -55,7 +54,7 @@ if username == "insert OS-username here" and pretrain==False and mixed_train==Fa
                         'test_output_dir': 'please insert path to test images',
                         'model_store': 'please insert path where you want information about your models to be stored (model weights, config, predictions, submission)',
                 }
-"""
+'''
 The three case distinctions refer to whether the user intends to pretrain, mixed train or standard train.
 
 
@@ -118,5 +117,5 @@ The authors provided the user with the preset configuration files to implement t
 
 To ensure reproducibility we fixed the random seeds in all the stochastic elements of our code (pytorch, numpy, random).
 
-We ran all our experiments using three different seeds (seed run 1: ,2,3) to gain insights in the robustness of our results.
+We ran all our experiments using three different seeds (seed run 1,2,3) to gain insights in the robustness of our results.
 
