@@ -64,7 +64,7 @@ To reproduce our results which were presented in our report the interested user 
 Below is a detailed list of all the eligible settings/flags/variables which need to be specified in order to launch a run.
 
 - model_name: str, refers to the model/baseline to be used. Choices are ["unet_baseline", "fcnres50_baseline", "deeplabv3"]
-- checkpoint_name: str, name of the current experiment. Creates folder path_dict["model_store"] and saves corresponding data (weights, predictions etc.)
+- checkpoint_name: str, name of the current experiment. Creates folder in path_dict["model_store"] and saves corresponding data (weights, predictions etc.)
 - pretrain: bool, if run is to pretrain
 - mixed_train: bool, if model is trained on mixed dataset
 - num_classes: int, indicate model the number of classes to segment
