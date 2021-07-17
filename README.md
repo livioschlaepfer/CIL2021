@@ -27,7 +27,7 @@ This is the Git Repo of Livio Schläpfer, Mathias Rouss and Sven Kohler containi
 Before trying to reproduce our results, please arrange the pretraining, training and test data as instructed below.
 First the user has to complete the missing folder paths in paths.py:
 
-'''
+```
         if username == "insert OS-username here" and pretrain==False and mixed_train==False:
                 path_dict = {
                         'train_mask_dir': 'please insert path to train masks',
@@ -54,7 +54,7 @@ First the user has to complete the missing folder paths in paths.py:
                         'test_output_dir': 'please insert path to test images',
                         'model_store': 'please insert path where you want information about your models to be stored (model weights, config, predictions, submission)',
                 }
-'''
+```
 The three case distinctions refer to whether the user intends to pretrain, mixed train or standard train.
 
 
