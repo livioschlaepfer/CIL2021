@@ -1,19 +1,19 @@
 # Model name
 model_name: "deeplabv3"
-checkpoint_name: "test"
+checkpoint_name: "deeplab_cldice_modified2"
 
 # if run is to pretrain
 pretrain: False
 
 # if mixed dataset is used
-mixed_train: True
+mixed_train: False
 
 # Number of classes for segmentation
 num_classes: 2
 
 # Set seed for reproducability
-seed_run: 1
-seed: 36573 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
+seed_run: 3
+seed: 23012 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
 
 # Batch size for training (change depending on how much memory you have)
 batch_size: 5
@@ -58,7 +58,7 @@ loss:
   # options: ["bce", "dice", "cl_dice", "focal"]
   name: "cl_dice"
   patched_loss: True
-  iter: 20
+  iter: 40
   alpha: 0.5
   smooth: 1
   bce_weight: 0.0
