@@ -79,31 +79,31 @@ Below is a detailed list of all the eligible settings/flags/variables which need
 - continue_trainig: bool, flag load previously trained model and continue training
 - continue_training_on_checkpoint: str, checkpoint name of model to pretrain on
 - transforms:
-        - apply_test_transforms: bool, flag to indicate test time transformation
-        - apply_transforms: bool, flag to indicate train time transformation
-        - crop_size: int, crop size of original image and mask 
-        - flip_prob: float, probability that a training example is flipped horizontally/vertically
-        - rot_prob: float, probability that a training example is rotated at a random angle
-        - canny: bool, whether to add the output of the canny edge detector to the original images
-        - canny_filter_size: int, variable controlling filtering neighborhood of the canny edge detector
-        - canny_thresh: int, threshold of canny edge detector
+  - apply_test_transforms: bool, flag to indicate test time transformation
+  - apply_transforms: bool, flag to indicate train time transformation
+  - crop_size: int, crop size of original image and mask 
+  - flip_prob: float, probability that a training example is flipped horizontally/vertically
+  - rot_prob: float, probability that a training example is rotated at a random angle
+  - canny: bool, whether to add the output of the canny edge detector to the original images
+  - canny_filter_size: int, variable controlling filtering neighborhood of the canny edge detector
+  - canny_thresh: int, threshold of canny edge detector
 - morph: 
-        - apply: bool, flag indicating if morphological postprocessing is applied to the final prediction of the model
-        - area_closing: bool, flag indicating if area closing is applied to the final prediction of the model
-        - area_opening: bool, flag indicating if area opening is applied to the final prediction of the model
-        - binary_closing: bool, flag indicating if binary closing is applied to the final prediction of the model
-        - iter: int, number if binary closing iterations to conduct
+  - apply: bool, flag indicating if morphological postprocessing is applied to the final prediction of the model
+  - area_closing: bool, flag indicating if area closing is applied to the final prediction of the model
+  - area_opening: bool, flag indicating if area opening is applied to the final prediction of the model
+  - binary_closing: bool, flag indicating if binary closing is applied to the final prediction of the model
+  - iter: int, number if binary closing iterations to conduct
 - loss:
-        - name: str, desired loss to be used during training. Choices are ["bce", "dice", "cl_dice", "focal"]
-        - patched_loss: bool, ??? is this implemented?
-        - iter: int, hyperparameter of cl_dice. Controls degree of skeletonization
-        - alpha: float, hyperparameter of cl_dice. Controls weight of soft_dice loss compared to soft_cl_dice loss.
-        - smooth: float, smoothing parameter of cl_dice. 
-        - bce_weight: float, weight of Binary Cross Entropy Loss when training on compound loss.
-        - only_foreground: bool, flag indicating whether to apply cl_dice only to the road map.
+  - name: str, desired loss to be used during training. Choices are ["bce", "dice", "cl_dice", "focal"]
+  - patched_loss: bool, ??? is this implemented?
+  - iter: int, hyperparameter of cl_dice. Controls degree of skeletonization
+  - alpha: float, hyperparameter of cl_dice. Controls weight of soft_dice loss compared to soft_cl_dice loss.
+  - smooth: float, smoothing parameter of cl_dice. 
+  - bce_weight: float, weight of Binary Cross Entropy Loss when training on compound loss.
+  - only_foreground: bool, flag indicating whether to apply cl_dice only to the road map.
 - lr:
-        - init_lr: float, initial learning rate to use during training
-        - lr_policy: learning rate policy to apply during training. Choices are [none", linear", "step", "plateau"]
+  - init_lr: float, initial learning rate to use during training
+  - lr_policy: learning rate policy to apply during training. Choices are [none", linear", "step", "plateau"]
 - best_epoch: None, placeholder to save number of best epoch during training.
 
 The authors provided the user with the preset configuration files to implement the three baselines and a custom configuration file where an arbitrary setting can be implemented.
