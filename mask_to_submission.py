@@ -54,6 +54,8 @@ if __name__ == '__main__':
         choices = ['custom', 'baseline_fcn', 'baseline_unet', 'baseline_deeplab'],
         help = 'Select on of the experiments described in our report or setup a custom config file'
     )
+    parser.add_argument('--flag_majority', action='store_true', help="whether predictions come from a majority voting run")
+    parser.add_argument('--majority_name', default=None, type=str, help="supply name of majority run")
     args = parser.parse_args()
 
     # load config
@@ -72,14 +74,26 @@ if __name__ == '__main__':
 
     models = os.listdir(config.paths.model_store)
 
-    for model in models:
+    if args.flag_majority:
         # check if dir exists, otherwise create
-        if not os.path.exists(config.paths.model_store + "/" + model +"/"+ 'submission_seed_' + str(config.seed_run)+'/'):
-            os.makedirs(config.paths.model_store + "/" + model +"/"+ 'submission_seed_' + str(config.seed_run)+'/')
+            if not os.path.exists(config.paths.model_store + "/" + args.majority_name +"/"+ 'submission/'):
+                os.makedirs(config.paths.model_store + "/" + args.majority_name +"/"+ 'submission/')
 
-        submission_filename = config.paths.model_store + "/" + model +"/"+ 'submission_seed_' + str(config.seed_run)+'/' 'submission.csv'
-        image_filenames = glob.glob(config.paths.model_store + "/" + model +"/"+ 'predictions_seed_' + str(config.seed_run) +"/*.png")
+            submission_filename = config.paths.model_store + "/" + args.majority_name +"/"+ 'submission/submission.csv'
+            image_filenames = glob.glob(config.paths.model_store + "/" + args.majority_name +"/"+ 'predictions/*.png')
+            
+            print("Start masks to submission")
 
-        print("Start masks to submission")
+            masks_to_submission(submission_filename, *image_filenames)
+    else:
+        for model in models:
+            # check if dir exists, otherwise create
+            if not os.path.exists(config.paths.model_store + "/" + model +"/"+ 'submission_seed_' + str(config.seed_run)+'/'):
+                os.makedirs(config.paths.model_store + "/" + model +"/"+ 'submission_seed_' + str(config.seed_run)+'/')
 
-        masks_to_submission(submission_filename, *image_filenames)
+            submission_filename = config.paths.model_store + "/" + model +"/"+ 'submission_seed_' + str(config.seed_run)+'/' 'submission.csv'
+            image_filenames = glob.glob(config.paths.model_store + "/" + model +"/"+ 'predictions_seed_' + str(config.seed_run) +"/*.png")
+
+            print("Start masks to submission")
+
+            masks_to_submission(submission_filename, *image_filenames)

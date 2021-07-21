@@ -64,14 +64,14 @@ if args.voting_rule == "majority":
     # sum up over first dimension
     sum = np.sum(images, axis=0)
     sum_copy = sum.copy()
-    sum_copy[sum>=255*((images.shape[0]/2)+1)] = 255
+    sum_copy[sum>=255*((images.shape[0]/2)+1)] = 1
     sum_copy[sum<255*((images.shape[0]/2)+1)] = 0
     binary_imgs = sum_copy
 elif args.voting_rule == "max":
     # sum up over first dimension
     sum = np.sum(images, axis=0)
     sum_copy = sum.copy()
-    sum_copy[sum>=255] = 255
+    sum_copy[sum>=255] = 1
     sum_copy[sum<255] = 0
     binary_imgs = sum_copy
 
@@ -84,7 +84,7 @@ if args.morph_post:
         binary = area_closing(binary_imgs[img,:,:], area_threshold=500)
         binary = area_opening(binary, area_threshold=500)
         footprint = disk(10)
-        footprint_1= disk(12)
+        footprint_1= disk(14)
         binary = binary_dilation(binary, footprint)
         binary_imgs[img,:,:] = binary_erosion(binary, footprint_1)
 
@@ -95,7 +95,7 @@ if not os.path.exists(config.paths.model_store +"/"+args.name+"/predictions/"):
     os.makedirs(config.paths.model_store +"/"+args.name+"/predictions/")
 
 for img, name in zip(range(binary_imgs.shape[0]), images_paths):
-    pil = Image.fromarray(binary_imgs[img,:,:].astype(np.uint8), mode="L")
+    pil = Image.fromarray((binary_imgs[img,:,:]*255).astype(np.uint8), mode="L")
     pil.save(config.paths.model_store +"/"+args.name+"/predictions/" +name)
 
 print("successfull")
