@@ -25,7 +25,7 @@ parser.add_argument('--config',
     help = 'Select one of the experiments described in our report or setup a custom config file'
 )
 parser.add_argument("name", help="name of the majority voting instance")
-parser.add_argument("--voting_rule", default="majority", type=str, help = "voting rule between the results of the different models. Choices: ['majority', 'max']")
+parser.add_argument("--voting_rule", default="majority", type=str, help = "voting rule between the results of the different models. Choices: ['majority', 'max', 'avg']")
 parser.add_argument("--morph_post", action="store_true", help = "flag to apply morphological postprocessing")
 parser.add_argument("--models", type=str, help="provide list of models you want to take part in majority voting, delimited by a comma. Example: 'model1,model2' ")
 parser.add_argument("--model_seeds", type=str, help="per model in models, please indicate which seed should be used, delimited by a comma. Example: '1,3' ")
@@ -74,12 +74,18 @@ elif args.voting_rule == "max":
     sum_copy[sum>=255] = 1
     sum_copy[sum<255] = 0
     binary_imgs = sum_copy
+elif args.voting_rule == "avg":
+    # sum up over first dimension
+    sum = np.sum(images, axis=0)
+    sum_copy = sum.copy()
+    avg = sum_copy/(images.shape[0]*255)
+    binary_imgs = avg
 
 # plt.imshow(binary_imgs[0,:,:])
 # plt.show()
 
 # apply morphological postprocessing if chosen
-if args.morph_post:
+if args.morph_post and args.voting_rule != "avg":
     for img in range(binary_imgs.shape[0]):
         binary = area_closing(binary_imgs[img,:,:], area_threshold=500)
         binary = area_opening(binary, area_threshold=500)
