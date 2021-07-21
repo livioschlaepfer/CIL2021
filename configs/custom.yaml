@@ -1,6 +1,6 @@
 # Model name
 model_name: "deeplabv3"
-checkpoint_name: "deeplab_cldice_modified2"
+checkpoint_name: "kaggle"
 
 # if run is to pretrain
 pretrain: False
@@ -12,8 +12,8 @@ mixed_train: False
 num_classes: 2
 
 # Set seed for reproducability
-seed_run: 3
-seed: 23012 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
+seed_run: 1
+seed: 36573 # [seed 1: 36573, seed 2: 90708, seed 3: 23012]
 
 # Batch size for training (change depending on how much memory you have)
 batch_size: 5
@@ -26,7 +26,7 @@ visualize_time: 600
 num_epochs: 100
 
 # Proportion of the dataset used for validation split
-use_train_val_split: True
+use_train_val_split: False
 val_size: 0.1
 
 # Continue training
@@ -46,7 +46,7 @@ transforms:
 
 #morphological postprocessing
 morph:
-  apply: False
+  apply: True
   area_closing: True
   area_opening: True
   binary_closing: True
@@ -56,7 +56,7 @@ morph:
 loss:
   # Select desired loss
   # options: ["bce", "dice", "cl_dice", "focal"]
-  name: "cl_dice"
+  name: "dice"
   patched_loss: True
   iter: 40
   alpha: 0.5
