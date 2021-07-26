@@ -7,12 +7,8 @@ This is the Git Repository of Livio Schläpfer, Mathias Rouss and Sven Kohler co
 ## Directory Structure
 ```
 ├── configs
-│   ├── baselines
-│   │   ├── baseline_deeplab.yaml
-│   │   └── ...
-│   ├── experiments
-│   │   ├── deeplabv3_bce_train_test_aug.txt
-│   │   └── ...
+│   ├── baseline_deeplab.yaml
+│   ├── ...
 │   └── custom.yaml
 ├── src
 │   ├── criterion
@@ -27,12 +23,13 @@ This is the Git Repository of Livio Schläpfer, Mathias Rouss and Sven Kohler co
 │   └── ...
 ├── runner_training.py
 ├── runner_test.py
+├── ...
 └── mask_to_submission.py
 ```
 
 Some notes:
-1. Configurations for our baselines are directly provided, while configurations of our experiments can be derived from XXX and must be copied into `custom.yaml`. 
-2. Directories `src/cirterion` and `src/models` contain our implementations of the different loss functions and model structures used in our experiments. The remaining files in the `src` directory are helpers to the runner files.
+1. Configurations for baselines are directly provided, while configurations for our experiments must be derived according to the steps described under XXX. 
+2. Directories `src/cirterion` and `src/models` contain our implementations of different loss functions and model structures used within our experiments. The remaining files in the `src` directory are helpers to the runner files.
 4. Files starting with `runner_...` are used to do training / testing runs or produce visualizations of our augmentations (transforms), see section XXX.
 
 ## Getting started
