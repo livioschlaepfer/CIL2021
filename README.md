@@ -2,26 +2,38 @@
 
 Welcome!
 
-This is the Git Repo of Livio Schläpfer, Mathias Rouss and Sven Kohler containing the code to reproduce our results for Project 3 ("Road Segmentation") which was completed within the scope of the Computational Intelligence Lab 2021.
+This is the Git Repo of Livio Schläpfer, Mathias Rouss and Sven Kohler containing the code to reproduce our results for the Road Segmentation Challenge which was completed within the scope of the Computational Intelligence Lab 2021.
 
-## High profile explanation of the different files
-- runner_training.py: Execute to train selected configuration
-- runner_test.py: Execute to produce prediction for the selected configuration
-- mask_to_submission.py: Execute to translate image prediction into uploadable Kaggle submission
-- massa.py: Execute to prepare Massachusetts Road Dataset for pretraining and mixed training
-- source folder (src):
-    - criterion: folder which holds the implementations of the different loss functions
-    - models: folder which holds the files to initialize the different models used in our experiments
-    - dataset.py: creates datasets and data loaders
-    - edge.py: canny edge detector
-    - paths.py: holds the dictionaries with all the relevant paths
-    - scheduler.py: different learning rate scheduler
-    - seed.py: seeding function to ensure reproducability
-    - tester.py: function which defines the whole testing process
-    - trainer.py function which defines the whole training process
-    - transform_test.py: defines transformations which are performed at test time
-    - transforms.py: defines transformations which are performed at train time
-    - visualizer.py: framework to visually keep track of training progress
+## Directory Structure
+```
+├── configs
+│   ├── baselines
+│   │   ├── baseline_deeplab.yaml
+│   │   └── ...
+│   ├── experiments
+│   │   ├── deeplabv3_bce_train_test_aug.txt
+│   │   └── ...
+│   └── custom.yaml
+├── src
+│   ├── criterion
+│   │   ├── focal_loss.py
+│   │   ├── dice_loss.py
+│   │   └── ...
+│   ├── models
+│   │   ├── deeplabv3.py
+│   │   └── ...
+│   ├── trainer.py
+│   ├── tester.py
+│   └── ...
+├── runner_training.py
+├── runner_test.py
+└── mask_to_submission.py
+```
+
+Some notes:
+1. Configurations for our baselines are directly provided, while configurations of our experiments can be derived from XXX and must be copied into `custom.yaml` 
+2. Directories `src/cirterion` and `src/models` contain our implementations of the different loss functions and model structures used in our experiments. The remaining files in the `src` directory are helpers to the runner files.
+4. Files starting with `runner_...` are used to do training / testing runs or produce visualizations of our augmentations (transforms), see section XXX
 
 ## Data preparation
 Before trying to reproduce our results, please arrange the pretraining, training and test data as instructed below.
