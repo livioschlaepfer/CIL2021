@@ -2,7 +2,7 @@
 
 Welcome!
 
-This is the Git Repo of Livio Schläpfer, Mathias Rouss and Sven Kohler containing the code to reproduce our results for the Road Segmentation Challenge which was completed as part of the Computational Intelligence Lab 2021.
+This is the Git Repository of Livio Schläpfer, Mathias Rouss and Sven Kohler containing the code to reproduce our experimental results for the Road Segmentation Challenge which was completed as part of the Computational Intelligence Lab 2021.
 
 ## Directory Structure
 ```
