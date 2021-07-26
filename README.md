@@ -2,7 +2,7 @@
 
 Welcome!
 
-This is the Git Repo of Livio Schläpfer, Mathias Rouss and Sven Kohler containing the code to reproduce our results for the Road Segmentation Challenge which was completed within the scope of the Computational Intelligence Lab 2021.
+This is the Git Repo of Livio Schläpfer, Mathias Rouss and Sven Kohler containing the code to reproduce our results for the Road Segmentation Challenge which was completed as part of the Computational Intelligence Lab 2021.
 
 ## Directory Structure
 ```
@@ -31,13 +31,20 @@ This is the Git Repo of Livio Schläpfer, Mathias Rouss and Sven Kohler containi
 ```
 
 Some notes:
-1. Configurations for our baselines are directly provided, while configurations of our experiments can be derived from XXX and must be copied into `custom.yaml` 
+1. Configurations for our baselines are directly provided, while configurations of our experiments can be derived from XXX and must be copied into `custom.yaml`. 
 2. Directories `src/cirterion` and `src/models` contain our implementations of the different loss functions and model structures used in our experiments. The remaining files in the `src` directory are helpers to the runner files.
-4. Files starting with `runner_...` are used to do training / testing runs or produce visualizations of our augmentations (transforms), see section XXX
+4. Files starting with `runner_...` are used to do training / testing runs or produce visualizations of our augmentations (transforms), see section XXX.
 
-## Data preparation
-Before trying to reproduce our results, please arrange the pretraining, training and test data as instructed below.
-First the user has to complete the missing folder paths in paths.py:
+## Getting started
+**Requirements**
+Preferably, create your own conda environment before following the step below:
+
+```
+pip install -r requirements.txt
+```
+
+**Paths to datasets**
+Before trying to reproduce our results, please download the CIL Road Segmentation Dataset (add link) and the used images from the Massachusetts Road Dataset (add link). Next, update the path variables under `src/paths.py` as following:
 
 ```
         if username == "insert OS-username here" and pretrain==False and mixed_train==False:
@@ -67,8 +74,33 @@ First the user has to complete the missing folder paths in paths.py:
                         'model_store': 'please insert path where you want information about your models to be stored (model weights, config, predictions, submission)',
                 }
 ```
-The three case distinctions refer to whether the user intends to pretrain, mixed train or standard train.
 
+## Reproducing scores
+
+The following steps will allow to reproduce the presented scores. Please note that the scores presented in the report consist of mean and standard deviation calculated over 3 seeds. Thus, the procedures introduced below must be repeated 3 times with different seed. 
+
+**Baselines**
+Select the desired configuration and run:
+```
+python3 runner_training.py -config baseline_deeplab.yaml
+python3 runner_test.py -config baseline_deeplab.yaml
+python3 mask_to_submission.py
+```
+
+**Experiments**
+Update `custom.yaml` according to the configuration of the desired experiment and run:
+```
+python3 runner_training.py -config custom.yaml
+python3 runner_test.py -config custom.yaml
+python3 mask_to_submission.py
+```
+
+**Final Kaggle Submission**
+```
+python3 runner_training.py -config custom.yaml
+python3 runner_test.py -config custom.yaml
+python3 mask_to_submission.py
+```
 
 ## Configuration files
 
@@ -124,10 +156,4 @@ The authors provided the user with the preset configuration files to implement t
 - baseline_unet.yaml
 - baseline_deeplab.yaml
 - custom.yaml
-
-## Reproducibility
-
-To ensure reproducibility we fixed the random seeds in all the stochastic elements of our code (pytorch, numpy, random).
-
-We ran all our experiments using three different seeds (seed run 1,2,3) to gain insights in the robustness of our results.
 
