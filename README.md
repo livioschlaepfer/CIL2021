@@ -37,6 +37,7 @@ Some notes:
 
 ## Getting started
 **Requirements**
+
 Preferably, create your own conda environment before following the step below:
 
 ```
@@ -44,6 +45,7 @@ pip install -r requirements.txt
 ```
 
 **Paths to datasets**
+
 Before trying to reproduce our results, please download the CIL Road Segmentation Dataset (add link) and the used images from the Massachusetts Road Dataset (add link). Next, update the path variables under `src/paths.py` as following:
 
 ```
@@ -77,9 +79,12 @@ Before trying to reproduce our results, please download the CIL Road Segmentatio
 
 ## Reproducing scores
 
-The following steps will allow to reproduce the presented scores. Please note that the scores presented in the report consist of mean and standard deviation calculated over 3 seeds. Thus, the procedures introduced below must be repeated 3 times with different seed. 
+All configs, segmentation masks, submission files of conducted experiments are available under (add polybox link).
+
+The following steps will allow to reproduce the presented scores. Please note that the scores presented in the report consist of mean and standard deviation calculated over 3 seeds. Thus, the below introduced procedures must be repeated 3 times with different seed. 
 
 **Baselines**
+
 Select the desired configuration and run:
 ```
 python3 runner_training.py -config baseline_deeplab.yaml
@@ -88,6 +93,7 @@ python3 mask_to_submission.py
 ```
 
 **Experiments**
+
 Update `custom.yaml` according to the configuration of the desired experiment and run:
 ```
 python3 runner_training.py -config custom.yaml
@@ -96,11 +102,16 @@ python3 mask_to_submission.py
 ```
 
 **Final Kaggle Submission**
+
+The final kaggle submission score was obtained by averaging over the outputs of the conducted experiments. Either reproduce all of our experiments by 
+updating `custom.yaml` according to the configuration of the desired experiment and run:
 ```
 python3 runner_training.py -config custom.yaml
 python3 runner_test.py -config custom.yaml
 python3 mask_to_submission.py
 ```
+
+Or refer to the results provided under (add link to polybox). 
 
 ## Configuration files
 
