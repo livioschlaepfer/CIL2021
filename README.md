@@ -76,13 +76,13 @@ Before trying to reproduce our results, please download the CIL Road Segmentatio
 
 ## Reproducing scores
 
-All configs, segmentation masks, submission files of conducted experiments are available under (add polybox link).
+The following steps will allow to reproduce the presented scores. Please note that the scores presented in the report consist of mean and standard deviation calculated over 3 seeds. Thus, the below introduced procedures must be repeated 3 times with different seed and average / standard deviation must be computed manually based on the obtained submission scores.
 
-The following steps will allow to reproduce the presented scores. Please note that the scores presented in the report consist of mean and standard deviation calculated over 3 seeds. Thus, the below introduced procedures must be repeated 3 times with different seed. 
+Detailed information of conducted experiments can be found under (add polybox link), where we provide configs, output segmentation masks, and submission files.
 
 **Baselines**
 
-Select the desired configuration and run:
+Select the desired baseline and, e.g. run:
 ```
 python3 runner_training.py -config baseline_deeplab.yaml
 python3 runner_test.py -config baseline_deeplab.yaml
@@ -90,8 +90,7 @@ python3 mask_to_submission.py
 ```
 
 **Experiments**
-
-Update `custom.yaml` according to the configuration of the desired experiment and run:
+Update `custom.yaml` based on the configuration details (see link to polybox) of the desired exeriment and run:
 ```
 python3 runner_training.py -config custom.yaml
 python3 runner_test.py -config custom.yaml
@@ -100,20 +99,18 @@ python3 mask_to_submission.py
 
 **Final Kaggle Submission**
 
-The final kaggle submission score was obtained by averaging over the outputs of the conducted experiments. Either reproduce all of our experiments by 
-updating `custom.yaml` according to the configuration of the desired experiment and run:
+The final Kaggle submission score was obtained by averaging over the outputs of the experiments for (TODO: add experiments). Either reproduce the scores of the mentioned experiments by updating `custom.yaml` according to steps introduced above or refer to the results provided under (add link to polybox).
+
+(TODO) To average over the outputs and obtain the submission file run:
 ```
 python3 runner_training.py -config custom.yaml
 python3 runner_test.py -config custom.yaml
 python3 mask_to_submission.py
 ```
 
-Or refer to the results provided under (add link to polybox). 
-
 ## Configuration files
 
-To reproduce our results which were presented in our report the interested user will mainly interact with configuration files stored in the "configs" folder.
-Below is a detailed list of all the eligible settings/flags/variables which need to be specified in order to launch a run.
+To reproduce the scores presented in our report the interested user will mainly interact with the configuration files under `configs/`. Below is a detailed list of all possible settings/flags/variables configurable in order to run arbitrary experiments.
 
 - model_name: str, refers to the model/baseline to be used. Choices are ["unet_baseline", "fcnres50_baseline", "deeplabv3"]
 - checkpoint_name: str, name of the current experiment. Creates folder in path_dict["model_store"] and saves corresponding data (weights, predictions etc.)
@@ -157,11 +154,4 @@ Below is a detailed list of all the eligible settings/flags/variables which need
   - init_lr: float, initial learning rate to use during training
   - lr_policy: learning rate policy to apply during training. Choices are [none", linear", "step", "plateau"]
 - best_epoch: None, placeholder to save number of best epoch during training.
-
-The authors provided the user with the preset configuration files to implement the three baselines and a custom configuration file where an arbitrary setting can be implemented.
-
-- baseline_fnc.yaml
-- baseline_unet.yaml
-- baseline_deeplab.yaml
-- custom.yaml
 
