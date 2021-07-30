@@ -91,7 +91,7 @@ The following steps will allow you to reproduce the presented scores. Please not
 
 To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store.  
 
-**Baselines - Training**
+**Reproducing Baselines - Training**
 
 Update the value of the config flag with the desired baseline and e.g. run:
 
@@ -99,7 +99,7 @@ Update the value of the config flag with the desired baseline and e.g. run:
 python3 runner_training.py -config baseline_deeplab.yaml
 ```
 
-**Baselines - Prediction, Submission Mask**
+**Reproducing Baselines - Prediction, Submission Mask**
 
 Update the value of the config flag with the desired baseline and e.g. run:
 
@@ -108,14 +108,14 @@ python3 runner_test.py -config baseline_deeplab.yaml
 python3 mask_to_submission.py -config baseline_deeplab.yaml
 ```
 
-**Experiments - Training**
+**Reproducing Experiments - Training**
 
 Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the PolyBox Model Store. Then run:
 ```
 python3 runner_training.py -config custom.yaml
 ```
 
-**Experiments - Prediction, Submission Mask**
+**Reproducing Experiments - Prediction, Submission Mask**
 
 Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the PolyBox Model Store. Then run:
 ```
@@ -123,7 +123,7 @@ python3 runner_test.py -config custom.yaml
 python3 mask_to_submission.py -config custom.yaml
 ```
 
-**Final Kaggle Submission**
+**Reproducing Final Kaggle Submission**
 
 The final Kaggle submission score was obtained by averaging over the outputs of the experiments for [deeplab_bce](https://www.google.com), deeplab_focal, deeplab_dice. Either reproduce the scores of the mentioned experiments by updating `custom.yaml` according to steps introduced above or refer to the results provided under (add link to polybox).
 
