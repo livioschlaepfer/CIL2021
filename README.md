@@ -82,7 +82,21 @@ Next, update the path variables under `src/paths.py` as described below:
 
 In our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments) we provide configurations, predicted segmentation masks, submission files, and model weights of conducted experiments.
 
-To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store.
+To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store. 
+
+| Type                         | Model     | Loss function | Remarks                                 | Polybox Model Store Foldername     |
+|------------------------------|-----------|---------------|-----------------------------------------|----------------------------|
+| Baseline                     | FCN       | BCE           | -                                       | baseline_fcn_100epochs     |
+|                              | Unet      | BCE           | -                                       | baseline_unet_100epochs    |
+|                              | DeepLabv3 | BCE           | -                                       | baseline_deeplab_100epochs |
+| Augmentation                 | DeepLabv3 | BCE           | with train aug                          | deeplab_trainaug           |
+|                              | DeepLabv3 | BCE           | with train + test aug                   | deeplab_trainaug_testaug   |
+| Analysis Segmentation Losses | DeepLabv3 | Focal         | with train + test aug                   | deeplab_focal              |
+|                              | DeepLabv3 | Dice          | with train + test aug                   | deeplab_dice               |
+|                              | DeepLabv3 | clDice        | with train + test aug                   | deeplab_cldice             |
+| Improved clDice loss         | DeepLabv3 | clDice        | with train + test aug, foreground only  | deeplab_cldice_modified    |
+|                              | DeepLabv3 | clDice + BCE  |                                         | deeplab_cldice_modified2   |
+| Kaggle Submission            | DeepLabv3 | Dice          | morphology post-processing              | majority_all_maj           |
 
 
 ## Reproducing scores
@@ -110,14 +124,14 @@ python3 mask_to_submission.py --config baseline_deeplab
 
 **Reproducing Experiments - Training**
 
-Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the Polybox Model Store. Then run:
+Locate the configuration `.txt` file of your desired experiment in the Polybox Model Store. Update `custom.yaml` based on the provided configuration details and run:
 ```
 python3 runner_training.py --config custom
 ```
 
 **Reproducing Experiments - Prediction, Submission Mask**
 
-Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the Polybox Model Store. Then run:
+Locate the configuration `.txt` file of your desired experiment in the Polybox Model Store. Update `custom.yaml` based on the provided configuration details and run:
 ```
 python3 runner_test.py --config custom
 python3 mask_to_submission.py --config custom
