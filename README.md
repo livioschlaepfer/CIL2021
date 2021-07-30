@@ -82,7 +82,7 @@ Next, update the path variables under `src/paths.py` as described below:
 
 In our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments) we provide configurations, predicted segmentation masks, submission files, and model weights of conducted experiments.
 
-To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store. 
+To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store, the path of which you specified in the above `src/paths.py` file.
 
 | Type                         | Model     | Loss function | Remarks                                 | Polybox Model Store Foldername     |
 |------------------------------|-----------|---------------|-----------------------------------------|----------------------------|
@@ -139,13 +139,14 @@ python3 mask_to_submission.py --config custom
 
 **Reproducing Final Kaggle Submission**
 
-The final Kaggle submission score was obtained by averaging over the outputs of the experiments DeepLabv3 with BCE, Focal, and Dice loss over all 3 seeds (see Polybox Model Store: `deeplab_trainaug_testaug`, `deeplab_dice`, `deeplab_focal`). Either reproduce the submission scores from scratch according to steps introduced above or directly download the experiment folders from our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments) and store the folders in your local Model Store.
+The final Kaggle submission score was obtained by averaging over the outputs of the experiments DeepLabv3 with BCE, Focal, and Dice loss over all 3 seeds (see Polybox Model Store: `deeplab_trainaug_testaug`, `deeplab_dice`, `deeplab_focal`). Either reproduce the submission scores from scratch according to steps introduced above or directly download the experiment folders from our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments) and store the folders in your local Model Store (the folder/ path of which you specified in the `src/paths.py` file).
 
 After reproducing the segmentation masks for the above mentioned experiments or downloading the mentioned experiment folders, run the following:
 ```
 python3 runner_majority_voting.py majority_all_maj --models "deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_focal,deeplab_focal,deeplab_focal,deeplab_dice,deeplab_dice,deeplab_dice" --model_seeds "1,2,3,1,2,3,1,2,3"
 python3 mask_to_submission.py --flag_majority --majority_name majority_all_maj
 ```
+The csv submission file will be in the folder `majority_all_maj/submission`.
 
 ## Configuration files
 
