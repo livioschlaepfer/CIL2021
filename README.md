@@ -87,7 +87,7 @@ To skip training and directly start with predictions, download the desired exper
 
 ## Reproducing scores
 
-The following steps will allow you to reproduce the presented scores. Please note that the scores presented in the report consist of mean and standard deviation calculated over 3 seeds. Thus, the below introduced procedures must be repeated 3 times with different seed. Average / standard deviation must be computed manually based on the obtained submission scores.
+The following steps will allow you to reproduce the presented scores. Please note that the scores presented in the report consist of mean and standard deviation calculated over 3 seeds. Thus, the below introduced procedures must be repeated 3 times with a different seed. Average / standard deviation must be computed manually based on the obtained submission scores.
 
 To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store.  
 
