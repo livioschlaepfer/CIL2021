@@ -82,6 +82,8 @@ Next, update the path variables under `src/paths.py` as described below:
 
 Under (add polybox link) we provide configurations, predicted segmentation masks, submission files, and model weights of conducted experiments.
 
+To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store.
+
 
 ## Reproducing scores
 
