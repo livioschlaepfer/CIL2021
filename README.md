@@ -43,7 +43,7 @@ pip3 install -r requirements.txt
 
 **2) Download Data**
 
-Please download the CIL Road Segmentation Dataset (add link) and a subset of the Massachusetts Road Dataset (add link). 
+Please download the CIL Road Segmentation Dataset (add link) and the used subset of the Massachusetts Road Dataset (add link). 
 
 **3) Setup paths**
 
