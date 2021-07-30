@@ -130,7 +130,7 @@ The final Kaggle submission score was obtained by averaging over the outputs of 
 After producing the segmentation masks for the mentioned experiments or downloading the experiment folders, run the following:
 ```
 python3 runner_majority_voting.py majority_all_maj --models "deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_focal,deeplab_focal,deeplab_focal,deeplab_dice,deeplab_dice,deeplab_dice" --model_seeds "1,2,3,1,2,3,1,2,3"
-python3 mask_to_submission.py -config custom.yaml
+python3 mask_to_submission.py --flag_majority --majority_name insert-experiment-name
 ```
 
 ## Configuration files
