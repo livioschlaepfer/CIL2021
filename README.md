@@ -33,17 +33,21 @@ Some notes:
 4. Files starting with `runner_...` are used to do training / testing runs or produce visualizations of our augmentations (transforms), see section XXX.
 
 ## Getting started
-**Requirements**
+**1) Requirements**
 
 Preferably, create your own conda environment before following the step below:
 
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
-**Paths to datasets**
+**2) Download Data**
 
-Before trying to reproduce our results, please download the CIL Road Segmentation Dataset (add link) and the used images from the Massachusetts Road Dataset (add link). Next, update the path variables under `src/paths.py` as following:
+Please download the CIL Road Segmentation Dataset (add link) and a subset of the Massachusetts Road Dataset (add link). 
+
+**3) Setup paths**
+
+Next, update the path variables under `src/paths.py` as described below:
 
 ```
         if username == "insert OS-username here" and pretrain==False and mixed_train==False:
@@ -74,27 +78,44 @@ Before trying to reproduce our results, please download the CIL Road Segmentatio
                 }
 ```
 
+**3) Polybox Model Store**
+Under (add polybox link) we provide configurations, predicted segmentation masks, submission files, and model weights of conducted experiments.
+
+
 ## Reproducing scores
 
-The following steps will allow to reproduce the presented scores. Please note that the scores presented in the report consist of mean and standard deviation calculated over 3 seeds. Thus, the below introduced procedures must be repeated 3 times with different seed and average / standard deviation must be computed manually based on the obtained submission scores.
+The following steps will allow you to reproduce the presented scores. Please note that the scores presented in the report consist of mean and standard deviation calculated over 3 seeds. Thus, the below introduced procedures must be repeated 3 times with different seed. Average / standard deviation must be computed manually based on the obtained submission scores.
 
-Detailed information of conducted experiments can be found under (add polybox link), where we provide configs, output segmentation masks, and submission files.
+To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store.  
 
-**Baselines**
+**Baselines - Training**
+Update the value of the config flag with the desired baseline and e.g. run:
 
-Select the desired baseline and, e.g. run:
 ```
 python3 runner_training.py -config baseline_deeplab.yaml
-python3 runner_test.py -config baseline_deeplab.yaml
-python3 mask_to_submission.py
 ```
 
-**Experiments**
-Update `custom.yaml` based on the configuration details (see link to polybox) of the desired exeriment and run:
+**Baselines - Prediction, Submission Mask**
+Update the value of the config flag with the desired baseline and e.g. run:
+
+```
+python3 runner_test.py -config baseline_deeplab.yaml
+python3 mask_to_submission.py -config baseline_deeplab.yaml
+```
+
+**Experiments - Training**
+
+Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the PolyBox Model Store. Then run:
 ```
 python3 runner_training.py -config custom.yaml
+```
+
+**Experiments - Prediction, Submission Mask**
+
+Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the PolyBox Model Store. Then run:
+```
 python3 runner_test.py -config custom.yaml
-python3 mask_to_submission.py
+python3 mask_to_submission.py -config custom.yaml
 ```
 
 **Final Kaggle Submission**
