@@ -125,9 +125,9 @@ python3 mask_to_submission.py -config custom.yaml
 
 **Reproducing Final Kaggle Submission**
 
-The final Kaggle submission score was obtained by averaging over the outputs of the experiments for [deeplab_bce](https://polybox.ethz.ch/index.php/s/ZYqomRNR52tY3Jl), [deeplab_focal](https://polybox.ethz.ch/index.php/s/bTY4hLZqSxMgOSl), [deeplab_dice](https://polybox.ethz.ch/index.php/s/qhxmlNXiAC3FOTY) over all 3 seeds. Either reproduce the scores of the mentioned experiments by updating `custom.yaml` according to steps introduced above or refer to the results provided under ([Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments)).
+The final Kaggle submission score was obtained by averaging over the outputs of the experiments for [deeplab_bce](https://polybox.ethz.ch/index.php/s/ZYqomRNR52tY3Jl), [deeplab_focal](https://polybox.ethz.ch/index.php/s/bTY4hLZqSxMgOSl), [deeplab_dice](https://polybox.ethz.ch/index.php/s/qhxmlNXiAC3FOTY) over all 3 seeds. Either reproduce the submission scores from scratch according to steps introduced above or download the experiments folders from our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments).
 
-To average over the outputs and obtain the submission file run:
+After producing the prediction segmentation mask for the mentioned experiments, average the outputs and obtain the submission file by running:
 ```
 python3 runner_majority_voting.py majority_all_maj --models "deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_focal,deeplab_focal,deeplab_focal,deeplab_dice,deeplab_dice,deeplab_dice" --model_seeds "1,2,3,1,2,3,1,2,3"
 python3 mask_to_submission.py -config custom.yaml
