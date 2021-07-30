@@ -125,7 +125,7 @@ python3 mask_to_submission.py -config custom.yaml
 
 **Reproducing Final Kaggle Submission**
 
-The final Kaggle submission score was obtained by averaging over the outputs of the experiments for [deeplab_bce](https://polybox.ethz.ch/index.php/s/ZYqomRNR52tY3Jl), [deeplab_focal](https://polybox.ethz.ch/index.php/s/bTY4hLZqSxMgOSl), [deeplab_dice](https://polybox.ethz.ch/index.php/s/qhxmlNXiAC3FOTY). Either reproduce the scores of the mentioned experiments by updating `custom.yaml` according to steps introduced above or refer to the results provided under (add link to polybox).
+The final Kaggle submission score was obtained by averaging over the outputs of the experiments for [deeplab_bce](https://polybox.ethz.ch/index.php/s/ZYqomRNR52tY3Jl), [deeplab_focal](https://polybox.ethz.ch/index.php/s/bTY4hLZqSxMgOSl), [deeplab_dice](https://polybox.ethz.ch/index.php/s/qhxmlNXiAC3FOTY) over all 3 seeds. Either reproduce the scores of the mentioned experiments by updating `custom.yaml` according to steps introduced above or refer to the results provided under ([Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments)).
 
 To average over the outputs and obtain the submission file run:
 ```
