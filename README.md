@@ -135,7 +135,7 @@ python3 mask_to_submission.py -config custom.yaml
 
 ## Configuration files
 
-To reproduce the scores presented in our report the interested user will mainly interact with the configuration files under `configs/`. Below is a detailed list of all settings/flags/variables configurable:
+To reproduce the scores presented in our report the interested user will mainly interact with the configuration files under `configs/`. Below you find a detailed list of available settings,flags, and variables:
 
 - model_name: str, refers to the model/baseline to be used. Choices are ["unet_baseline", "fcnres50_baseline", "deeplabv3"]
 - checkpoint_name: str, name of the current experiment. Creates folder in path_dict["model_store"] and saves corresponding data (weights, predictions etc.)
