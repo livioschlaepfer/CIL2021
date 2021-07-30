@@ -28,7 +28,7 @@ This is the Git Repository of Livio Schläpfer, Mathias Rouss and Sven Kohler co
 ```
 
 Some notes:
-1. Configurations for baselines are directly provided, while configurations for other conducted experiments must be derived from the configuration files provided in our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments). 
+1. Configurations for baselines are directly provided, while the remaining configurations of experiments are provided in our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments). 
 2. Directories `src/cirterion` and `src/models` contain our implementations of different loss functions and model structures used within our experiments. The remaining files in the `src` directory are helpers to the runner files.
 4. Files starting with `runner_...` are used to do training / testing runs, see section [Reproducing Scores](#reproducing-scores).
 
