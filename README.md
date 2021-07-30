@@ -125,7 +125,7 @@ python3 mask_to_submission.py --config custom
 
 **Reproducing Final Kaggle Submission**
 
-The final Kaggle submission score was obtained by averaging over the outputs of the experiments DeepLabv3 with BCE, Focal, and Dice loss (see Polybox Model Store: `deeplab_trainaug_testaug`, `deeplab_dice`, `deeplab_focal`)  over all 3 seeds. Either reproduce the submission scores from scratch according to steps introduced above or directly download the experiment folders from our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments) and store the folders in your local Model Store.
+The final Kaggle submission score was obtained by averaging over the outputs of the experiments DeepLabv3 with BCE, Focal, and Dice loss over all 3 seeds (see Polybox Model Store: `deeplab_trainaug_testaug`, `deeplab_dice`, `deeplab_focal`). Either reproduce the submission scores from scratch according to steps introduced above or directly download the experiment folders from our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments) and store the folders in your local Model Store.
 
 After reproducing the segmentation masks for the above mentioned experiments or downloading the mentioned experiment folders, run the following:
 ```
