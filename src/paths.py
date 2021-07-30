@@ -1,4 +1,30 @@
 def paths_setter(username, pretrain=False, mixed_train=False):
+        if username == "Mathiass" and pretrain==False and mixed_train==False:
+                path_dict = {
+                        'train_mask_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\training\training\groundtruth",
+                        'train_image_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\training\training\images",
+                        'test_image_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\test_images\test_images",
+                        'test_output_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\checkpoints",
+                        'model_store': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\modelstore",
+                }
+        
+        elif username == "Mathiass" and pretrain==True:
+                path_dict = {
+                        'train_mask_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\Massachusetts Road Dataset\Masks",
+                        'train_image_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\Massachusetts Road Dataset\Images",
+                        'test_image_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\test_images\test_images",
+                        'test_output_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\checkpoints",
+                        'model_store': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\modelstore",
+                }
+
+        elif username == "Mathiass" and mixed_train==True:
+                path_dict = {
+                        'train_mask_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\training\training\groundtruth",
+                        'train_image_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\training\training\images",
+                        'test_image_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\test_images\test_images",
+                        'test_output_dir': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\checkpoints",
+                        'model_store': r"C:\Users\Mathiass\Documents\Python Scripts\FS2021_CIL_Code\project3_road_segmentation\modelstore",
+                }
         if username == "svkohler" and pretrain==False and mixed_train==False:
             path_dict = {
                     'train_mask_dir': '/home/svkohler/OneDrive/Desktop/ETH_SS_21/Computational_Intelligence_Lab/Project/Data/training/groundtruth',
