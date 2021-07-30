@@ -148,7 +148,7 @@ After reproducing the segmentation masks for the above mentioned experiments or 
 python3 runner_majority_voting.py majority_all_maj --models "deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_focal,deeplab_focal,deeplab_focal,deeplab_dice,deeplab_dice,deeplab_dice" --model_seeds "1,2,3,1,2,3,1,2,3" --morph_post
 python3 mask_to_submission.py --flag_majority --majority_name majority_all_maj
 ```
-The csv submission file will be in the folder `majority_all_maj/submission`.
+The csv submission file will be in your local model store in folder `majority_all_maj/submission`.
 
 ## Configuration files
 
