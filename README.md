@@ -28,9 +28,9 @@ This is the Git Repository of Livio Schläpfer, Mathias Rouss and Sven Kohler co
 ```
 
 Some notes:
-1. Configurations for baselines are directly provided, while configurations for our experiments must be derived according to the steps described under XXX. 
+1. Configurations for baselines are directly provided, while configurations for other conducted experiments must be derived from the configuration files provided in our PolyBox Model Store. 
 2. Directories `src/cirterion` and `src/models` contain our implementations of different loss functions and model structures used within our experiments. The remaining files in the `src` directory are helpers to the runner files.
-4. Files starting with `runner_...` are used to do training / testing runs or produce visualizations of our augmentations (transforms), see section XXX.
+4. Files starting with `runner_...` are used to do training / testing runs, see section [Reproducing Scores](#Link).
 
 ## Getting started
 **1) Requirements**
@@ -130,11 +130,12 @@ The final Kaggle submission score was obtained by averaging over the outputs of 
 To average over the outputs and obtain the submission file run:
 ```
 python3 runner_majority_voting.py majority_all_maj --models "deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_focal,deeplab_focal,deeplab_focal,deeplab_dice,deeplab_dice,deeplab_dice" --model_seeds "1,2,3,1,2,3,1,2,3"
+python3 mask_to_submission.py -config custom.yaml
 ```
 
 ## Configuration files
 
-To reproduce the scores presented in our report the interested user will mainly interact with the configuration files under `configs/`. Below is a detailed list of all possible settings/flags/variables configurable in order to run arbitrary experiments.
+To reproduce the scores presented in our report the interested user will mainly interact with the configuration files under `configs/`. Below is a detailed list of all settings/flags/variables configurable:
 
 - model_name: str, refers to the model/baseline to be used. Choices are ["unet_baseline", "fcnres50_baseline", "deeplabv3"]
 - checkpoint_name: str, name of the current experiment. Creates folder in path_dict["model_store"] and saves corresponding data (weights, predictions etc.)
