@@ -110,14 +110,14 @@ python3 mask_to_submission.py -config baseline_deeplab.yaml
 
 **Reproducing Experiments - Training**
 
-Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the PolyBox Model Store. Then run:
+Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the Polybox Model Store. Then run:
 ```
 python3 runner_training.py -config custom.yaml
 ```
 
 **Reproducing Experiments - Prediction, Submission Mask**
 
-Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the PolyBox Model Store. Then run:
+Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the Polybox Model Store. Then run:
 ```
 python3 runner_test.py -config custom.yaml
 python3 mask_to_submission.py -config custom.yaml
