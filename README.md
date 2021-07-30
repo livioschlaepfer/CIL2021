@@ -79,6 +79,7 @@ Next, update the path variables under `src/paths.py` as described below:
 ```
 
 **3) Polybox Model Store**
+
 Under (add polybox link) we provide configurations, predicted segmentation masks, submission files, and model weights of conducted experiments.
 
 
