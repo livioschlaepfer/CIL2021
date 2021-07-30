@@ -96,7 +96,7 @@ To skip training and directly start with predictions, download the desired exper
 Update the value of the config flag with the desired baseline and e.g. run:
 
 ```
-python3 runner_training.py -config baseline_deeplab.yaml
+python3 runner_training.py --config baseline_deeplab
 ```
 
 **Reproducing Baselines - Prediction, Submission Mask**
@@ -104,23 +104,23 @@ python3 runner_training.py -config baseline_deeplab.yaml
 Update the value of the config flag with the desired baseline and e.g. run:
 
 ```
-python3 runner_test.py -config baseline_deeplab.yaml
-python3 mask_to_submission.py -config baseline_deeplab.yaml
+python3 runner_test.py --config baseline_deeplab
+python3 mask_to_submission.py --config baseline_deeplab
 ```
 
 **Reproducing Experiments - Training**
 
 Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the Polybox Model Store. Then run:
 ```
-python3 runner_training.py -config custom.yaml
+python3 runner_training.py --config custom
 ```
 
 **Reproducing Experiments - Prediction, Submission Mask**
 
 Update `custom.yaml` based on the configuration details of the desired exeriment. The configuration details are available in the Polybox Model Store. Then run:
 ```
-python3 runner_test.py -config custom.yaml
-python3 mask_to_submission.py -config custom.yaml
+python3 runner_test.py --config custom
+python3 mask_to_submission.py --config custom
 ```
 
 **Reproducing Final Kaggle Submission**
@@ -130,7 +130,7 @@ The final Kaggle submission score was obtained by averaging over the outputs of 
 After producing the segmentation masks for the mentioned experiments or downloading the experiment folders, run the following:
 ```
 python3 runner_majority_voting.py majority_all_maj --models "deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_focal,deeplab_focal,deeplab_focal,deeplab_dice,deeplab_dice,deeplab_dice" --model_seeds "1,2,3,1,2,3,1,2,3"
-python3 mask_to_submission.py --flag_majority --majority_name insert-experiment-name
+python3 mask_to_submission.py --flag_majority --majority_name majority_all_maj
 ```
 
 ## Configuration files

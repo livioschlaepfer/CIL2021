@@ -31,6 +31,9 @@ checkpoint_name: "baseline_unet_100epochs"
 # if run is to pretrain
 pretrain: False
 
+# if mixed dataset is used
+mixed_train: False
+
 # Number of classes for segmentation
 num_classes: 2
 
