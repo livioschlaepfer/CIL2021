@@ -28,7 +28,7 @@ This is the Git Repository of Livio Schläpfer, Mathias Rouss and Sven Kohler co
 ```
 
 Some notes:
-1. Configurations for baselines are directly provided, while configurations for other conducted experiments must be derived from the configuration files provided in our PolyBox Model Store. 
+1. Configurations for baselines are directly provided, while configurations for other conducted experiments must be derived from the configuration files provided in our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments). 
 2. Directories `src/cirterion` and `src/models` contain our implementations of different loss functions and model structures used within our experiments. The remaining files in the `src` directory are helpers to the runner files.
 4. Files starting with `runner_...` are used to do training / testing runs, see section [Reproducing Scores](#reproducing-scores).
 
@@ -43,7 +43,7 @@ pip3 install -r requirements.txt
 
 **2) Download Data**
 
-Please download the CIL Road Segmentation Dataset (add link) and the used subset of the Massachusetts Road Dataset (add link). 
+Please download the CIL Road Segmentation Dataset ([link](https://www.kaggle.com/c/cil-road-segmentation-2021/data)) and the used subset of the Massachusetts Road Dataset ([link](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FMass)). 
 
 **3) Setup paths**
 
@@ -80,7 +80,7 @@ Next, update the path variables under `src/paths.py` as described below:
 
 **3) Polybox Model Store**
 
-Under (add polybox link) we provide configurations, predicted segmentation masks, submission files, and model weights of conducted experiments.
+In our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments) we provide configurations, predicted segmentation masks, submission files, and model weights of conducted experiments.
 
 To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store.
 
