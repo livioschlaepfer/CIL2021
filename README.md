@@ -90,6 +90,7 @@ The following steps will allow you to reproduce the presented scores. Please not
 To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store.  
 
 **Baselines - Training**
+
 Update the value of the config flag with the desired baseline and e.g. run:
 
 ```
@@ -97,6 +98,7 @@ python3 runner_training.py -config baseline_deeplab.yaml
 ```
 
 **Baselines - Prediction, Submission Mask**
+
 Update the value of the config flag with the desired baseline and e.g. run:
 
 ```
