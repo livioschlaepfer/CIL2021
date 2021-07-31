@@ -80,7 +80,7 @@ Next, update the path variables under `src/paths.py` as described below:
 
 **3) Polybox Model Store**
 
-In our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments) we provide configurations, predicted segmentation masks, submission files, and model weights of conducted experiments. To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store, the path of which you specified in the above `src/paths.py` file.
+In our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments) we provide configurations, predicted segmentation masks, submission files, and model weights of conducted experiments. To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local Model Store, the path of which you specified in the above `src/paths.py` file.
 
 Please refer to the following table to find the Polybox Model Store folder of the desired experiment.
 
@@ -104,7 +104,7 @@ Please refer to the following table to find the Polybox Model Store folder of th
 
 The following steps will allow you to reproduce the presented scores. Please note that the scores presented in the report consist of mean and standard deviation calculated over 3 seeds. Thus, the below introduced procedures must be repeated 3 times with a different seed. Average / standard deviation must be computed manually based on the obtained submission scores. 
 
-To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store. 
+To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local Model Store. 
 
 **Reproducing Baselines - Training**
 
@@ -147,7 +147,7 @@ After reproducing the segmentation masks for the above mentioned experiments or 
 python3 runner_majority_voting.py majority_all_maj --models "deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_trainaug_testaug,deeplab_focal,deeplab_focal,deeplab_focal,deeplab_dice,deeplab_dice,deeplab_dice" --model_seeds "1,2,3,1,2,3,1,2,3" --morph_post
 python3 mask_to_submission.py --flag_majority --majority_name majority_all_maj
 ```
-The csv submission file will be in your local model store in folder `majority_all_maj/submission`.
+The csv submission file will be in your local Model Store in folder `majority_all_maj/submission`.
 
 ## Configuration files
 
