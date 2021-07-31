@@ -97,7 +97,7 @@ Please refer to the following table to find the Polybox Model Store folder of th
 |                              | DeepLabv3 | clDice        | with train + test aug                   | deeplab_cldice             |
 | Improved clDice loss         | DeepLabv3 | clDice        | with train + test aug, foreground only  | deeplab_cldice_modified    |
 |                              | DeepLabv3 | clDice + BCE  |                                         | deeplab_cldice_modified2   |
-| Kaggle Submission            | DeepLabv3 |           | averaging experiment outputs + morphology post-processing              | majority_all_maj           |
+| Kaggle Submission            |  |           | averaging experiment outputs + morphology post-processing              | majority_all_maj           |
 
 
 ## Reproducing scores
