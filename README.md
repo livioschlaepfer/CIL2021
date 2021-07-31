@@ -80,11 +80,10 @@ Next, update the path variables under `src/paths.py` as described below:
 
 **3) Polybox Model Store**
 
-In our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments) we provide configurations, predicted segmentation masks, submission files, and model weights of conducted experiments. To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store. 
+In our [Polybox Model Store](https://polybox.ethz.ch/index.php/s/qtn4FY23P8lj4xG?path=%2FExperiments) we provide configurations, predicted segmentation masks, submission files, and model weights of conducted experiments. To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store, the path of which you specified in the above `src/paths.py` file.
 
 Please refer to the following table to find the Polybox Model Store folder of the desired experiment.
 
-To skip training and directly start with predictions, download the desired experiment folder from the Polybox Model Store and place the folder within your local model store, the path of which you specified in the above `src/paths.py` file.
 
 | Type                         | Model     | Loss function | Remarks                                 | Polybox Model Store Foldername     |
 |------------------------------|-----------|---------------|-----------------------------------------|----------------------------|
